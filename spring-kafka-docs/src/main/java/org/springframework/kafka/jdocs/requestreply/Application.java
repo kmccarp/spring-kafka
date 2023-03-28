@@ -120,11 +120,11 @@ public class Application {
     @SendTo
     public byte[] listen(String in) {
         log.info(in);
-        if (in.equals("\"getAThing\"")) {
-            return ("{\"thingProp\":\"someValue\"}").getBytes();
+        if ("\"getAThing\"".equals(in)) {
+            return "{\"thingProp\":\"someValue\"}".getBytes();
         }
-        if (in.equals("\"getThings\"")) {
-            return ("[{\"thingProp\":\"someValue1\"},{\"thingProp\":\"someValue2\"}]").getBytes();
+        if ("\"getThings\"".equals(in)) {
+            return "[{\"thingProp\":\"someValue1\"},{\"thingProp\":\"someValue2\"}]".getBytes();
         }
         return in.toUpperCase().getBytes();
     }

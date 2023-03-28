@@ -110,7 +110,7 @@ public class FailedRecordTrackerTests {
 		given(bo2.start()).willReturn(be2);
 		FailedRecordTracker tracker = new FailedRecordTracker((rec, ex) -> { }, bo1, mock(LogAccessor.class));
 		tracker.setBackOffFunction((record, ex) -> {
-			if (record.topic().equals("foo")) {
+			if ("foo".equals(record.topic())) {
 				return bo2;
 			}
 			else {

@@ -72,9 +72,9 @@ public abstract class AbstractJavaTypeMapper implements BeanClassLoaderAware {
 	 */
 	public static final String KEY_DEFAULT_KEY_CLASSID_FIELD_NAME = "__Key_KeyTypeId__";
 
-	private final Map<String, Class<?>> idClassMapping = new ConcurrentHashMap<String, Class<?>>();
+	private final Map<String, Class<?>> idClassMapping = new ConcurrentHashMap<>();
 
-	private final Map<Class<?>, byte[]> classIdMapping = new ConcurrentHashMap<Class<?>, byte[]>();
+	private final Map<Class<?>, byte[]> classIdMapping = new ConcurrentHashMap<>();
 
 	private String classIdFieldName = DEFAULT_CLASSID_FIELD_NAME;
 

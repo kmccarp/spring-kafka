@@ -88,8 +88,7 @@ public class BatchMessagingMessageListenerAdapterTests {
 		@SuppressWarnings({ "rawtypes" })
 		@Bean
 		public ConsumerFactory consumerFactory() {
-			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
-			return consumerFactory;
+			return mock(ConsumerFactory.class);
 		}
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })

@@ -167,7 +167,7 @@ public final class KafkaTestUtils {
 					reset.computeIfAbsent(new TopicPartition(rec.topic(), rec.partition()), tp -> rec.offset());
 				}
 			});
-			reset.forEach((tp, off) -> consumer.seek(tp, off));
+			reset.forEach(consumer::seek);
 			try {
 				Thread.sleep(50); // NOSONAR magic#
 			}

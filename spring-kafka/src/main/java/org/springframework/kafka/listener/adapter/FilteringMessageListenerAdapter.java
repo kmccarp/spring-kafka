@@ -82,14 +82,7 @@ public class FilteringMessageListenerAdapter<K, V>
 	}
 
 	private void ackFilteredIfNecessary(@Nullable Acknowledgment acknowledgment) {
-		switch (this.delegateType) {
-			case ACKNOWLEDGING_CONSUMER_AWARE, ACKNOWLEDGING -> {
-				if (this.ackDiscarded && acknowledgment != null) {
-					acknowledgment.acknowledge();
-				}
-			}
-			case CONSUMER_AWARE, SIMPLE -> {
-			}
+		if (this.delegateType != ListenerType.ACKNOWLEDGING_CONSUMER_AWARE) {
 		}
 	}
 

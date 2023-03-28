@@ -119,7 +119,7 @@ public abstract class AbstractMessageListenerContainer<K, V>
 
 	private ApplicationContext applicationContext;
 
-	private volatile boolean running = false;
+	private volatile boolean running;
 
 	private volatile boolean paused;
 
@@ -131,7 +131,7 @@ public abstract class AbstractMessageListenerContainer<K, V>
 	private boolean changeConsumerThreadName;
 
 	@NonNull
-	private Function<MessageListenerContainer, String> threadNameSupplier = container -> container.getListenerId();
+	private Function<MessageListenerContainer, String> threadNameSupplier = MessageListenerContainer::getListenerId;
 
 	@Nullable
 	private KafkaAdmin kafkaAdmin;
@@ -597,7 +597,7 @@ public abstract class AbstractMessageListenerContainer<K, V>
 			catch (Exception e) {
 				this.logger.error(e, "Failed to check topic existence");
 			}
-			if (missing != null && missing.size() > 0) {
+			if (missing != null && !missing.isEmpty()) {
 				throw new IllegalStateException(
 						"Topic(s) " + missing.toString()
 								+ " is/are not present and missingTopicsFatal is true");

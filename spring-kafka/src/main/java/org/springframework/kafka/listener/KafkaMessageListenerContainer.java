@@ -19,6 +19,7 @@ package org.springframework.kafka.listener;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1042,7 +1043,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 			props.putAll(propertyOverrides);
 			Set<String> stringPropertyNames = propertyOverrides.stringPropertyNames();
 			// User might have provided properties as defaults
-			stringPropertyNames.forEach((name) -> {
+			stringPropertyNames.forEach(name -> {
 				if (!props.contains(name)) {
 					props.setProperty(name, propertyOverrides.getProperty(name));
 				}
@@ -1120,7 +1121,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 					autoOffsetReset = str;
 				}
 			}
-			boolean resetLatest = autoOffsetReset == null || autoOffsetReset.equals("latest");
+			boolean resetLatest = autoOffsetReset == null || "latest".equals(autoOffsetReset);
 			boolean latestOnlyOption = AssignmentCommitOption.LATEST_ONLY.equals(this.autoCommitOption)
 					|| AssignmentCommitOption.LATEST_ONLY_NO_TX.equals(this.autoCommitOption);
 			return !this.autoCommit && resetLatest && latestOnlyOption;
@@ -2455,7 +2456,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 			ConsumerRecords<K, V> records = recordsArg;
 			List<ConsumerRecord<K, V>> recordList = recordListArg;
 			if (this.listenerinfo != null) {
-				records.iterator().forEachRemaining(rec -> listenerInfo(rec));
+				records.iterator().forEachRemaining(this::listenerInfo);
 			}
 			if (this.batchInterceptor != null) {
 				records = this.batchInterceptor.intercept(recordsArg, this.consumer);
@@ -3213,7 +3214,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 			if (this.consumerSeekAwareListener != null) {
 				this.consumerSeekAwareListener.onPartitionsAssigned(this.definedPartitions.keySet().stream()
 							.map(tp -> new SimpleEntry<>(tp, this.consumer.position(tp)))
-							.collect(Collectors.toMap(entry -> entry.getKey(), entry -> entry.getValue())),
+							.collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)),
 						this.seekCallback);
 			}
 		}
@@ -3495,7 +3496,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 					newRecords.computeIfAbsent(new TopicPartition(cRecord.topic(), cRecord.partition()),
 							tp -> new LinkedList<>()).add(cRecord);
 				}
-				processAcks(new ConsumerRecords<K, V>(newRecords));
+				processAcks(new ConsumerRecords<>(newRecords));
 			}
 
 			@Override
@@ -3572,7 +3573,7 @@ public class KafkaMessageListenerContainer<K, V> // NOSONAR line count
 					remainingParts.removeAll(partitions);
 					if (!remainingParts.isEmpty()) {
 						Map<TopicPartition, List<ConsumerRecord<K, V>>> trimmed = new LinkedHashMap<>();
-						remainingParts.forEach(part -> trimmed.computeIfAbsent(part, tp -> remaining.records(tp)));
+						remainingParts.forEach(part -> trimmed.computeIfAbsent(part, remaining::records));
 						ListenerConsumer.this.remainingRecords = new ConsumerRecords<>(trimmed);
 					}
 					else {

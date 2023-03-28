@@ -142,8 +142,8 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		try {
 			AtomicReference<Method> configsMethod = new AtomicReference<>();
 			ReflectionUtils.doWithMethods(TestUtils.class,
-					method -> configsMethod.set(method),
-					method -> method.getName().equals("createBrokerConfig"));
+					configsMethod::set,
+					method -> "createBrokerConfig".equals(method.getName()));
 			BROKER_CONFIGS_METHOD = configsMethod.get();
 			if (BROKER_CONFIGS_METHOD == null) {
 				throw new IllegalStateException();
@@ -533,12 +533,10 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 	 * @since 2.5.4
 	 */
 	private Map<String, Exception> createKafkaTopicsWithResults(Set<String> topicsToCreate) {
-		return doWithAdminFunction(admin -> {
-			return createTopicsWithResults(admin,
+		return doWithAdminFunction(admin -> createTopicsWithResults(admin,
 					topicsToCreate.stream()
 						.map(t -> new NewTopic(t, this.partitionsPerTopic, (short) this.count))
-						.collect(Collectors.toList()));
-		});
+						.collect(Collectors.toList())));
 	}
 
 	private Map<String, Exception> createTopicsWithResults(AdminClient admin, List<NewTopic> newTopics) {
@@ -631,7 +629,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		catch (NoSuchMethodError error) {
 			if (GET_BROKER_STATE_METHOD != null) {
 				try {
-					return !GET_BROKER_STATE_METHOD.invoke(kafkaServer).toString().equals("NOT_RUNNING");
+					return !"NOT_RUNNING".equals(GET_BROKER_STATE_METHOD.invoke(kafkaServer).toString());
 				}
 				catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
 					logger.debug(ex, "Could not determine broker state during shutdown");
@@ -684,7 +682,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 	}
 
 	public BrokerAddress[] getBrokerAddresses() {
-		List<BrokerAddress> addresses = new ArrayList<BrokerAddress>();
+		List<BrokerAddress> addresses = new ArrayList<>();
 		for (int kafkaPort : this.kafkaPorts) {
 			addresses.add(new BrokerAddress(LOOPBACK, kafkaPort));
 		}
@@ -798,7 +796,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		List<String> notEmbedded = Arrays.stream(topicsToConsume)
 				.filter(topic -> !this.topics.contains(topic))
 				.collect(Collectors.toList());
-		if (notEmbedded.size() > 0) {
+		if (!notEmbedded.isEmpty()) {
 			throw new IllegalStateException("topic(s):'" + notEmbedded + "' are not in embedded topic list");
 		}
 		final AtomicReference<Collection<TopicPartition>> assigned = new AtomicReference<>();
