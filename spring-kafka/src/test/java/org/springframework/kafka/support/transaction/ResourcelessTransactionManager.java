@@ -28,6 +28,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 @SuppressWarnings("serial")
 public class ResourcelessTransactionManager extends AbstractPlatformTransactionManager {
 
+	private static final long serialVersionUID = 1;
+
 	@Override
 	public void doBegin(Object transaction, TransactionDefinition definition) throws TransactionException {
 		((ResourcelessTransaction) transaction).begin();
@@ -87,7 +89,7 @@ public class ResourcelessTransactionManager extends AbstractPlatformTransactionM
 
 	private static class ResourcelessTransaction {
 
-		private boolean active = false;
+		private boolean active;
 
 		public boolean isActive() {
 			return active;

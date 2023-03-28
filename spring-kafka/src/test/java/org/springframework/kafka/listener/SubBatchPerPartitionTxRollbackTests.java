@@ -140,7 +140,7 @@ public class SubBatchPerPartitionTxRollbackTests {
 		@KafkaListener(id = CONTAINER_ID, topics = "foo")
 		public void foo(List<String> in) {
 			this.contents.addAll(in);
-			if (this.failSecondBatch && in.get(0).equals("baz")) {
+			if (this.failSecondBatch && "baz".equals(in.get(0))) {
 				this.failSecondBatch = false;
 				throw new RuntimeException("test");
 			}

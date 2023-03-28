@@ -333,7 +333,7 @@ public class KafkaListenerAnnotationBeanPostProcessor<K, V>
 		this.registrar.afterPropertiesSet();
 		Map<String, ContainerGroupSequencer> sequencers =
 				this.applicationContext.getBeansOfType(ContainerGroupSequencer.class, false, false);
-		sequencers.values().forEach(seq -> seq.initialize());
+		sequencers.values().forEach(ContainerGroupSequencer::initialize);
 	}
 
 	private void buildEnhancer() {
@@ -371,7 +371,7 @@ public class KafkaListenerAnnotationBeanPostProcessor<K, V>
 			Map<Method, Set<KafkaListener>> annotatedMethods = MethodIntrospector.selectMethods(targetClass,
 					(MethodIntrospector.MetadataLookup<Set<KafkaListener>>) method -> {
 						Set<KafkaListener> listenerMethods = findListenerAnnotations(method);
-						return (!listenerMethods.isEmpty() ? listenerMethods : null);
+						return !listenerMethods.isEmpty() ? listenerMethods : null;
 					});
 			if (hasClassLevelListeners) {
 				Set<Method> methodsWithHandler = MethodIntrospector.selectMethods(targetClass,
@@ -500,7 +500,7 @@ public class KafkaListenerAnnotationBeanPostProcessor<K, V>
 		String[] retryableCandidates = topics;
 		if (retryableCandidates.length == 0 && tps.length > 0) {
 			retryableCandidates = Arrays.stream(tps)
-					.map(tp -> tp.getTopic())
+					.map(TopicPartitionOffset::getTopic)
 					.distinct()
 					.toList()
 					.toArray(new String[0]);
@@ -865,7 +865,7 @@ public class KafkaListenerAnnotationBeanPostProcessor<K, V>
 		for (String partition : partitions) {
 			resolvePartitionAsInteger((String) topic, resolveExpression(partition), result, null, false, false);
 		}
-		if (partitionOffsets.length == 1 && partitionOffsets[0].partition().equals("*")) {
+		if (partitionOffsets.length == 1 && "*".equals(partitionOffsets[0].partition())) {
 			result.forEach(tpo -> {
 				tpo.setOffset(resolveInitialOffset(tpo.getTopic(), partitionOffsets[0]));
 				tpo.setRelativeToCurrent(isRelative(tpo.getTopic(), partitionOffsets[0]));
@@ -873,7 +873,7 @@ public class KafkaListenerAnnotationBeanPostProcessor<K, V>
 		}
 		else {
 			for (PartitionOffset partitionOffset : partitionOffsets) {
-				Assert.isTrue(!partitionOffset.partition().equals("*"), () ->
+				Assert.isTrue(!"*".equals(partitionOffset.partition()), () ->
 						"Partition wildcard '*' is only allowed in a single @PartitionOffset in " + result);
 				resolvePartitionAsInteger((String) topic, resolveExpression(partitionOffset.partition()), result,
 						resolveInitialOffset(topic, partitionOffset), isRelative(topic, partitionOffset), true);
@@ -1113,7 +1113,7 @@ public class KafkaListenerAnnotationBeanPostProcessor<K, V>
 				}
 			}
 			else {
-				parsePartitions(part).forEach(p -> parts.add(p));
+				parsePartitions(part).forEach(parts::add);
 			}
 		}
 		return parts.stream()

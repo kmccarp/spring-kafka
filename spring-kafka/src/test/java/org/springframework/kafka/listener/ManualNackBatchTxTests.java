@@ -223,9 +223,7 @@ public class ManualNackBatchTxTests {
 						return ConsumerRecords.empty();
 				}
 			}).given(consumer).poll(Duration.ofMillis(ContainerProperties.DEFAULT_POLL_TIMEOUT));
-			willAnswer(i -> {
-				return Collections.emptySet();
-			}).given(consumer).paused();
+			willAnswer(i -> Collections.emptySet()).given(consumer).paused();
 			willAnswer(i -> {
 				paused.set(true);
 				return null;

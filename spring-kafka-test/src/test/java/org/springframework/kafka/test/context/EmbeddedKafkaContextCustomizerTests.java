@@ -125,6 +125,8 @@ public class EmbeddedKafkaContextCustomizerTests {
 	@SuppressWarnings("serial")
 	private class BeanFactoryStub extends DefaultListableBeanFactory {
 
+		private static final long serialVersionUID = 1;
+
 		private Object bean;
 
 		public EmbeddedKafkaBroker getBroker() {

@@ -36,7 +36,7 @@ public class ListenerContainerPartitionNoLongerIdleEvent extends KafkaEvent {
 
 	private final TopicPartition topicPartition;
 
-	private transient Consumer<?, ?> consumer;
+	private final transient Consumer<?, ?> consumer;
 
 	/**
 	 * Construct an instance with the provided arguments.

@@ -89,7 +89,7 @@ public class Configurer2Tests {
 		@Bean
 		public KStream<Integer, String> kStream(StreamsBuilder kStreamBuilder) {
 			KStream<Integer, String> stream = kStreamBuilder.stream(STREAMING_TOPIC1);
-			stream.foreach((K, v) -> { });
+			stream.foreach((k, v) -> { });
 			return stream;
 		}
 
@@ -100,13 +100,8 @@ public class Configurer2Tests {
 
 		@Bean
 		StreamsBuilderFactoryBeanConfigurer onlyAppliedOnce(List<Integer> callOrder) {
-			return new StreamsBuilderFactoryBeanConfigurer() {
-
-				@Override
-				public void configure(StreamsBuilderFactoryBean factoryBean) {
-					callOrder.add(1);
-				}
-
+			return factoryBean -> {
+				callOrder.add(1);
 			};
 		}
 
