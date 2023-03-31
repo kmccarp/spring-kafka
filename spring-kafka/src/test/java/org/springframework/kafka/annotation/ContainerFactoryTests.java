@@ -77,10 +77,7 @@ public class ContainerFactoryTests {
 			@Override
 			protected MessagingMessageListenerAdapter<String, String> createMessageListener(
 					MessageListenerContainer container, MessageConverter messageConverter) {
-
-				RecordMessagingMessageListenerAdapter<String, String> adapter =
-						new RecordMessagingMessageListenerAdapter<String, String>(null, null);
-				return adapter;
+				return new RecordMessagingMessageListenerAdapter<>(null, null);
 			}
 
 		};

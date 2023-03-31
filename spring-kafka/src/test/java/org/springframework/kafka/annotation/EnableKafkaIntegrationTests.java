@@ -50,7 +50,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -441,7 +440,7 @@ public class EnableKafkaIntegrationTests {
 		this.embeddedKafka.consumeFromAnEmbeddedTopic(consumer, "annotated43reply");
 		template.send("annotated43", 0, "foo");
 		ConsumerRecord<Integer, String> reply = KafkaTestUtils.getSingleRecord(consumer, "annotated43reply");
-		assertThat(reply).extracting(rec -> rec.value()).isEqualTo("FOO");
+		assertThat(reply).extracting(ConsumerRecord::value).isEqualTo("FOO");
 		consumer.close();
 	}
 
@@ -1379,9 +1378,7 @@ public class EnableKafkaIntegrationTests {
 
 		@Bean
 		public Map<String, Object> consumerConfigs() {
-			Map<String, Object> consumerProps =
-					KafkaTestUtils.consumerProps(DEFAULT_TEST_GROUP_ID, "false", this.embeddedKafka);
-			return consumerProps;
+			return KafkaTestUtils.consumerProps(DEFAULT_TEST_GROUP_ID, "false", this.embeddedKafka);
 		}
 
 		@Bean
@@ -1647,9 +1644,7 @@ public class EnableKafkaIntegrationTests {
 
 		@Bean
 		public KafkaListenerErrorHandler voidSendToErrorHandler() {
-			return (m, e) -> {
-				return "baz";
-			};
+			return (m, e) -> "baz";
 		}
 
 		private Throwable listen16Exception;
@@ -2280,13 +2275,10 @@ public class EnableKafkaIntegrationTests {
 			if ("multiListenerSendTo".equals(beanName)) {
 				ProxyFactory proxyFactory = new ProxyFactory(bean);
 				proxyFactory.setProxyTargetClass(true);
-				proxyFactory.addAdvice(new MethodInterceptor() {
-					@Override
-					public Object invoke(MethodInvocation invocation) throws Throwable {
-						logger.info(String.format("Proxy listener for %s.$s",
-								invocation.getMethod().getDeclaringClass(), invocation.getMethod().getName()));
-						return invocation.proceed();
-					}
+				proxyFactory.addAdvice(invocation -> {
+					logger.info(String.format("Proxy listener for %s.$s",
+							invocation.getMethod().getDeclaringClass()));
+					return invocation.proceed();
 				});
 				return proxyFactory.getProxy();
 			}

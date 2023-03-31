@@ -71,7 +71,7 @@ public class MultiMethodKafkaListenerEndpoint<K, V> extends MethodKafkaListenerE
 
 	@Override
 	protected HandlerAdapter configureListenerAdapter(MessagingMessageListenerAdapter<K, V> messageListener) {
-		List<InvocableHandlerMethod> invocableHandlerMethods = new ArrayList<InvocableHandlerMethod>();
+		List<InvocableHandlerMethod> invocableHandlerMethods = new ArrayList<>();
 		InvocableHandlerMethod defaultHandler = null;
 		for (Method method : this.methods) {
 			InvocableHandlerMethod handler = getMessageHandlerMethodFactory()
