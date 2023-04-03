@@ -70,7 +70,7 @@ public class BatchAdapterConversionErrorsTests {
 						junkRecord,
 						new ConsumerRecord<>("foo", 0, 0L, null, "{\"bar\":\"qux\"}")), null, null))
 				.withCauseExactlyInstanceOf(BatchListenerFailedException.class)
-				.extracting(t -> t.getCause())
+				.extracting(Throwable::getCause)
 				.extracting("index")
 				.isEqualTo(1);
 		assertThat(listener.values).containsExactly(new Foo("baz"), null, new Foo("qux"));
@@ -156,8 +156,7 @@ public class BatchAdapterConversionErrorsTests {
 		@SuppressWarnings({ "rawtypes" })
 		@Bean
 		public ConsumerFactory consumerFactory() {
-			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
-			return consumerFactory;
+			return mock(ConsumerFactory.class);
 		}
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })

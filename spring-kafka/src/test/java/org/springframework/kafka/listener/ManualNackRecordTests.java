@@ -61,7 +61,6 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -137,7 +136,7 @@ public class ManualNackRecordTests {
 		@KafkaListener(topics = "foo", groupId = "grp")
 		public void foo(String in, Acknowledgment ack) {
 			this.contents.add(in);
-			if (in.equals("qux")) {
+			if ("qux".equals(in)) {
 				this.replayTime = System.currentTimeMillis() - this.replayTime;
 			}
 			this.deliveryLatch.countDown();
@@ -215,9 +214,7 @@ public class ManualNackRecordTests {
 						return new ConsumerRecords(Collections.emptyMap());
 				}
 			}).given(consumer).poll(Duration.ofMillis(ContainerProperties.DEFAULT_POLL_TIMEOUT));
-			willAnswer(i -> {
-				return Collections.emptySet();
-			}).given(consumer).paused();
+			willAnswer(i -> Collections.emptySet()).given(consumer).paused();
 			willAnswer(i -> {
 				paused.set(true);
 				return null;
@@ -244,18 +241,9 @@ public class ManualNackRecordTests {
 			factory.setConsumerFactory(consumerFactory());
 			factory.getContainerProperties().setAckMode(AckMode.MANUAL);
 			factory.getContainerProperties().setMissingTopicsFatal(false);
-			factory.setRecordInterceptor(new RecordInterceptor() {
-
-				@Override
-				@Nullable
-				@SuppressWarnings("rawtypes")
-				public ConsumerRecord intercept(ConsumerRecord record, Consumer consumer) {
-					return new ConsumerRecord(record.topic(), record.partition(), record.offset(), 0L,
-							TimestampType.NO_TIMESTAMP_TYPE, 0, 0, record.key(), record.value(), record.headers(),
-							Optional.empty());
-				}
-
-			});
+			factory.setRecordInterceptor((record, consumer) -> new ConsumerRecord(record.topic(), record.partition(), record.offset(), 0L,
+		TimestampType.NO_TIMESTAMP_TYPE, 0, 0, record.key(), record.value(), record.headers(),
+		Optional.empty()));
 			return factory;
 		}
 

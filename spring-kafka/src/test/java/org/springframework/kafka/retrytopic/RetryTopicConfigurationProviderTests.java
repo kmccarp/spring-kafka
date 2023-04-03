@@ -56,9 +56,7 @@ class RetryTopicConfigurationProviderTests {
 
 	{
 		this.beanFactory = mock(ConfigurableListableBeanFactory.class);
-		willAnswer(invoc -> {
-			return invoc.getArgument(0);
-		}).given(this.beanFactory).resolveEmbeddedValue(anyString());
+		willAnswer(invoc -> invoc.getArgument(0)).given(this.beanFactory).resolveEmbeddedValue(anyString());
 	}
 
 	private final String[] topics = {"topic1", "topic2"};

@@ -131,7 +131,7 @@ public class ContainerGroupSequencer implements ApplicationContextAware,
 
 	@Override
 	public synchronized void onApplicationEvent(ListenerContainerIdleEvent event) {
-		LOGGER.debug(() -> event.toString());
+		LOGGER.debug(event::toString);
 		MessageListenerContainer parent = event.getContainer(MessageListenerContainer.class);
 		MessageListenerContainer container = (MessageListenerContainer) event.getSource();
 		boolean inCurrentGroup = this.currentGroup != null && this.currentGroup.contains(parent);
@@ -186,7 +186,7 @@ public class ContainerGroupSequencer implements ApplicationContextAware,
 		for (String group : this.groupNames) {
 			this.groups.add(this.applicationContext.getBean(group + ".group", ContainerGroup.class));
 		}
-		if (this.groups.size() > 0) {
+		if (!this.groups.isEmpty()) {
 			this.iterator = this.groups.iterator();
 			this.currentGroup = this.iterator.next();
 			this.groups.forEach(grp -> {
