@@ -71,11 +71,11 @@ public class RecordMessagingMessageListenerAdapterTests {
 		Method defMethod = null;
 		List<Method> methods = new ArrayList<>();
 		for (Method method : declaredMethods) {
-			if (method.getName().equals("defListen")) {
+			if ("defListen".equals(method.getName())) {
 				defMethod = method;
 				methods.add(method);
 			}
-			else if (method.getName().equals("listen")) {
+			else if ("listen".equals(method.getName())) {
 				methods.add(method);
 			}
 		}

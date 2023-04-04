@@ -121,7 +121,7 @@ public class KafkaTransactionManager<K, V> extends AbstractPlatformTransactionMa
 	@SuppressWarnings(UNCHECKED)
 	@Override
 	protected Object doGetTransaction() {
-		KafkaTransactionObject<K, V> txObject = new KafkaTransactionObject<K, V>();
+		KafkaTransactionObject<K, V> txObject = new KafkaTransactionObject<>();
 		txObject.setResourceHolder((KafkaResourceHolder<K, V>) TransactionSynchronizationManager
 				.getResource(getProducerFactory()));
 		return txObject;
@@ -131,7 +131,7 @@ public class KafkaTransactionManager<K, V> extends AbstractPlatformTransactionMa
 	protected boolean isExistingTransaction(Object transaction) {
 		@SuppressWarnings(UNCHECKED)
 		KafkaTransactionObject<K, V> txObject = (KafkaTransactionObject<K, V>) transaction;
-		return (txObject.getResourceHolder() != null);
+		return txObject.getResourceHolder() != null;
 	}
 
 	@Override

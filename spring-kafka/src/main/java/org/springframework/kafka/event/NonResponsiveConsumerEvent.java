@@ -42,7 +42,7 @@ public class NonResponsiveConsumerEvent extends KafkaEvent {
 
 	private final List<TopicPartition> topicPartitions;
 
-	private transient Consumer<?, ?> consumer;
+	private final transient Consumer<?, ?> consumer;
 
 	/**
 	 * Construct an instance with the provided properties.

@@ -61,9 +61,9 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 
 	protected final LogAccessor logger = new LogAccessor(LogFactory.getLog(getClass())); // NOSONAR
 
-	private boolean generateMessageId = false;
+	private boolean generateMessageId;
 
-	private boolean generateTimestamp = false;
+	private boolean generateTimestamp;
 
 	private KafkaHeaderMapper headerMapper;
 

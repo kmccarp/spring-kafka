@@ -133,7 +133,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 
 	private ObjectReader reader;
 
-	private boolean typeMapperExplicitlySet = false;
+	private boolean typeMapperExplicitlySet;
 
 	private boolean removeTypeHeaders = true;
 

@@ -152,11 +152,11 @@ public class FallbackBatchErrorHandlerIntegrationTests {
 		consumer.close();
 		assertThat(stopLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(events.stream()
-				.filter(ev -> ev instanceof ConsumerPausedEvent)
+				.filter(ConsumerPausedEvent.class::isInstance)
 				.collect(Collectors.toList()))
 				.hasSize(1);
 		assertThat(events.stream()
-				.filter(ev -> ev instanceof ConsumerResumedEvent)
+				.filter(ConsumerResumedEvent.class::isInstance)
 				.collect(Collectors.toList()))
 				.hasSize(1);
 	}
