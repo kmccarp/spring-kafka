@@ -105,7 +105,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 
 	private boolean failIfSendResultIsError = true;
 
-	private boolean throwIfNoDestinationReturned = false;
+	private boolean throwIfNoDestinationReturned;
 
 	private long timeoutBuffer = Duration.ofSeconds(FIVE).toMillis();
 
@@ -183,7 +183,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 		Boolean tx = this.transactional;
 		Assert.isTrue(templates.values()
 			.stream()
-			.map(t -> t.isTransactional())
+			.map(KafkaOperations::isTransactional)
 			.allMatch(t -> t.equals(tx)), "All templates must have the same setting for transactional");
 		this.destinationResolver = destinationResolver;
 	}
@@ -586,7 +586,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 		}
 		Optional<Class<?>> key = templates.keySet()
 			.stream()
-			.filter((k) -> k.isAssignableFrom(value.getClass()))
+			.filter(k -> k.isAssignableFrom(value.getClass()))
 			.findFirst();
 		if (key.isPresent()) {
 			return (KafkaOperations<Object, Object>) templates.get(key.get());
@@ -886,7 +886,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 			/**
 			 * The exception stack trace.
 			 */
-			EX_STACKTRACE;
+			EX_STACKTRACE
 
 		}
 

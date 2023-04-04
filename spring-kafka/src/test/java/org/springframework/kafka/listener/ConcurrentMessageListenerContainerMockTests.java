@@ -983,10 +983,11 @@ public class ConcurrentMessageListenerContainerMockTests {
 					rebal.get().onPartitionsAssigned(allAssignments);
 					return allRecords;
 				case 1:
-					rebal.get().onPartitionsRevoked(allAssignments);
-					rebal.get().onPartitionsAssigned(afterRevokeAssignments);
-					rebalLatch.countDown();
-					continueLatch.await(10, TimeUnit.SECONDS);
+				rebal.get().onPartitionsRevoked(allAssignments);
+				rebal.get().onPartitionsAssigned(afterRevokeAssignments);
+				rebalLatch.countDown();
+				continueLatch.await(10, TimeUnit.SECONDS);
+				break;
 				default:
 					if (paused.get()) {
 						return ConsumerRecords.empty();
@@ -1087,10 +1088,11 @@ public class ConcurrentMessageListenerContainerMockTests {
 					rebal.get().onPartitionsAssigned(allAssignments);
 					return allRecords;
 				case 1:
-					rebal.get().onPartitionsRevoked(revokedAssignments);
-					rebal.get().onPartitionsAssigned(Collections.emptyList());
-					rebalLatch.countDown();
-					continueLatch.await(10, TimeUnit.SECONDS);
+				rebal.get().onPartitionsRevoked(revokedAssignments);
+				rebal.get().onPartitionsAssigned(Collections.emptyList());
+				rebalLatch.countDown();
+				continueLatch.await(10, TimeUnit.SECONDS);
+				break;
 				default:
 					return ConsumerRecords.empty();
 			}
@@ -1170,10 +1172,11 @@ public class ConcurrentMessageListenerContainerMockTests {
 					rebal.get().onPartitionsAssigned(allAssignments);
 					return allRecords;
 				case 1:
-					rebal.get().onPartitionsRevoked(allAssignments);
-					rebal.get().onPartitionsAssigned(afterRevokeAssignments);
-					rebalLatch.countDown();
-					continueLatch.await(10, TimeUnit.SECONDS);
+				rebal.get().onPartitionsRevoked(allAssignments);
+				rebal.get().onPartitionsAssigned(afterRevokeAssignments);
+				rebalLatch.countDown();
+				continueLatch.await(10, TimeUnit.SECONDS);
+				break;
 				default:
 					return ConsumerRecords.empty();
 			}
@@ -1247,10 +1250,11 @@ public class ConcurrentMessageListenerContainerMockTests {
 					rebal.get().onPartitionsAssigned(allAssignments);
 					return allRecords;
 				case 1:
-					rebal.get().onPartitionsRevoked(List.of(tp0));
-					rebal.get().onPartitionsAssigned(List.of(new TopicPartition("foo", 2)));
-					rebalLatch.countDown();
-					continueLatch.await(10, TimeUnit.SECONDS);
+				rebal.get().onPartitionsRevoked(List.of(tp0));
+				rebal.get().onPartitionsAssigned(List.of(new TopicPartition("foo", 2)));
+				rebalLatch.countDown();
+				continueLatch.await(10, TimeUnit.SECONDS);
+				break;
 				default:
 					return ConsumerRecords.empty();
 			}
@@ -1292,7 +1296,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 
 	public static class TestMessageListener1 implements MessageListener<String, String>, ConsumerSeekAware {
 
-		private static ThreadLocal<ConsumerSeekCallback> callbacks = new ThreadLocal<>();
+		private static final ThreadLocal<ConsumerSeekCallback> callbacks = new ThreadLocal<>();
 
 		CountDownLatch latch = new CountDownLatch(1);
 
@@ -1328,7 +1332,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 
 	public static class TestMessageListener2 implements MessageListener<String, String>, ConsumerSeekAware {
 
-		private static ThreadLocal<ConsumerSeekCallback> callbacks = new ThreadLocal<>();
+		private static final ThreadLocal<ConsumerSeekCallback> callbacks = new ThreadLocal<>();
 
 		CountDownLatch latch = new CountDownLatch(1);
 

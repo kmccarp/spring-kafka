@@ -121,7 +121,7 @@ public class RetryableTopicAnnotationProcessor {
 				traverse = traverseResolved;
 			}
 			else {
-				traverse = includes.size() > 0 || excludes.size() > 0;
+				traverse = !includes.isEmpty() || !excludes.isEmpty();
 			}
 		}
 		Boolean autoStartDlt = null;

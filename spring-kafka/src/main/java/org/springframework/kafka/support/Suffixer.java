@@ -54,7 +54,7 @@ public class Suffixer {
 		}
 		return sources
 				.stream()
-				.map(source -> maybeAddTo(source))
+				.map(this::maybeAddTo)
 				.collect(Collectors.toList());
 	}
 }

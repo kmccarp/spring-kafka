@@ -60,14 +60,14 @@ public class StreamsBuilderFactoryLateConfigTests {
 	@Test
 	public void testStreamBuilderFactoryCannotBeStartedWithoutStreamsConfig() {
 		StreamsBuilderFactoryBean fb = new StreamsBuilderFactoryBean();
-		assertThatExceptionOfType(KafkaException.class).isThrownBy(() -> fb.start());
+		assertThatExceptionOfType(KafkaException.class).isThrownBy(fb::start);
 	}
 
 	@Test
 	public void testStreamBuilderFactoryCannotBeInstantiatedWhenAutoStart() {
 		StreamsBuilderFactoryBean fb = new StreamsBuilderFactoryBean();
 		fb.setAutoStartup(true);
-		assertThatIllegalStateException().isThrownBy(() -> fb.createInstance());
+		assertThatIllegalStateException().isThrownBy(fb::createInstance);
 	}
 
 	@Test

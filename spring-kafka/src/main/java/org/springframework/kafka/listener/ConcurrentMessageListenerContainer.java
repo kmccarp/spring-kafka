@@ -365,7 +365,7 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 			if (exec == null) {
 				exec = new SimpleAsyncTaskExecutor(getListenerId() + ".authRestart");
 			}
-			exec.execute(() -> start());
+			exec.execute(this::start);
 		}
 	}
 
@@ -420,8 +420,8 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 		synchronized (this.lifecycleMonitor) {
 			return (isRunning() || isStoppedNormally()) && this.containers
 					.stream()
-					.map(container -> container.isInExpectedState())
-					.allMatch(bool -> Boolean.TRUE.equals(bool));
+					.map(KafkaMessageListenerContainer::isInExpectedState)
+					.allMatch(Boolean.TRUE::equals);
 		}
 	}
 

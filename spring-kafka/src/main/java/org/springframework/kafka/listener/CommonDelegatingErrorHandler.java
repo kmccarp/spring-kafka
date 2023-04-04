@@ -47,7 +47,7 @@ public class CommonDelegatingErrorHandler implements CommonErrorHandler {
 
 	private final Map<Class<? extends Throwable>, CommonErrorHandler> delegates = new LinkedHashMap<>();
 
-	private boolean causeChainTraversing = false;
+	private boolean causeChainTraversing;
 
 	private BinaryExceptionClassifier classifier = new BinaryExceptionClassifier(new HashMap<>());
 
