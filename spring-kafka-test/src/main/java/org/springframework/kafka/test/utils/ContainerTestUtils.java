@@ -117,10 +117,10 @@ public final class ContainerTestUtils {
 	}
 
 	private static Method getAssignedPartitionsMethod(Class<?> clazz) {
-		final AtomicReference<Method> theMethod = new AtomicReference<Method>();
+		final AtomicReference<Method> theMethod = new AtomicReference<>();
 		ReflectionUtils.doWithMethods(clazz,
-				method -> theMethod.set(method),
-				method -> method.getName().equals("getAssignedPartitions") && method.getParameterTypes().length == 0);
+	theMethod::set,
+				method -> "getAssignedPartitions".equals(method.getName()) && method.getParameterTypes().length == 0);
 		if (theMethod.get() == null) {
 			throw new IllegalStateException(clazz + " has no getAssignedParitions() method");
 		}

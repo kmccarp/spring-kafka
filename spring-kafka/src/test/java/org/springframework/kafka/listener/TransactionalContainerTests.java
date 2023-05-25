@@ -915,6 +915,8 @@ public class TransactionalContainerTests {
 	@SuppressWarnings("serial")
 	public static class SomeOtherTransactionManager extends AbstractPlatformTransactionManager {
 
+		private static final long serialVersionUID = 1;
+
 		@Override
 		protected Object doGetTransaction() throws TransactionException {
 			return new Object();

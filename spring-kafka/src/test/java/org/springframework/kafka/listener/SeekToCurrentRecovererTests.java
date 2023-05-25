@@ -102,7 +102,7 @@ public class SeekToCurrentRecovererTests {
 		Serializer<?> byteArraySerializer = new ByteArraySerializer();
 		@SuppressWarnings("unchecked")
 		DefaultKafkaProducerFactory<Object, Object> dltPf =
-				new DefaultKafkaProducerFactory<Object, Object>(senderProps, null, (Serializer<Object>) byteArraySerializer);
+				new DefaultKafkaProducerFactory<>(senderProps, null, (Serializer<Object>) byteArraySerializer);
 		final CountDownLatch latch = new CountDownLatch(1);
 		AtomicReference<String> data = new AtomicReference<>();
 		containerProps.setMessageListener((MessageListener<Integer, String>) message -> {
@@ -245,7 +245,7 @@ public class SeekToCurrentRecovererTests {
 		assertThat(failedDeliveryAttempt.get()).isEqualTo(2);
 		assertThat(recoveryFailureEx.get())
 				.isInstanceOf(RuntimeException.class)
-				.extracting(ex -> ex.getMessage())
+				.extracting(Throwable::getMessage)
 				.isEqualTo("recovery failed");
 		assertThat(isRecovered.get()).isTrue();
 	}

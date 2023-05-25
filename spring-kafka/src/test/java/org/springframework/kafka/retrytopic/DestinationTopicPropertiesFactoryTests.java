@@ -360,7 +360,7 @@ class DestinationTopicPropertiesFactoryTests {
 
 		// then
 		IntStream.range(1, maxAttempts).forEach(index -> assertThat(propertiesList.get(index).suffix())
-				.isEqualTo(retryTopicSuffix + "-" + String.valueOf(index - 1)));
+				.isEqualTo(retryTopicSuffix + "-" + index - 1));
 	}
 
 	@Test
@@ -384,7 +384,7 @@ class DestinationTopicPropertiesFactoryTests {
 		// then
 		IntStream.range(1, maxAttempts)
 				.forEach(index -> assertThat(propertiesList.get(index).suffix()).isEqualTo(retryTopicSuffix +
-						"-" + String.valueOf(index - 1)));
+						"-" + index - 1));
 	}
 
 	@Test

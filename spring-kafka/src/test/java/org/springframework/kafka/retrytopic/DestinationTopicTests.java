@@ -140,7 +140,7 @@ public class DestinationTopicTests {
 
 	// Holders
 
-	protected final static String FIRST_TOPIC = "firstTopic";
+	protected static final String FIRST_TOPIC = "firstTopic";
 
 	protected PropsHolder mainDestinationHolder = new PropsHolder(FIRST_TOPIC, mainTopicProps);
 
@@ -153,7 +153,7 @@ public class DestinationTopicTests {
 	protected List<PropsHolder> allFirstDestinationsHolders = Arrays
 			.asList(mainDestinationHolder, firstRetryDestinationHolder, secondRetryDestinationHolder, dltDestinationHolder);
 
-	protected final static String SECOND_TOPIC = "secondTopic";
+	protected static final String SECOND_TOPIC = "secondTopic";
 
 	protected PropsHolder mainDestinationHolder2 =
 			new PropsHolder(SECOND_TOPIC, mainTopicProps2);
@@ -170,7 +170,7 @@ public class DestinationTopicTests {
 	protected List<PropsHolder> allSecondDestinationHolders = Arrays
 			.asList(mainDestinationHolder2, firstRetryDestinationHolder2, secondRetryDestinationHolder2, dltDestinationHolder2);
 
-	protected final static String THIRD_TOPIC = "thirdTopic";
+	protected static final String THIRD_TOPIC = "thirdTopic";
 
 	protected PropsHolder mainDestinationHolder3 =
 			new PropsHolder(THIRD_TOPIC, mainTopicProps3);
@@ -184,7 +184,7 @@ public class DestinationTopicTests {
 	protected List<PropsHolder> allThirdDestinationHolders = Arrays
 			.asList(mainDestinationHolder3, firstRetryDestinationHolder3, secondRetryDestinationHolder3);
 
-	protected final static String FOURTH_TOPIC = "fourthTopic";
+	protected static final String FOURTH_TOPIC = "fourthTopic";
 
 	protected PropsHolder mainDestinationHolder4 =
 			new PropsHolder(FOURTH_TOPIC, mainTopicProps4);
@@ -260,7 +260,7 @@ public class DestinationTopicTests {
 	protected List<DestinationTopic> allFourthDestinationTopics = Arrays
 			.asList(mainDestinationTopic4, singleFixedRetryDestinationTopic4, dltDestinationTopic4);
 
-	protected final static String FIFTH_TOPIC = "fifthTopic";
+	protected static final String FIFTH_TOPIC = "fifthTopic";
 
 	protected DestinationTopic mainDestinationTopic5 =
 			new DestinationTopic(FIFTH_TOPIC + mainTopicProps5.suffix(), mainTopicProps5);

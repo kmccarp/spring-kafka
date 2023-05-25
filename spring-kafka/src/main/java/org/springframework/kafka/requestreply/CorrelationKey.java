@@ -70,10 +70,7 @@ public final class CorrelationKey {
 			return false;
 		}
 		CorrelationKey other = (CorrelationKey) obj;
-		if (!Arrays.equals(this.correlationId, other.correlationId)) {
-			return false;
-		}
-		return true;
+		return Arrays.equals(this.correlationId, other.correlationId);
 	}
 
 	private static String bytesToHex(byte[] bytes) {

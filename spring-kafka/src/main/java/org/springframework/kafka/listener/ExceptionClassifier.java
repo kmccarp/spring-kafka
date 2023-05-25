@@ -222,6 +222,8 @@ public abstract class ExceptionClassifier extends KafkaExceptionLogLevelAware {
 	@SuppressWarnings("serial")
 	private static final class ExtendedBinaryExceptionClassifier extends BinaryExceptionClassifier {
 
+		private static final long serialVersionUID = 1;
+
 		ExtendedBinaryExceptionClassifier(Map<Class<? extends Throwable>, Boolean> typeMap, boolean defaultValue) {
 			super(typeMap, defaultValue);
 			setTraverseCauses(true);

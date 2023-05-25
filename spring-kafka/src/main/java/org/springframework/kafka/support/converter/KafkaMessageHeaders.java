@@ -31,6 +31,8 @@ import org.springframework.messaging.MessageHeaders;
 @SuppressWarnings("serial")
 public class KafkaMessageHeaders extends MessageHeaders {
 
+	private static final long serialVersionUID = 1;
+
 	/**
 	 * Construct headers with or without id and/or timestamp.
 	 * @param generateId true to add an ID header.

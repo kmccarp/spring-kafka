@@ -76,7 +76,7 @@ public final class TopicBuilder {
 	 * @see NewTopic#replicasAssignments()
 	 */
 	public TopicBuilder replicasAssignments(Map<Integer, List<Integer>> replicaAssignments) {
-		replicaAssignments.forEach((part, list) -> assignReplicas(part, list));
+		replicaAssignments.forEach(this::assignReplicas);
 		return this;
 	}
 
