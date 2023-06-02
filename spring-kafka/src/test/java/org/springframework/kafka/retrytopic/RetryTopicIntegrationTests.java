@@ -90,12 +90,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  */
 @SpringJUnitConfig
 @DirtiesContext
-@EmbeddedKafka(topics = { RetryTopicIntegrationTests.FIRST_TOPIC,
-		RetryTopicIntegrationTests.SECOND_TOPIC,
-		RetryTopicIntegrationTests.THIRD_TOPIC,
-		RetryTopicIntegrationTests.FOURTH_TOPIC,
-		RetryTopicIntegrationTests.TWO_LISTENERS_TOPIC })
-@TestPropertySource(properties = { "five.attempts=5", "kafka.template=customKafkaTemplate"})
+@EmbeddedKafka(topics = {RetryTopicIntegrationTests.FIRST_TOPIC,RetryTopicIntegrationTests.SECOND_TOPIC,RetryTopicIntegrationTests.THIRD_TOPIC,RetryTopicIntegrationTests.FOURTH_TOPIC,RetryTopicIntegrationTests.TWO_LISTENERS_TOPIC})
+@TestPropertySource(properties = {"five.attempts=5", "kafka.template=customKafkaTemplate"})
 public class RetryTopicIntegrationTests {
 
 	private static final Logger logger = LoggerFactory.getLogger(RetryTopicIntegrationTests.class);
@@ -128,25 +124,25 @@ public class RetryTopicIntegrationTests {
 		logger.debug("Sending message to topic " + FIRST_TOPIC);
 		kafkaTemplate.send(FIRST_TOPIC, "Testing topic 1");
 		assertThat(topicContainer.getNextDestinationTopicFor("firstTopicId", FIRST_TOPIC).getDestinationName())
-				.isEqualTo("myRetryTopic1-retry");
+	.isEqualTo("myRetryTopic1-retry");
 		assertThat(awaitLatch(latchContainer.countDownLatch1)).isTrue();
 		assertThat(awaitLatch(latchContainer.customDltCountdownLatch)).isTrue();
 		assertThat(awaitLatch(latchContainer.customErrorHandlerCountdownLatch)).isTrue();
 		assertThat(awaitLatch(latchContainer.customMessageConverterCountdownLatch)).isTrue();
 		registry.getListenerContainerIds().stream()
-				.filter(id -> id.startsWith("first"))
-				.forEach(id -> {
-					ConcurrentMessageListenerContainer<?, ?> container = (ConcurrentMessageListenerContainer<?, ?>) registry
-							.getListenerContainer(id);
-					if (id.equals("firstTopicId")) {
-						assertThat(container.getConcurrency()).isEqualTo(2);
-					}
-					else {
-						assertThat(container.getConcurrency())
-								.describedAs("Expected %s to have concurrency", id)
-								.isEqualTo(1);
-					}
-				});
+	.filter(id -> id.startsWith("first"))
+	.forEach(id -> {
+		ConcurrentMessageListenerContainer<?, ?> container = (ConcurrentMessageListenerContainer<?, ?>) registry
+	.getListenerContainer(id);
+		if (id.equals("firstTopicId")) {
+			assertThat(container.getConcurrency()).isEqualTo(2);
+		}
+		else {
+			assertThat(container.getConcurrency())
+		.describedAs("Expected %s to have concurrency", id)
+		.isEqualTo(1);
+		}
+	});
 	}
 
 	@Test
@@ -159,7 +155,7 @@ public class RetryTopicIntegrationTests {
 
 	@Test
 	void shouldRetryThirdTopicWithTimeout(@Autowired KafkaAdmin admin,
-			@Autowired KafkaListenerEndpointRegistry registry) throws Exception {
+@Autowired KafkaListenerEndpointRegistry registry) throws Exception {
 		logger.debug("Sending message to topic " + THIRD_TOPIC);
 		kafkaTemplate.send(THIRD_TOPIC, "Testing topic 3");
 		assertThat(awaitLatch(latchContainer.countDownLatch3)).isTrue();
@@ -184,19 +180,19 @@ public class RetryTopicIntegrationTests {
 		});
 		assertThat(weeded.get()).isEqualTo(2);
 		registry.getListenerContainerIds().stream()
-				.filter(id -> id.startsWith("third"))
-				.forEach(id -> {
-					ConcurrentMessageListenerContainer<?, ?> container =
-							(ConcurrentMessageListenerContainer<?, ?>) registry.getListenerContainer(id);
-					if (id.equals("thirdTopicId")) {
-						assertThat(container.getConcurrency()).isEqualTo(2);
-					}
-					else {
-						assertThat(container.getConcurrency())
-								.describedAs("Expected %s to have concurrency", id)
-								.isEqualTo(1);
-					}
-				});
+	.filter(id -> id.startsWith("third"))
+	.forEach(id -> {
+		ConcurrentMessageListenerContainer<?, ?> container =
+	(ConcurrentMessageListenerContainer<?, ?>) registry.getListenerContainer(id);
+		if (id.equals("thirdTopicId")) {
+			assertThat(container.getConcurrency()).isEqualTo(2);
+		}
+		else {
+			assertThat(container.getConcurrency())
+		.describedAs("Expected %s to have concurrency", id)
+		.isEqualTo(1);
+		}
+	});
 	}
 
 	@Test
@@ -208,7 +204,7 @@ public class RetryTopicIntegrationTests {
 
 	@Test
 	void shouldRetryFifthTopicWithTwoListenersAndManualAssignment(@Autowired FifthTopicListener1 listener1,
-			@Autowired FifthTopicListener2 listener2) {
+@Autowired FifthTopicListener2 listener2) {
 
 		logger.debug("Sending two messages to topic " + TWO_LISTENERS_TOPIC);
 		kafkaTemplate.send(TWO_LISTENERS_TOPIC, 0, "0", "Testing topic 5 - 0");
@@ -218,11 +214,11 @@ public class RetryTopicIntegrationTests {
 		assertThat(awaitLatch(latchContainer.countDownLatchDltThree)).isTrue();
 		assertThat(awaitLatch(latchContainer.countDownLatchDltFour)).isTrue();
 		assertThat(listener1.topics).containsExactly(TWO_LISTENERS_TOPIC, TWO_LISTENERS_TOPIC
-				+ "-listener1-0", TWO_LISTENERS_TOPIC + "-listener1-1", TWO_LISTENERS_TOPIC + "-listener1-2",
-				TWO_LISTENERS_TOPIC + "-listener1-dlt");
+	+ "-listener1-0", TWO_LISTENERS_TOPIC + "-listener1-1", TWO_LISTENERS_TOPIC + "-listener1-2",
+	TWO_LISTENERS_TOPIC + "-listener1-dlt");
 		assertThat(listener2.topics).containsExactly(TWO_LISTENERS_TOPIC, TWO_LISTENERS_TOPIC
-				+ "-listener2-0", TWO_LISTENERS_TOPIC + "-listener2-1", TWO_LISTENERS_TOPIC + "-listener2-2",
-				TWO_LISTENERS_TOPIC + "-listener2-dlt");
+	+ "-listener2-0", TWO_LISTENERS_TOPIC + "-listener2-1", TWO_LISTENERS_TOPIC + "-listener2-2",
+	TWO_LISTENERS_TOPIC + "-listener2-dlt");
 	}
 
 	@Test
@@ -253,8 +249,8 @@ public class RetryTopicIntegrationTests {
 		CountDownLatchContainer container;
 
 		@KafkaListener(id = "firstTopicId", topics = FIRST_TOPIC, containerFactory = MAIN_TOPIC_CONTAINER_FACTORY,
-				errorHandler = "myCustomErrorHandler", contentTypeConverter = "myCustomMessageConverter",
-				concurrency = "2")
+	errorHandler = "myCustomErrorHandler", contentTypeConverter = "myCustomMessageConverter",
+	concurrency = "2")
 		public void listen(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			logger.debug("Message {} received in topic {}", message, receivedTopic);
 			container.countDownLatch1.countDown();
@@ -283,14 +279,14 @@ public class RetryTopicIntegrationTests {
 		CountDownLatchContainer container;
 
 		@RetryableTopic(attempts = "${five.attempts}",
-				backoff = @Backoff(delay = 250, maxDelay = 1000, multiplier = 1.5),
-				numPartitions = "#{3}",
-				timeout = "${missing.property:2000}",
-				include = MyRetryException.class, kafkaTemplate = "${kafka.template}",
-				topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
-				concurrency = "1")
+	backoff = @Backoff(delay = 250, maxDelay = 1000, multiplier = 1.5),
+	numPartitions = "#{3}",
+	timeout = "${missing.property:2000}",
+	include = MyRetryException.class, kafkaTemplate = "${kafka.template}",
+	topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
+	concurrency = "1")
 		@KafkaListener(id = "thirdTopicId", topics = THIRD_TOPIC, containerFactory = MAIN_TOPIC_CONTAINER_FACTORY,
-				concurrency = "2")
+	concurrency = "2")
 		public void listenWithAnnotation(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			container.countDownIfNotKnown(receivedTopic, container.countDownLatch3);
 			logger.debug("========================== Message {} received in annotated topic {} ", message, receivedTopic);
@@ -311,7 +307,7 @@ public class RetryTopicIntegrationTests {
 		CountDownLatchContainer container;
 
 		@RetryableTopic(dltStrategy = DltStrategy.NO_DLT, attempts = "4", backoff = @Backoff(300),
-				kafkaTemplate = "${kafka.template}")
+	kafkaTemplate = "${kafka.template}")
 		@KafkaListener(topics = FOURTH_TOPIC, containerFactory = MAIN_TOPIC_CONTAINER_FACTORY)
 		public void listenNoDlt(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			logger.debug("Message {} received in topic {} ", message, receivedTopic);
@@ -333,14 +329,14 @@ public class RetryTopicIntegrationTests {
 		CountDownLatchContainer container;
 
 		@RetryableTopic(attempts = "4",
-				backoff = @Backoff(250),
-				numPartitions = "2",
-				retryTopicSuffix = "-listener1", dltTopicSuffix = "-listener1-dlt",
-				topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
-				kafkaTemplate = "${kafka.template}")
+	backoff = @Backoff(250),
+	numPartitions = "2",
+	retryTopicSuffix = "-listener1", dltTopicSuffix = "-listener1-dlt",
+	topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
+	kafkaTemplate = "${kafka.template}")
 		@KafkaListener(id = "fifthTopicId1", topicPartitions = {@TopicPartition(topic = TWO_LISTENERS_TOPIC,
-				partitionOffsets = @PartitionOffset(partition = "0", initialOffset = "0"))},
-				containerFactory = MAIN_TOPIC_CONTAINER_FACTORY)
+	partitionOffsets = @PartitionOffset(partition = "0", initialOffset = "0"))},
+	containerFactory = MAIN_TOPIC_CONTAINER_FACTORY)
 		public void listenWithAnnotation(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			this.topics.add(receivedTopic);
 			container.countDownIfNotKnown(receivedTopic, container.countDownLatch51);
@@ -365,14 +361,14 @@ public class RetryTopicIntegrationTests {
 		CountDownLatchContainer container;
 
 		@RetryableTopic(attempts = "4",
-				backoff = @Backoff(250),
-				numPartitions = "2",
-				retryTopicSuffix = "-listener2", dltTopicSuffix = "-listener2-dlt",
-				topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
-				kafkaTemplate = "${kafka.template}")
+	backoff = @Backoff(250),
+	numPartitions = "2",
+	retryTopicSuffix = "-listener2", dltTopicSuffix = "-listener2-dlt",
+	topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE,
+	kafkaTemplate = "${kafka.template}")
 		@KafkaListener(id = "fifthTopicId2", topicPartitions = {@TopicPartition(topic = TWO_LISTENERS_TOPIC,
-				partitionOffsets = @PartitionOffset(partition = "1", initialOffset = "0"))},
-				containerFactory = MAIN_TOPIC_CONTAINER_FACTORY)
+	partitionOffsets = @PartitionOffset(partition = "1", initialOffset = "0"))},
+	containerFactory = MAIN_TOPIC_CONTAINER_FACTORY)
 		public void listenWithAnnotation2(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			this.topics.add(receivedTopic);
 			container.countDownLatch52.countDown();
@@ -396,8 +392,8 @@ public class RetryTopicIntegrationTests {
 		CountDownLatchContainer container;
 
 		@RetryableTopic(attempts = "3", numPartitions = "3", exclude = MyDontRetryException.class,
-				backoff = @Backoff(delay = 50, maxDelay = 100, multiplier = 3),
-				traversingCauses = "true", kafkaTemplate = "${kafka.template}")
+	backoff = @Backoff(delay = 50, maxDelay = 100, multiplier = 3),
+	traversingCauses = "true", kafkaTemplate = "${kafka.template}")
 		@KafkaListener(topics = NOT_RETRYABLE_EXCEPTION_TOPIC, containerFactory = MAIN_TOPIC_CONTAINER_FACTORY)
 		public void listenWithAnnotation2(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			container.countDownIfNotKnown(receivedTopic, container.countDownLatchNoRetry);
@@ -482,28 +478,28 @@ public class RetryTopicIntegrationTests {
 		@Bean
 		public RetryTopicConfiguration firstRetryTopic(KafkaTemplate<String, String> template) {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.fixedBackOff(50)
-					.maxAttempts(5)
-					.concurrency(1)
-					.useSingleTopicForFixedDelays()
-					.includeTopic(FIRST_TOPIC)
-					.doNotRetryOnDltFailure()
-					.dltHandlerMethod("myCustomDltProcessor", DLT_METHOD_NAME)
-					.create(template);
+		.newInstance()
+		.fixedBackOff(50)
+		.maxAttempts(5)
+		.concurrency(1)
+		.useSingleTopicForFixedDelays()
+		.includeTopic(FIRST_TOPIC)
+		.doNotRetryOnDltFailure()
+		.dltHandlerMethod("myCustomDltProcessor", DLT_METHOD_NAME)
+		.create(template);
 		}
 
 		@Bean
 		public RetryTopicConfiguration secondRetryTopic(KafkaTemplate<String, String> template) {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.exponentialBackoff(500, 2, 10000)
-					.retryOn(Arrays.asList(IllegalStateException.class, IllegalAccessException.class))
-					.traversingCauses()
-					.includeTopic(SECOND_TOPIC)
-					.doNotRetryOnDltFailure()
-					.dltHandlerMethod("myCustomDltProcessor", DLT_METHOD_NAME)
-					.create(template);
+		.newInstance()
+		.exponentialBackoff(500, 2, 10000)
+		.retryOn(Arrays.asList(IllegalStateException.class, IllegalAccessException.class))
+		.traversingCauses()
+		.includeTopic(SECOND_TOPIC)
+		.doNotRetryOnDltFailure()
+		.dltHandlerMethod("myCustomDltProcessor", DLT_METHOD_NAME)
+		.create(template);
 		}
 
 		@Bean
@@ -582,14 +578,14 @@ public class RetryTopicIntegrationTests {
 		public ProducerFactory<String, String> producerFactory() {
 			Map<String, Object> configProps = new HashMap<>();
 			configProps.put(
-					ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					this.broker.getBrokersAsString());
+		ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+		this.broker.getBrokersAsString());
 			configProps.put(
-					ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
+		ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+		StringSerializer.class);
 			configProps.put(
-					ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
+		ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+		StringSerializer.class);
 			return new DefaultKafkaProducerFactory<>(configProps);
 		}
 
@@ -627,19 +623,19 @@ public class RetryTopicIntegrationTests {
 		public ConsumerFactory<String, String> consumerFactory() {
 			Map<String, Object> props = new HashMap<>();
 			props.put(
-					ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					this.broker.getBrokersAsString());
+		ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+		this.broker.getBrokersAsString());
 			props.put(
-					ConsumerConfig.GROUP_ID_CONFIG,
-					"groupId");
+		ConsumerConfig.GROUP_ID_CONFIG,
+		"groupId");
 			props.put(
-					ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
+		ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+		StringDeserializer.class);
 			props.put(
-					ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
+		ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+		StringDeserializer.class);
 			props.put(
-					ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
+		ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
 			props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
 			return new DefaultKafkaConsumerFactory<>(props);
@@ -647,7 +643,7 @@ public class RetryTopicIntegrationTests {
 
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> retryTopicListenerContainerFactory(
-				ConsumerFactory<String, String> consumerFactory) {
+	ConsumerFactory<String, String> consumerFactory) {
 
 			ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 			ContainerProperties props = factory.getContainerProperties();
@@ -657,13 +653,13 @@ public class RetryTopicIntegrationTests {
 			factory.setConsumerFactory(consumerFactory);
 			factory.setConcurrency(1);
 			factory.setContainerCustomizer(
-					container -> container.getContainerProperties().setIdlePartitionEventInterval(100L));
+		container -> container.getContainerProperties().setIdlePartitionEventInterval(100L));
 			return factory;
 		}
 
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(
-				ConsumerFactory<String, String> consumerFactory) {
+	ConsumerFactory<String, String> consumerFactory) {
 
 			ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory);

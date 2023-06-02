@@ -54,11 +54,7 @@ import org.springframework.util.backoff.FixedBackOff;
  * @since 2.3.7
  *
  */
-@EmbeddedKafka(topics = {
-		FallbackBatchErrorHandlerIntegrationTests.topic1,
-		FallbackBatchErrorHandlerIntegrationTests.topic1DLT,
-		FallbackBatchErrorHandlerIntegrationTests.topic2,
-		FallbackBatchErrorHandlerIntegrationTests.topic2DLT})
+@EmbeddedKafka(topics = {FallbackBatchErrorHandlerIntegrationTests.topic1,FallbackBatchErrorHandlerIntegrationTests.topic1DLT,FallbackBatchErrorHandlerIntegrationTests.topic2,FallbackBatchErrorHandlerIntegrationTests.topic2DLT})
 public class FallbackBatchErrorHandlerIntegrationTests {
 
 	public static final String topic1 = "retryTopic1";
@@ -95,24 +91,24 @@ public class FallbackBatchErrorHandlerIntegrationTests {
 		});
 
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setBeanName("retryBatch");
 		final CountDownLatch recoverLatch = new CountDownLatch(1);
 		final AtomicReference<String> failedGroupId = new AtomicReference<>();
 		DeadLetterPublishingRecoverer recoverer =
-				new DeadLetterPublishingRecoverer(template,
-						(r, e) -> new TopicPartition(topic1DLT, r.partition())) {
+	new DeadLetterPublishingRecoverer(template,
+(r, e) -> new TopicPartition(topic1DLT, r.partition())) {
 
-			@Override
-			public void accept(ConsumerRecord<?, ?> record, Exception exception) {
-				super.accept(record, exception);
-				if (exception instanceof ListenerExecutionFailedException) {
-					failedGroupId.set(((ListenerExecutionFailedException) exception).getGroupId());
-				}
-				recoverLatch.countDown();
+		@Override
+		public void accept(ConsumerRecord<?, ?> record, Exception exception) {
+			super.accept(record, exception);
+			if (exception instanceof ListenerExecutionFailedException) {
+				failedGroupId.set(((ListenerExecutionFailedException) exception).getGroupId());
 			}
+			recoverLatch.countDown();
+		}
 
-		};
+	};
 		FallbackBatchErrorHandler errorHandler = new FallbackBatchErrorHandler(new FixedBackOff(0L, 3), recoverer);
 		container.setCommonErrorHandler(errorHandler);
 		final CountDownLatch stopLatch = new CountDownLatch(1);
@@ -152,13 +148,13 @@ public class FallbackBatchErrorHandlerIntegrationTests {
 		consumer.close();
 		assertThat(stopLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(events.stream()
-				.filter(ev -> ev instanceof ConsumerPausedEvent)
-				.collect(Collectors.toList()))
-				.hasSize(1);
+	.filter(ev -> ev instanceof ConsumerPausedEvent)
+	.collect(Collectors.toList()))
+	.hasSize(1);
 		assertThat(events.stream()
-				.filter(ev -> ev instanceof ConsumerResumedEvent)
-				.collect(Collectors.toList()))
-				.hasSize(1);
+	.filter(ev -> ev instanceof ConsumerResumedEvent)
+	.collect(Collectors.toList()))
+	.hasSize(1);
 	}
 
 	@Test
@@ -180,28 +176,28 @@ public class FallbackBatchErrorHandlerIntegrationTests {
 		});
 
 		KafkaMessageListenerContainer<Integer, String> container =
-				new KafkaMessageListenerContainer<>(cf, containerProps);
+	new KafkaMessageListenerContainer<>(cf, containerProps);
 		container.setBeanName("retryBatch");
 		final CountDownLatch recoverLatch = new CountDownLatch(1);
 		final AtomicReference<String> failedGroupId = new AtomicReference<>();
 		final AtomicBoolean failRecovery = new AtomicBoolean(true);
 		DeadLetterPublishingRecoverer recoverer =
-				new DeadLetterPublishingRecoverer(template,
-						(r, e) -> new TopicPartition(topic2DLT, r.partition())) {
+	new DeadLetterPublishingRecoverer(template,
+(r, e) -> new TopicPartition(topic2DLT, r.partition())) {
 
-			@Override
-			public void accept(ConsumerRecord<?, ?> record, Exception exception) {
-				if (exception instanceof ListenerExecutionFailedException) {
-					failedGroupId.set(((ListenerExecutionFailedException) exception).getGroupId());
-				}
-				if (failRecovery.getAndSet(false)) {
-					throw new RuntimeException("Recovery failed");
-				}
-				super.accept(record, exception);
-				recoverLatch.countDown();
+		@Override
+		public void accept(ConsumerRecord<?, ?> record, Exception exception) {
+			if (exception instanceof ListenerExecutionFailedException) {
+				failedGroupId.set(((ListenerExecutionFailedException) exception).getGroupId());
 			}
+			if (failRecovery.getAndSet(false)) {
+				throw new RuntimeException("Recovery failed");
+			}
+			super.accept(record, exception);
+			recoverLatch.countDown();
+		}
 
-		};
+	};
 		FallbackBatchErrorHandler errorHandler = new FallbackBatchErrorHandler(new FixedBackOff(0L, 3), recoverer);
 		container.setCommonErrorHandler(errorHandler);
 		final CountDownLatch stopLatch = new CountDownLatch(1);

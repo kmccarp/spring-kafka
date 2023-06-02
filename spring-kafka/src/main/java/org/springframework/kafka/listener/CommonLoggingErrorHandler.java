@@ -50,7 +50,7 @@ public class CommonLoggingErrorHandler implements CommonErrorHandler {
 
 	@Override
 	public boolean handleOne(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		LOGGER.error(thrownException, () -> "Error occured while processing: " + KafkaUtils.format(record));
 		return true;
@@ -58,7 +58,7 @@ public class CommonLoggingErrorHandler implements CommonErrorHandler {
 
 	@Override
 	public void handleBatch(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener) {
+MessageListenerContainer container, Runnable invokeListener) {
 
 		StringBuilder message = new StringBuilder("Error occurred while processing:\n");
 		for (ConsumerRecord<?, ?> record : data) {
@@ -69,7 +69,7 @@ public class CommonLoggingErrorHandler implements CommonErrorHandler {
 
 	@Override
 	public void handleOtherException(Exception thrownException, Consumer<?, ?> consumer,
-			MessageListenerContainer container, boolean batchListener) {
+MessageListenerContainer container, boolean batchListener) {
 
 		LOGGER.error(thrownException, () -> "Error occurred while not processing records");
 	}

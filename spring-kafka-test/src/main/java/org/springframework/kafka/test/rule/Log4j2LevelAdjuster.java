@@ -67,8 +67,8 @@ public class Log4j2LevelAdjuster implements MethodRule {
 				LevelsContainer container = null;
 				try {
 					container = JUnitUtils.adjustLogLevels(method.getName(),
-							Log4j2LevelAdjuster.this.classes, Log4j2LevelAdjuster.this.categories,
-							Log4j2LevelAdjuster.this.level);
+				Log4j2LevelAdjuster.this.classes, Log4j2LevelAdjuster.this.categories,
+				Log4j2LevelAdjuster.this.level);
 					base.evaluate();
 				}
 				finally {

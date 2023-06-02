@@ -81,7 +81,7 @@ public class GlobalEmbeddedKafkaTestExecutionListener implements TestExecutionLi
 	 * The location for a properties file with Kafka broker configuration.
 	 */
 	public static final String BROKER_PROPERTIES_LOCATION_PROPERTY_NAME =
-			"spring.kafka.embedded.broker.properties.location";
+"spring.kafka.embedded.broker.properties.location";
 
 	private EmbeddedKafkaBroker embeddedKafkaBroker;
 
@@ -104,30 +104,30 @@ public class GlobalEmbeddedKafkaTestExecutionListener implements TestExecutionLi
 		if (enabled) {
 			Integer count = configurationParameters.get(COUNT_PROPERTY_NAME, Integer::parseInt).orElse(1);
 			String[] topics =
-					configurationParameters.get(TOPICS_PROPERTY_NAME, StringUtils::commaDelimitedListToStringArray)
-							.orElse(null);
+		configurationParameters.get(TOPICS_PROPERTY_NAME, StringUtils::commaDelimitedListToStringArray)
+	.orElse(null);
 			Integer partitions = configurationParameters.get(PARTITIONS_PROPERTY_NAME, Integer::parseInt).orElse(2);
 			Map<String, String> brokerProperties =
-					configurationParameters.get(BROKER_PROPERTIES_LOCATION_PROPERTY_NAME, this::brokerProperties)
-							.orElse(Map.of());
+		configurationParameters.get(BROKER_PROPERTIES_LOCATION_PROPERTY_NAME, this::brokerProperties)
+	.orElse(Map.of());
 			String brokerListProperty = configurationParameters.get(EmbeddedKafkaBroker.BROKER_LIST_PROPERTY)
-					.orElse(null);
+		.orElse(null);
 			int[] ports =
-					configurationParameters.get(PORTS_PROPERTY_NAME, this::ports)
-							.orElse(new int[count]);
+		configurationParameters.get(PORTS_PROPERTY_NAME, this::ports)
+	.orElse(new int[count]);
 
 			this.embeddedKafkaBroker =
-					new EmbeddedKafkaBroker(count, false, partitions, topics)
-							.brokerProperties(brokerProperties)
-							.brokerListProperty(brokerListProperty)
-							.kafkaPorts(ports);
+		new EmbeddedKafkaBroker(count, false, partitions, topics)
+	.brokerProperties(brokerProperties)
+	.brokerListProperty(brokerListProperty)
+	.kafkaPorts(ports);
 			this.embeddedKafkaBroker.afterPropertiesSet();
 
 			this.logger.info("Started global Embedded Kafka on: " + this.embeddedKafkaBroker.getBrokersAsString());
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private Map<String, String> brokerProperties(String propertiesLocation) {
 		Resource propertiesResource = new DefaultResourceLoader().getResource(propertiesLocation);
 		try {
@@ -140,9 +140,9 @@ public class GlobalEmbeddedKafkaTestExecutionListener implements TestExecutionLi
 
 	private int[] ports(String ports) {
 		return StringUtils.commaDelimitedListToSet(ports)
-				.stream()
-				.mapToInt(Integer::parseInt)
-				.toArray();
+	.stream()
+	.mapToInt(Integer::parseInt)
+	.toArray();
 	}
 
 	@Override

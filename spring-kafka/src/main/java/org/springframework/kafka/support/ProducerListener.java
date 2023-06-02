@@ -59,7 +59,7 @@ public interface ProducerListener<K, V> {
 	 * @since 2.6.2
 	 */
 	default void onError(ProducerRecord<K, V> producerRecord, @Nullable RecordMetadata recordMetadata,
-			Exception exception) {
+Exception exception) {
 	}
 
 }

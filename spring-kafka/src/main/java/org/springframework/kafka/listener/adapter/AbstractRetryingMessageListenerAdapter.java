@@ -31,8 +31,7 @@ import org.springframework.util.Assert;
  * @author Gary Russell
  *
  */
-public abstract class AbstractRetryingMessageListenerAdapter<K, V, T>
-		extends AbstractDelegatingMessageListenerAdapter<T> {
+public abstract class AbstractRetryingMessageListenerAdapter<K, V, T>extends AbstractDelegatingMessageListenerAdapter<T> {
 
 	private final RetryTemplate retryTemplate;
 
@@ -56,7 +55,7 @@ public abstract class AbstractRetryingMessageListenerAdapter<K, V, T>
 	 * thrown to the container after retries are exhausted.
 	 */
 	public AbstractRetryingMessageListenerAdapter(T delegate, RetryTemplate retryTemplate,
-			@Nullable RecoveryCallback<? extends Object> recoveryCallback) {
+@Nullable RecoveryCallback<? extends Object> recoveryCallback) {
 
 		super(delegate);
 		Assert.notNull(retryTemplate, "'retryTemplate' cannot be null");

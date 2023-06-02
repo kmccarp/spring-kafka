@@ -50,7 +50,7 @@ public class RequestReplyTypedMessageFuture<K, V, P> extends RequestReplyMessage
 	@SuppressWarnings("unchecked")
 	@Override
 	public Message<P> get(long timeout, TimeUnit unit)
-			throws InterruptedException, ExecutionException, TimeoutException {
+throws InterruptedException, ExecutionException, TimeoutException {
 
 		return (Message<P>) super.get(timeout, unit);
 	}

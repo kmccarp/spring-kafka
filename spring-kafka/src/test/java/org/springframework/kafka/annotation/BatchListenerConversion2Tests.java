@@ -90,7 +90,7 @@ public class BatchListenerConversion2Tests {
 		@Bean
 		public KafkaListenerContainerFactory<?> kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory<Integer, Foo> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory());
 			factory.setBatchListener(true);
 			factory.setReplyTemplate(template());
@@ -105,7 +105,7 @@ public class BatchListenerConversion2Tests {
 		@Bean
 		public Map<String, Object> consumerConfigs() {
 			Map<String, Object> consumerProps =
-					KafkaTestUtils.consumerProps(DEFAULT_TEST_GROUP_ID, "false", this.embeddedKafka);
+		KafkaTestUtils.consumerProps(DEFAULT_TEST_GROUP_ID, "false", this.embeddedKafka);
 			consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ErrorHandlingDeserializer.class);
 			consumerProps.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
 			consumerProps.put(ErrorHandlingDeserializer.VALUE_FUNCTION, FailedFooProvider.class);

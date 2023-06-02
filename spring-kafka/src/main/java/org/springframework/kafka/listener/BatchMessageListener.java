@@ -50,7 +50,7 @@ public interface BatchMessageListener<K, V> extends GenericMessageListener<List<
 	 * @since 2.2
 	 */
 	default void onMessage(ConsumerRecords<K, V> records, @Nullable Acknowledgment acknowledgment,
-			Consumer<K, V> consumer) {
+Consumer<K, V> consumer) {
 		throw new UnsupportedOperationException("This batch listener doesn't support ConsumerRecords");
 	}
 

@@ -48,7 +48,7 @@ public class ListenerContainerPartitionNoLongerIdleEvent extends KafkaEvent {
 	 * @param consumer the consumer.
 	 */
 	public ListenerContainerPartitionNoLongerIdleEvent(Object source, Object container, long idleTime, String id,
-													TopicPartition topicPartition, Consumer<?, ?> consumer) {
+TopicPartition topicPartition, Consumer<?, ?> consumer) {
 
 		super(source, container);
 		this.idleTime = idleTime;
@@ -93,8 +93,8 @@ public class ListenerContainerPartitionNoLongerIdleEvent extends KafkaEvent {
 	@Override
 	public String toString() {
 		return "ListenerContainerNoLongerIdleEvent [idleTime="
-				+ ((float) this.idleTime / 1000) + "s, listenerId=" + this.listenerId // NOSONAR magic #
-				+ ", container=" + getSource()
-				+ ", topicPartitios=" + this.topicPartition + "]";
+	+ ((float) this.idleTime / 1000) + "s, listenerId=" + this.listenerId // NOSONAR magic #
+	+ ", container=" + getSource()
+	+ ", topicPartitios=" + this.topicPartition + "]";
 	}
 }

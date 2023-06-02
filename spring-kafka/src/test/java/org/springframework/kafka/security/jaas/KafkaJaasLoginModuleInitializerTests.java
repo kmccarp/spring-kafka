@@ -51,13 +51,13 @@ public class KafkaJaasLoginModuleInitializerTests {
 	public void testConfigurationParsedCorrectlyWithKafkaClient() throws Exception {
 		ConfigFile configFile = new ConfigFile(new ClassPathResource("jaas-sample-kafka-only.conf").getURI());
 		final AppConfigurationEntry[] kafkaConfigurationArray = configFile
-				.getAppConfigurationEntry(KafkaJaasLoginModuleInitializer.KAFKA_CLIENT_CONTEXT_NAME);
+	.getAppConfigurationEntry(KafkaJaasLoginModuleInitializer.KAFKA_CLIENT_CONTEXT_NAME);
 
 		javax.security.auth.login.Configuration configuration = javax.security.auth.login.Configuration
-				.getConfiguration();
+	.getConfiguration();
 
 		final AppConfigurationEntry[] kafkaConfiguration = configuration
-				.getAppConfigurationEntry(KafkaJaasLoginModuleInitializer.KAFKA_CLIENT_CONTEXT_NAME);
+	.getAppConfigurationEntry(KafkaJaasLoginModuleInitializer.KAFKA_CLIENT_CONTEXT_NAME);
 		assertThat(kafkaConfiguration).hasSize(1);
 		assertThat(kafkaConfiguration[0].getOptions()).isEqualTo(kafkaConfigurationArray[0].getOptions());
 

@@ -78,11 +78,11 @@ public class DelegatingSerializationTests {
 		DelegatingSerializer serializer = new DelegatingSerializer();
 		Map<String, Object> configs = new HashMap<>();
 		configs.put(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR_CONFIG, "bytes:" + BytesSerializer.class.getName()
-				+ ", int:" + IntegerSerializer.class.getName() + ", string: " + StringSerializer.class.getName());
+	+ ", int:" + IntegerSerializer.class.getName() + ", string: " + StringSerializer.class.getName());
 		serializer.configure(configs, false);
 		DelegatingDeserializer deserializer = new DelegatingDeserializer();
 		configs.put(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR_CONFIG, "bytes:" + BytesDeserializer.class.getName()
-				+ ", int:" + IntegerDeserializer.class.getName() + ", string: " + StringDeserializer.class.getName());
+	+ ", int:" + IntegerDeserializer.class.getName() + ", string: " + StringDeserializer.class.getName());
 		deserializer.configure(configs, false);
 		doTest(serializer, deserializer);
 	}
@@ -112,11 +112,11 @@ public class DelegatingSerializationTests {
 		DelegatingSerializer serializer = new DelegatingSerializer();
 		Map<String, Object> configs = new HashMap<>();
 		configs.put(DelegatingSerializer.KEY_SERIALIZATION_SELECTOR_CONFIG, "bytes:" + BytesSerializer.class.getName()
-				+ ", int:" + IntegerSerializer.class.getName() + ", string: " + StringSerializer.class.getName());
+	+ ", int:" + IntegerSerializer.class.getName() + ", string: " + StringSerializer.class.getName());
 		serializer.configure(configs, true);
 		DelegatingDeserializer deserializer = new DelegatingDeserializer();
 		configs.put(DelegatingSerializer.KEY_SERIALIZATION_SELECTOR_CONFIG, "bytes:" + BytesDeserializer.class.getName()
-				+ ", int:" + IntegerDeserializer.class.getName() + ", string: " + StringDeserializer.class.getName());
+	+ ", int:" + IntegerDeserializer.class.getName() + ", string: " + StringDeserializer.class.getName());
 		deserializer.configure(configs, true);
 		doTestKeys(serializer, deserializer);
 	}
@@ -124,16 +124,16 @@ public class DelegatingSerializationTests {
 	private void doTest(DelegatingSerializer serializer, DelegatingDeserializer deserializer) {
 		Headers headers = new RecordHeaders();
 		headers.add(new RecordHeader(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR, "bytes".getBytes()));
-		byte[] bytes = new byte[]{ 1, 2, 3, 4 };
+		byte[] bytes = new byte[]{1, 2, 3, 4};
 		byte[] serialized = serializer.serialize("foo", headers, new Bytes(bytes));
 		assertThat(serialized).isSameAs(bytes);
 		headers.add(new RecordHeader(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR, "int".getBytes()));
 		serialized = serializer.serialize("foo", headers, 42);
-		assertThat(serialized).isEqualTo(new byte[]{ 0, 0, 0, 42 });
+		assertThat(serialized).isEqualTo(new byte[]{0, 0, 0, 42});
 		assertThat(deserializer.deserialize("foo", headers, serialized)).isEqualTo(42);
 		headers.add(new RecordHeader(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR, "string".getBytes()));
 		serialized = serializer.serialize("foo", headers, "bar");
-		assertThat(serialized).isEqualTo(new byte[]{ 'b', 'a', 'r' });
+		assertThat(serialized).isEqualTo(new byte[]{'b', 'a', 'r'});
 		assertThat(deserializer.deserialize("foo", headers, serialized)).isEqualTo("bar");
 
 		// implicit Serdes
@@ -143,7 +143,7 @@ public class DelegatingSerializationTests {
 		serialized = spySe.serialize("foo", headers, 42L);
 		verify(spySe, times(1)).trySerdes(42L);
 		assertThat(headers.lastHeader(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR).value())
-				.isEqualTo(Long.class.getName().getBytes());
+	.isEqualTo(Long.class.getName().getBytes());
 		DelegatingDeserializer spyDe = spy(deserializer);
 		assertThat(spyDe.deserialize("foo", headers, serialized)).isEqualTo(42L);
 		spyDe.deserialize("foo", headers, serialized);
@@ -151,28 +151,28 @@ public class DelegatingSerializationTests {
 
 		// The DKHM will jsonize the value; test that we ignore the quotes
 		MessageHeaders messageHeaders = new MessageHeaders(
-				Collections.singletonMap(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR, "string"));
+	Collections.singletonMap(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR, "string"));
 		new DefaultKafkaHeaderMapper().fromHeaders(messageHeaders, headers);
 		assertThat(headers.lastHeader(DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR).value())
-				.isEqualTo(new byte[]{ 's', 't', 'r', 'i', 'n', 'g' });
+	.isEqualTo(new byte[]{'s', 't', 'r', 'i', 'n', 'g'});
 		serialized = serializer.serialize("foo", headers, "bar");
-		assertThat(serialized).isEqualTo(new byte[]{ 'b', 'a', 'r' });
+		assertThat(serialized).isEqualTo(new byte[]{'b', 'a', 'r'});
 		assertThat(deserializer.deserialize("foo", headers, serialized)).isEqualTo("bar");
 	}
 
 	private void doTestKeys(DelegatingSerializer serializer, DelegatingDeserializer deserializer) {
 		Headers headers = new RecordHeaders();
 		headers.add(new RecordHeader(DelegatingSerializer.KEY_SERIALIZATION_SELECTOR, "bytes".getBytes()));
-		byte[] bytes = new byte[]{ 1, 2, 3, 4 };
+		byte[] bytes = new byte[]{1, 2, 3, 4};
 		byte[] serialized = serializer.serialize("foo", headers, new Bytes(bytes));
 		assertThat(serialized).isSameAs(bytes);
 		headers.add(new RecordHeader(DelegatingSerializer.KEY_SERIALIZATION_SELECTOR, "int".getBytes()));
 		serialized = serializer.serialize("foo", headers, 42);
-		assertThat(serialized).isEqualTo(new byte[]{ 0, 0, 0, 42 });
+		assertThat(serialized).isEqualTo(new byte[]{0, 0, 0, 42});
 		assertThat(deserializer.deserialize("foo", headers, serialized)).isEqualTo(42);
 		headers.add(new RecordHeader(DelegatingSerializer.KEY_SERIALIZATION_SELECTOR, "string".getBytes()));
 		serialized = serializer.serialize("foo", headers, "bar");
-		assertThat(serialized).isEqualTo(new byte[]{ 'b', 'a', 'r' });
+		assertThat(serialized).isEqualTo(new byte[]{'b', 'a', 'r'});
 		assertThat(deserializer.deserialize("foo", headers, serialized)).isEqualTo("bar");
 
 		// implicit Serdes
@@ -182,7 +182,7 @@ public class DelegatingSerializationTests {
 		serialized = spySe.serialize("foo", headers, 42L);
 		verify(spySe, times(1)).trySerdes(42L);
 		assertThat(headers.lastHeader(DelegatingSerializer.KEY_SERIALIZATION_SELECTOR).value())
-				.isEqualTo(Long.class.getName().getBytes());
+	.isEqualTo(Long.class.getName().getBytes());
 		DelegatingDeserializer spyDe = spy(deserializer);
 		assertThat(spyDe.deserialize("foo", headers, serialized)).isEqualTo(42L);
 		spyDe.deserialize("foo", headers, serialized);
@@ -190,12 +190,12 @@ public class DelegatingSerializationTests {
 
 		// The DKHM will jsonize the value; test that we ignore the quotes
 		MessageHeaders messageHeaders = new MessageHeaders(
-				Collections.singletonMap(DelegatingSerializer.KEY_SERIALIZATION_SELECTOR, "string"));
+	Collections.singletonMap(DelegatingSerializer.KEY_SERIALIZATION_SELECTOR, "string"));
 		new DefaultKafkaHeaderMapper().fromHeaders(messageHeaders, headers);
 		assertThat(headers.lastHeader(DelegatingSerializer.KEY_SERIALIZATION_SELECTOR).value())
-				.isEqualTo(new byte[]{ 's', 't', 'r', 'i', 'n', 'g' });
+	.isEqualTo(new byte[]{'s', 't', 'r', 'i', 'n', 'g'});
 		serialized = serializer.serialize("foo", headers, "bar");
-		assertThat(serialized).isEqualTo(new byte[]{ 'b', 'a', 'r' });
+		assertThat(serialized).isEqualTo(new byte[]{'b', 'a', 'r'});
 		assertThat(deserializer.deserialize("foo", headers, serialized)).isEqualTo("bar");
 	}
 
@@ -213,15 +213,15 @@ public class DelegatingSerializationTests {
 	@Test
 	void byTypeBadType() {
 		DelegatingByTypeSerializer serializer = new DelegatingByTypeSerializer(Map.of(String.class,
-				new StringSerializer(), byte[].class, new ByteArraySerializer()));
+	new StringSerializer(), byte[].class, new ByteArraySerializer()));
 		byte[] foo = "foo".getBytes();
 		assertThat(serializer.serialize("foo", foo)).isSameAs(foo);
 		String bar = "bar";
 		assertThat(serializer.serialize("foo", bar)).isEqualTo(bar.getBytes());
 		assertThatExceptionOfType(SerializationException.class).isThrownBy(
-						() -> serializer.serialize("foo", new Bytes(foo)))
-				.withMessageMatching("No matching delegate for type: " + Bytes.class.getName()
-						+ "; supported types: \\[(java.lang.String, \\[B|\\[B, java.lang.String)]");
+	() -> serializer.serialize("foo", new Bytes(foo)))
+	.withMessageMatching("No matching delegate for type: " + Bytes.class.getName()
++ "; supported types: \\[(java.lang.String, \\[B|\\[B, java.lang.String)]");
 	}
 
 	@Test
@@ -232,13 +232,13 @@ public class DelegatingSerializationTests {
 		DelegatingByTypeSerializer serializer = new DelegatingByTypeSerializer(delegates, true);
 
 		Integer i = 42;
-		assertThat(serializer.serialize("foo", i)).isEqualTo(new byte[]{ 0, 0, 0, 42 });
+		assertThat(serializer.serialize("foo", i)).isEqualTo(new byte[]{0, 0, 0, 42});
 		byte[] foo = "foo".getBytes();
 		assertThat(serializer.serialize("foo", foo)).isSameAs(foo);
 		assertThatExceptionOfType(SerializationException.class).isThrownBy(
-						() -> serializer.serialize("foo", new Bytes(foo)))
-				.withMessageMatching("No matching delegate for type: " + Bytes.class.getName()
-						+ "; supported types: \\[(java.lang.Number, \\[B|\\[B, java.lang.Number)]");
+	() -> serializer.serialize("foo", new Bytes(foo)))
+	.withMessageMatching("No matching delegate for type: " + Bytes.class.getName()
++ "; supported types: \\[(java.lang.Number, \\[B|\\[B, java.lang.Number)]");
 	}
 
 }

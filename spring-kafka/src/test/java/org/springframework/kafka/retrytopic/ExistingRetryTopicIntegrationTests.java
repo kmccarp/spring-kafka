@@ -71,10 +71,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  */
 @SpringJUnitConfig
 @DirtiesContext
-@EmbeddedKafka(topics = {ExistingRetryTopicIntegrationTests.MAIN_TOPIC_WITH_NO_PARTITION_INFO,
-		ExistingRetryTopicIntegrationTests.RETRY_TOPIC_WITH_NO_PARTITION_INFO,
-		ExistingRetryTopicIntegrationTests.MAIN_TOPIC_WITH_PARTITION_INFO,
-		ExistingRetryTopicIntegrationTests.RETRY_TOPIC_WITH_PARTITION_INFO}, partitions = 4)
+@EmbeddedKafka(topics = {ExistingRetryTopicIntegrationTests.MAIN_TOPIC_WITH_NO_PARTITION_INFO,ExistingRetryTopicIntegrationTests.RETRY_TOPIC_WITH_NO_PARTITION_INFO,ExistingRetryTopicIntegrationTests.MAIN_TOPIC_WITH_PARTITION_INFO,ExistingRetryTopicIntegrationTests.RETRY_TOPIC_WITH_PARTITION_INFO}, partitions = 4)
 @TestPropertySource(properties = "two.attempts=2")
 public class ExistingRetryTopicIntegrationTests {
 
@@ -104,7 +101,7 @@ public class ExistingRetryTopicIntegrationTests {
 
 	@Test
 	@DisplayName("When a @RetryableTopic listener method, with autoCreateTopic=false and NO PARTITION info called, " +
-			"should send messages to be retried across partitions for a retry topic")
+"should send messages to be retried across partitions for a retry topic")
 	void whenNoPartitionInfoProvided_shouldRetryMainTopicCoveringAllPartitionOfRetryTopic() {
 
 		send10MessagesToPartitionWithKey(0, "foo", MAIN_TOPIC_WITH_NO_PARTITION_INFO, this.countByPartitionContainerWithoutPartition);
@@ -114,12 +111,12 @@ public class ExistingRetryTopicIntegrationTests {
 
 		assertThat(awaitLatch(latchContainer.countDownLatch1)).isTrue();
 		assertThat(countByPartitionContainerWithoutPartition.mainTopicMessageCountByPartition)
-				.isEqualTo(countByPartitionContainerWithoutPartition.retryTopicMessageCountByPartition);
+	.isEqualTo(countByPartitionContainerWithoutPartition.retryTopicMessageCountByPartition);
 	}
 
 	@Test
 	@DisplayName("When a @RetryableTopic listener method, with autoCreateTopic=false and WITH PARTITION info called, " +
-			"should send messages to be retried across partitions for a retry topic")
+"should send messages to be retried across partitions for a retry topic")
 	void whenPartitionInfoProvided_shouldRetryMainTopicCoveringAllPartitionOfRetryTopic() {
 
 		send10MessagesToPartitionWithKey(0, "foo", MAIN_TOPIC_WITH_PARTITION_INFO, this.countByPartitionContainerWithPartition);
@@ -129,7 +126,7 @@ public class ExistingRetryTopicIntegrationTests {
 
 		assertThat(awaitLatch(latchContainer.countDownLatch2)).isTrue();
 		assertThat(countByPartitionContainerWithPartition.mainTopicMessageCountByPartition)
-				.isEqualTo(countByPartitionContainerWithPartition.retryTopicMessageCountByPartition);
+	.isEqualTo(countByPartitionContainerWithPartition.retryTopicMessageCountByPartition);
 	}
 
 	private void send10MessagesToPartitionWithKey(int partition, String messageKey, String mainTopic, CountByPartitionContainer countByPartitionContainer) {
@@ -160,13 +157,13 @@ public class ExistingRetryTopicIntegrationTests {
 		CountByPartitionContainer countByPartitionContainerWithoutPartition;
 
 		@RetryableTopic(autoCreateTopics = "false", dltStrategy = DltStrategy.NO_DLT,
-				attempts = "${two.attempts}", backoff = @Backoff(0), kafkaTemplate = "kafkaTemplate")
+	attempts = "${two.attempts}", backoff = @Backoff(0), kafkaTemplate = "kafkaTemplate")
 		@KafkaListener(id = "firstTopicId", topics = MAIN_TOPIC_WITH_NO_PARTITION_INFO, containerFactory = MAIN_TOPIC_CONTAINER_FACTORY)
 		public void listenFirst(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic,
-								@Header(KafkaHeaders.ORIGINAL_PARTITION) String originalPartition,
-								@Header(KafkaHeaders.RECEIVED_PARTITION) String receivedPartition) {
+	@Header(KafkaHeaders.ORIGINAL_PARTITION) String originalPartition,
+	@Header(KafkaHeaders.RECEIVED_PARTITION) String receivedPartition) {
 			logger.debug("Message {} received in topic {}. originalPartition: {}, receivedPartition: {}",
-					message, receivedTopic, originalPartition, receivedPartition);
+		message, receivedTopic, originalPartition, receivedPartition);
 
 			if (receivedTopic.contains("-retry")) {
 				countByPartitionContainerWithoutPartition.retryTopicMessageCountByPartition.merge(receivedPartition, 1, Integer::sum);
@@ -180,13 +177,13 @@ public class ExistingRetryTopicIntegrationTests {
 		CountByPartitionContainer countByPartitionContainerWithPartition;
 
 		@RetryableTopic(autoCreateTopics = "false", numPartitions = "4", dltStrategy = DltStrategy.NO_DLT,
-				attempts = "${two.attempts}", backoff = @Backoff(0), kafkaTemplate = "kafkaTemplate")
+	attempts = "${two.attempts}", backoff = @Backoff(0), kafkaTemplate = "kafkaTemplate")
 		@KafkaListener(id = "secondTopicId", topics = MAIN_TOPIC_WITH_PARTITION_INFO, containerFactory = MAIN_TOPIC_CONTAINER_FACTORY)
 		public void listenSecond(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic,
-								@Header(KafkaHeaders.ORIGINAL_PARTITION) String originalPartition,
-								@Header(KafkaHeaders.RECEIVED_PARTITION) String receivedPartition) {
+	@Header(KafkaHeaders.ORIGINAL_PARTITION) String originalPartition,
+	@Header(KafkaHeaders.RECEIVED_PARTITION) String receivedPartition) {
 			logger.debug("Message {} received in topic {}. originalPartition: {}, receivedPartition: {}",
-					message, receivedTopic, originalPartition, receivedPartition);
+		message, receivedTopic, originalPartition, receivedPartition);
 
 			if (receivedTopic.contains("-retry")) {
 				countByPartitionContainerWithPartition.retryTopicMessageCountByPartition.merge(receivedPartition, 1, Integer::sum);
@@ -274,14 +271,14 @@ public class ExistingRetryTopicIntegrationTests {
 		public ProducerFactory<String, String> producerFactory() {
 			Map<String, Object> configProps = new HashMap<>();
 			configProps.put(
-					ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					this.broker.getBrokersAsString());
+		ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+		this.broker.getBrokersAsString());
 			configProps.put(
-					ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
+		ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+		StringSerializer.class);
 			configProps.put(
-					ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
+		ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+		StringSerializer.class);
 			return new DefaultKafkaProducerFactory<>(configProps);
 		}
 
@@ -309,19 +306,19 @@ public class ExistingRetryTopicIntegrationTests {
 		public ConsumerFactory<String, String> consumerFactory() {
 			Map<String, Object> props = new HashMap<>();
 			props.put(
-					ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					this.broker.getBrokersAsString());
+		ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+		this.broker.getBrokersAsString());
 			props.put(
-					ConsumerConfig.GROUP_ID_CONFIG,
-					"groupId");
+		ConsumerConfig.GROUP_ID_CONFIG,
+		"groupId");
 			props.put(
-					ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
+		ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+		StringDeserializer.class);
 			props.put(
-					ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
+		ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+		StringDeserializer.class);
 			props.put(
-					ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
+		ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
 			props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
 			return new DefaultKafkaConsumerFactory<>(props);
@@ -329,7 +326,7 @@ public class ExistingRetryTopicIntegrationTests {
 
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> retryTopicListenerContainerFactory(
-				ConsumerFactory<String, String> consumerFactory) {
+	ConsumerFactory<String, String> consumerFactory) {
 
 			ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 			ContainerProperties props = factory.getContainerProperties();
@@ -339,13 +336,13 @@ public class ExistingRetryTopicIntegrationTests {
 			factory.setConsumerFactory(consumerFactory);
 			factory.setConcurrency(1);
 			factory.setContainerCustomizer(
-					container -> container.getContainerProperties().setIdlePartitionEventInterval(100L));
+		container -> container.getContainerProperties().setIdlePartitionEventInterval(100L));
 			return factory;
 		}
 
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(
-				ConsumerFactory<String, String> consumerFactory) {
+	ConsumerFactory<String, String> consumerFactory) {
 
 			ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory);

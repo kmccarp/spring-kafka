@@ -53,16 +53,16 @@ public class CommonDelegatingErrorHandlerTests {
 		eh.addDelegate(RuntimeException.class, three);
 
 		eh.handleRemaining(wrap(new IOException()), Collections.emptyList(), mock(Consumer.class),
-				mock(MessageListenerContainer.class));
+	mock(MessageListenerContainer.class));
 		verify(def).handleRemaining(any(), any(), any(), any());
 		eh.handleRemaining(wrap(new KafkaException("test")), Collections.emptyList(), mock(Consumer.class),
-				mock(MessageListenerContainer.class));
+	mock(MessageListenerContainer.class));
 		verify(three).handleRemaining(any(), any(), any(), any());
 		eh.handleRemaining(wrap(new IllegalArgumentException()), Collections.emptyList(), mock(Consumer.class),
-				mock(MessageListenerContainer.class));
+	mock(MessageListenerContainer.class));
 		verify(two).handleRemaining(any(), any(), any(), any());
 		eh.handleRemaining(wrap(new IllegalStateException()), Collections.emptyList(), mock(Consumer.class),
-				mock(MessageListenerContainer.class));
+	mock(MessageListenerContainer.class));
 		verify(one).handleRemaining(any(), any(), any(), any());
 	}
 
@@ -77,16 +77,16 @@ public class CommonDelegatingErrorHandlerTests {
 		eh.addDelegate(RuntimeException.class, three);
 
 		eh.handleBatch(wrap(new IOException()), mock(ConsumerRecords.class), mock(Consumer.class),
-				mock(MessageListenerContainer.class), mock(Runnable.class));
+	mock(MessageListenerContainer.class), mock(Runnable.class));
 		verify(def).handleBatch(any(), any(), any(), any(), any());
 		eh.handleBatch(wrap(new KafkaException("test")), mock(ConsumerRecords.class), mock(Consumer.class),
-				mock(MessageListenerContainer.class), mock(Runnable.class));
+	mock(MessageListenerContainer.class), mock(Runnable.class));
 		verify(three).handleBatch(any(), any(), any(), any(), any());
 		eh.handleBatch(wrap(new IllegalArgumentException()), mock(ConsumerRecords.class), mock(Consumer.class),
-				mock(MessageListenerContainer.class), mock(Runnable.class));
+	mock(MessageListenerContainer.class), mock(Runnable.class));
 		verify(two).handleBatch(any(), any(), any(), any(), any());
 		eh.handleBatch(wrap(new IllegalStateException()), mock(ConsumerRecords.class), mock(Consumer.class),
-				mock(MessageListenerContainer.class), mock(Runnable.class));
+	mock(MessageListenerContainer.class), mock(Runnable.class));
 		verify(one).handleBatch(any(), any(), any(), any(), any());
 	}
 
@@ -102,12 +102,12 @@ public class CommonDelegatingErrorHandlerTests {
 		var delegatingErrorHandler = new CommonDelegatingErrorHandler(defaultHandler);
 		delegatingErrorHandler.setCauseChainTraversing(true);
 		delegatingErrorHandler.setErrorHandlers(Map.of(
-			exc.getClass(), errorHandler,
-			directCauseExc.getClass(), directCauseErrorHandler
+	exc.getClass(), errorHandler,
+	directCauseExc.getClass(), directCauseErrorHandler
 		));
 
 		delegatingErrorHandler.handleRemaining(directCauseExc, Collections.emptyList(), mock(Consumer.class),
-			mock(MessageListenerContainer.class));
+	mock(MessageListenerContainer.class));
 
 		verify(directCauseErrorHandler).handleRemaining(any(), any(), any(), any());
 		verify(errorHandler, never()).handleRemaining(any(), any(), any(), any());
@@ -124,11 +124,11 @@ public class CommonDelegatingErrorHandlerTests {
 		var delegatingErrorHandler = new CommonDelegatingErrorHandler(defaultHandler);
 		delegatingErrorHandler.setCauseChainTraversing(true);
 		delegatingErrorHandler.setErrorHandlers(Map.of(
-			directCauseExc.getClass(), directCauseErrorHandler
+	directCauseExc.getClass(), directCauseErrorHandler
 		));
 
 		delegatingErrorHandler.handleRemaining(exc, Collections.emptyList(), mock(Consumer.class),
-			mock(MessageListenerContainer.class));
+	mock(MessageListenerContainer.class));
 
 		verify(directCauseErrorHandler).handleRemaining(any(), any(), any(), any());
 	}
@@ -145,11 +145,11 @@ public class CommonDelegatingErrorHandlerTests {
 		var delegatingErrorHandler = new CommonDelegatingErrorHandler(defaultHandler);
 		delegatingErrorHandler.setCauseChainTraversing(true);
 		delegatingErrorHandler.setErrorHandlers(Map.of(
-			KafkaException.class, directCauseErrorHandler
+	KafkaException.class, directCauseErrorHandler
 		));
 
 		delegatingErrorHandler.handleRemaining(exc, Collections.emptyList(), mock(Consumer.class),
-			mock(MessageListenerContainer.class));
+	mock(MessageListenerContainer.class));
 
 		verify(directCauseErrorHandler).handleRemaining(any(), any(), any(), any());
 	}
@@ -162,7 +162,7 @@ public class CommonDelegatingErrorHandlerTests {
 		delegatingErrorHandler.setCauseChainTraversing(true);
 
 		delegatingErrorHandler.handleRemaining(null, Collections.emptyList(), mock(Consumer.class),
-			mock(MessageListenerContainer.class));
+	mock(MessageListenerContainer.class));
 
 		verify(defaultHandler).handleRemaining(any(), any(), any(), any());
 	}

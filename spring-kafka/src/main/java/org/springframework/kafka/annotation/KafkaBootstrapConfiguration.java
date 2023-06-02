@@ -44,15 +44,15 @@ public class KafkaBootstrapConfiguration implements ImportBeanDefinitionRegistra
 	@Override
 	public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
 		if (!registry.containsBeanDefinition(
-				KafkaListenerConfigUtils.KAFKA_LISTENER_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+	KafkaListenerConfigUtils.KAFKA_LISTENER_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 
 			registry.registerBeanDefinition(KafkaListenerConfigUtils.KAFKA_LISTENER_ANNOTATION_PROCESSOR_BEAN_NAME,
-					new RootBeanDefinition(KafkaListenerAnnotationBeanPostProcessor.class));
+		new RootBeanDefinition(KafkaListenerAnnotationBeanPostProcessor.class));
 		}
 
 		if (!registry.containsBeanDefinition(KafkaListenerConfigUtils.KAFKA_LISTENER_ENDPOINT_REGISTRY_BEAN_NAME)) {
 			registry.registerBeanDefinition(KafkaListenerConfigUtils.KAFKA_LISTENER_ENDPOINT_REGISTRY_BEAN_NAME,
-					new RootBeanDefinition(KafkaListenerEndpointRegistry.class));
+		new RootBeanDefinition(KafkaListenerEndpointRegistry.class));
 		}
 	}
 

@@ -94,7 +94,7 @@ public class JsonMessageConverter extends MessagingMessageConverter {
 	@Override
 	protected Object convertPayload(Message<?> message) {
 		throw new UnsupportedOperationException("Select a subclass that creates a ProducerRecord value "
-				+ "corresponding to the configured Kafka Serializer");
+	+ "corresponding to the configured Kafka Serializer");
 	}
 
 	@Override
@@ -131,8 +131,8 @@ public class JsonMessageConverter extends MessagingMessageConverter {
 
 	private JavaType determineJavaType(ConsumerRecord<?, ?> record, Type type) {
 		JavaType javaType = this.typeMapper.getTypePrecedence().equals(TypePrecedence.INFERRED) && type != null
-				? TypeFactory.defaultInstance().constructType(type)
-				: this.typeMapper.toJavaType(record.headers());
+	? TypeFactory.defaultInstance().constructType(type)
+	: this.typeMapper.toJavaType(record.headers());
 		if (javaType == null) { // no headers
 			if (type != null) {
 				javaType = TypeFactory.defaultInstance().constructType(type);

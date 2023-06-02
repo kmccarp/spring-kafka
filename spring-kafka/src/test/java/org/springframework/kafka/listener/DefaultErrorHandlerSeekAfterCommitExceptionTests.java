@@ -103,8 +103,8 @@ public class DefaultErrorHandlerSeekAfterCommitExceptionTests {
 		inOrder.verify(this.consumer).assign(any(Collection.class));
 		inOrder.verify(this.consumer).poll(Duration.ofMillis(ContainerProperties.DEFAULT_POLL_TIMEOUT));
 		inOrder.verify(this.consumer).commitSync(
-				Collections.singletonMap(new TopicPartition("foo", 0), new OffsetAndMetadata(1L)),
-				Duration.ofSeconds(60));
+	Collections.singletonMap(new TopicPartition("foo", 0), new OffsetAndMetadata(1L)),
+	Duration.ofSeconds(60));
 		inOrder.verify(this.config.eh).handleRemaining(any(), any(), any(), any());
 		verify(this.consumer, times(3)).seek(any(), anyLong());
 	}
@@ -132,8 +132,8 @@ public class DefaultErrorHandlerSeekAfterCommitExceptionTests {
 		volatile org.apache.kafka.common.header.Header deliveryAttempt;
 
 		@KafkaListener(groupId = "grp",
-				topicPartitions = @org.springframework.kafka.annotation.TopicPartition(topic = "foo",
-						partitions = "#{'0,1,2'.split(',')}"))
+	topicPartitions = @org.springframework.kafka.annotation.TopicPartition(topic = "foo",
+partitions = "#{'0,1,2'.split(',')}"))
 		public void foo(String in, @Header(KafkaHeaders.DELIVERY_ATTEMPT) int delivery) {
 			this.contents.add(in);
 			this.deliveries.add(delivery);
@@ -143,17 +143,17 @@ public class DefaultErrorHandlerSeekAfterCommitExceptionTests {
 			}
 		}
 
-		@SuppressWarnings({ "rawtypes" })
+		@SuppressWarnings({"rawtypes"})
 		@Bean
 		public ConsumerFactory consumerFactory() {
 			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 			final Consumer consumer = consumer();
 			given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-				.willReturn(consumer);
+		.willReturn(consumer);
 			return consumerFactory;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public Consumer consumer() {
 			final Consumer consumer = mock(Consumer.class);
@@ -162,20 +162,20 @@ public class DefaultErrorHandlerSeekAfterCommitExceptionTests {
 			final TopicPartition topicPartition2 = new TopicPartition("foo", 2);
 			Map<TopicPartition, List<ConsumerRecord>> records1 = new LinkedHashMap<>();
 			records1.put(topicPartition0, Arrays.asList(
-					new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-							new RecordHeaders(), Optional.empty()),
-					new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
+	new RecordHeaders(), Optional.empty()),
+		new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
+	new RecordHeaders(), Optional.empty())));
 			records1.put(topicPartition1, Arrays.asList(
-					new ConsumerRecord("foo", 1, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
-							new RecordHeaders(), Optional.empty()),
-					new ConsumerRecord("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 1, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
+	new RecordHeaders(), Optional.empty()),
+		new ConsumerRecord("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
+	new RecordHeaders(), Optional.empty())));
 			records1.put(topicPartition2, Arrays.asList(
-					new ConsumerRecord("foo", 2, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "fiz",
-							new RecordHeaders(), Optional.empty()),
-					new ConsumerRecord("foo", 2, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "buz",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 2, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "fiz",
+	new RecordHeaders(), Optional.empty()),
+		new ConsumerRecord("foo", 2, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "buz",
+	new RecordHeaders(), Optional.empty())));
 			final AtomicInteger which = new AtomicInteger();
 			willAnswer(i -> {
 				this.pollLatch.countDown();
@@ -219,7 +219,7 @@ public class DefaultErrorHandlerSeekAfterCommitExceptionTests {
 			return consumer;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		ConcurrentKafkaListenerContainerFactory kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();

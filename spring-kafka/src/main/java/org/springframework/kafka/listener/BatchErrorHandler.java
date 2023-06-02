@@ -42,7 +42,7 @@ public interface BatchErrorHandler extends GenericErrorHandler<ConsumerRecords<?
 	 * @param container the container.
 	 */
 	default void handle(Exception thrownException, @Nullable ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 		handle(thrownException, data);
 	}
 
@@ -56,7 +56,7 @@ public interface BatchErrorHandler extends GenericErrorHandler<ConsumerRecords<?
 	 * @since 2.3.7
 	 */
 	default void handle(Exception thrownException, @Nullable ConsumerRecords<?, ?> data,
-			Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener) {
+Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener) {
 
 		handle(thrownException, data);
 	}

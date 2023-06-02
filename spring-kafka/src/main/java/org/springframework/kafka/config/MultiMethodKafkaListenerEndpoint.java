@@ -75,14 +75,14 @@ public class MultiMethodKafkaListenerEndpoint<K, V> extends MethodKafkaListenerE
 		InvocableHandlerMethod defaultHandler = null;
 		for (Method method : this.methods) {
 			InvocableHandlerMethod handler = getMessageHandlerMethodFactory()
-					.createInvocableHandlerMethod(getBean(), method);
+		.createInvocableHandlerMethod(getBean(), method);
 			invocableHandlerMethods.add(handler);
 			if (method.equals(this.defaultMethod)) {
 				defaultHandler = handler;
 			}
 		}
 		DelegatingInvocableHandler delegatingHandler = new DelegatingInvocableHandler(invocableHandlerMethods,
-				defaultHandler, getBean(), getResolver(), getBeanExpressionContext(), getBeanFactory(), this.validator);
+	defaultHandler, getBean(), getResolver(), getBeanExpressionContext(), getBeanFactory(), this.validator);
 		return new HandlerAdapter(delegatingHandler);
 	}
 

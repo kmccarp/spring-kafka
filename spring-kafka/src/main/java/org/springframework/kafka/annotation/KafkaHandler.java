@@ -42,7 +42,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
  * @see KafkaListener
  * @see KafkaListenerAnnotationBeanPostProcessor
  */
-@Target({ ElementType.METHOD, ElementType.ANNOTATION_TYPE })
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @MessageMapping
 @Documented

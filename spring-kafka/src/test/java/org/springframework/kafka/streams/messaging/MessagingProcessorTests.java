@@ -57,17 +57,16 @@ public class MessagingProcessorTests {
 		MessagingMessageConverter converter = new MessagingMessageConverter();
 		converter.setHeaderMapper(new SimpleKafkaHeaderMapper("*"));
 		ProcessorSupplier<String, String, String, String> messagingTransformer = () ->
-				new MessagingProcessor<>(message ->
-					MessageBuilder.withPayload("bar".getBytes())
+	new MessagingProcessor<>(message ->MessageBuilder.withPayload("bar".getBytes())
 						.copyHeaders(message.getHeaders())
 						.setHeader("baz", "qux".getBytes())
 						.build(),
-				converter);
+converter);
 		StreamsBuilder builder = new StreamsBuilder();
 		KStream<String, String> stream = builder.stream(INPUT);
 		stream
-				.process(messagingTransformer)
-				.to(OUTPUT);
+	.process(messagingTransformer)
+	.to(OUTPUT);
 
 		Properties config = new Properties();
 		config.put(StreamsConfig.APPLICATION_ID_CONFIG, "test");
@@ -77,11 +76,11 @@ public class MessagingProcessorTests {
 		TopologyTestDriver driver = new TopologyTestDriver(builder.build(), config);
 
 		TestInputTopic<String, String> inputTopic = driver.createInputTopic(INPUT, new StringSerializer(),
-				new StringSerializer());
+	new StringSerializer());
 		Headers headers = new RecordHeaders(Collections.singletonList(new RecordHeader("fiz", "buz".getBytes())));
 		inputTopic.pipeInput(new TestRecord<>("key", "value", headers));
 		TestOutputTopic<byte[], byte[]> outputTopic = driver.createOutputTopic(OUTPUT, new ByteArrayDeserializer(),
-				new ByteArrayDeserializer());
+	new ByteArrayDeserializer());
 		TestRecord<byte[], byte[]> result = outputTopic.readRecord();
 		assertThat(result.value()).isEqualTo("bar".getBytes());
 		assertThat(result.headers().lastHeader("fiz").value()).isEqualTo("buz".getBytes());

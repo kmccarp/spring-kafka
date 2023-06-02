@@ -53,30 +53,30 @@ class DestinationTopicPropertiesFactoryTests {
 
 	@SuppressWarnings("deprecation")
 	private final FixedDelayStrategy fixedDelayStrategy =
-			FixedDelayStrategy.SINGLE_TOPIC;
+FixedDelayStrategy.SINGLE_TOPIC;
 
 	private final TopicSuffixingStrategy suffixWithDelayValueSuffixingStrategy =
-			TopicSuffixingStrategy.SUFFIX_WITH_DELAY_VALUE;
+TopicSuffixingStrategy.SUFFIX_WITH_DELAY_VALUE;
 
 	private final TopicSuffixingStrategy suffixWithIndexTopicSuffixingStrategy =
-			TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE;
+TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE;
 
 	private final SameIntervalTopicReuseStrategy multipleTopicsSameIntervalReuseStrategy =
-			SameIntervalTopicReuseStrategy.MULTIPLE_TOPICS;
+SameIntervalTopicReuseStrategy.MULTIPLE_TOPICS;
 
 	private final SameIntervalTopicReuseStrategy singleTopicSameIntervalReuseStrategy =
-			SameIntervalTopicReuseStrategy.SINGLE_TOPIC;
+SameIntervalTopicReuseStrategy.SINGLE_TOPIC;
 
 	private final DltStrategy dltStrategy =
-			DltStrategy.FAIL_ON_ERROR;
+DltStrategy.FAIL_ON_ERROR;
 
 	private final DltStrategy noDltStrategy =
-			DltStrategy.NO_DLT;
+DltStrategy.NO_DLT;
 
 	private final BackOffPolicy backOffPolicy = new FixedBackOffPolicy();
 
 	private final BinaryExceptionClassifier classifier = new BinaryExceptionClassifierBuilder()
-			.retryOn(IllegalArgumentException.class).build();
+.retryOn(IllegalArgumentException.class).build();
 
 	@Mock
 	private KafkaOperations<?, ?> kafkaOperations;
@@ -93,10 +93,10 @@ class DestinationTopicPropertiesFactoryTests {
 		List<Long> backOffValues = new BackOffValuesGenerator(1, backOffPolicy).generateValues();
 
 		List<DestinationTopic.Properties> propertiesList =
-				new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
-						classifier, numPartitions, kafkaOperations, fixedDelayStrategy,
-						dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy,
-						RetryTopicConstants.NOT_SET).createProperties();
+	new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
+classifier, numPartitions, kafkaOperations, fixedDelayStrategy,
+dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy,
+RetryTopicConstants.NOT_SET).createProperties();
 
 		// then
 		assertThat(propertiesList.size() == 2).isTrue();
@@ -139,15 +139,15 @@ class DestinationTopicPropertiesFactoryTests {
 		List<Long> backOffValues = new BackOffValuesGenerator(maxAttempts, backOffPolicy).generateValues();
 
 		List<DestinationTopic.Properties> propertiesList =
-				new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
-						classifier, numPartitions, kafkaOperations, fixedDelayStrategy,
-						dltStrategy, TopicSuffixingStrategy.SUFFIX_WITH_DELAY_VALUE,
-						multipleTopicsSameIntervalReuseStrategy, RetryTopicConstants.NOT_SET).createProperties();
+	new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
+classifier, numPartitions, kafkaOperations, fixedDelayStrategy,
+dltStrategy, TopicSuffixingStrategy.SUFFIX_WITH_DELAY_VALUE,
+multipleTopicsSameIntervalReuseStrategy, RetryTopicConstants.NOT_SET).createProperties();
 
 		List<DestinationTopic> destinationTopicList = propertiesList
-				.stream()
-				.map(properties -> new DestinationTopic("mainTopic" + properties.suffix(), properties))
-				.collect(Collectors.toList());
+	.stream()
+	.map(properties -> new DestinationTopic("mainTopic" + properties.suffix(), properties))
+	.collect(Collectors.toList());
 
 		// then
 		assertThat(propertiesList.size() == 4).isTrue();
@@ -192,10 +192,10 @@ class DestinationTopicPropertiesFactoryTests {
 		List<Long> backOffValues = new BackOffValuesGenerator(maxAttempts, backOffPolicy).generateValues();
 
 		List<DestinationTopic.Properties> propertiesList =
-				new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues, classifier,
-						numPartitions, kafkaOperations, fixedDelayStrategy, noDltStrategy,
-						TopicSuffixingStrategy.SUFFIX_WITH_DELAY_VALUE, multipleTopicsSameIntervalReuseStrategy,
-						RetryTopicConstants.NOT_SET).createProperties();
+	new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues, classifier,
+numPartitions, kafkaOperations, fixedDelayStrategy, noDltStrategy,
+TopicSuffixingStrategy.SUFFIX_WITH_DELAY_VALUE, multipleTopicsSameIntervalReuseStrategy,
+RetryTopicConstants.NOT_SET).createProperties();
 
 		// then
 		assertThat(propertiesList.size() == 3).isTrue();
@@ -214,15 +214,15 @@ class DestinationTopicPropertiesFactoryTests {
 		List<Long> backOffValues = new BackOffValuesGenerator(maxAttempts, backOffPolicy).generateValues();
 
 		List<DestinationTopic.Properties> propertiesList =
-				new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
-						classifier, numPartitions, kafkaOperations, FixedDelayStrategy.SINGLE_TOPIC,
-						dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy,
-						-1).createProperties();
+	new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
+classifier, numPartitions, kafkaOperations, FixedDelayStrategy.SINGLE_TOPIC,
+dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy,
+-1).createProperties();
 
 		List<DestinationTopic> destinationTopicList = propertiesList
-				.stream()
-				.map(properties -> new DestinationTopic("mainTopic" + properties.suffix(), properties))
-				.collect(Collectors.toList());
+	.stream()
+	.map(properties -> new DestinationTopic("mainTopic" + properties.suffix(), properties))
+	.collect(Collectors.toList());
 
 		// then
 		assertThat(propertiesList.size() == 3).isTrue();
@@ -258,15 +258,15 @@ class DestinationTopicPropertiesFactoryTests {
 		List<Long> backOffValues = new BackOffValuesGenerator(maxAttempts, backOffPolicy).generateValues();
 
 		List<DestinationTopic.Properties> propertiesList =
-				new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
-						classifier, numPartitions, kafkaOperations, FixedDelayStrategy.MULTIPLE_TOPICS,
-						dltStrategy, suffixWithDelayValueSuffixingStrategy, singleTopicSameIntervalReuseStrategy,
-						-1).createProperties();
+	new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
+classifier, numPartitions, kafkaOperations, FixedDelayStrategy.MULTIPLE_TOPICS,
+dltStrategy, suffixWithDelayValueSuffixingStrategy, singleTopicSameIntervalReuseStrategy,
+-1).createProperties();
 
 		List<DestinationTopic> destinationTopicList = propertiesList
-				.stream()
-				.map(properties -> new DestinationTopic("mainTopic" + properties.suffix(), properties))
-				.collect(Collectors.toList());
+	.stream()
+	.map(properties -> new DestinationTopic("mainTopic" + properties.suffix(), properties))
+	.collect(Collectors.toList());
 
 		// then
 		assertThat(propertiesList.size() == 3).isTrue();
@@ -301,16 +301,16 @@ class DestinationTopicPropertiesFactoryTests {
 		List<Long> backOffValues = new BackOffValuesGenerator(maxAttempts, backOffPolicy).generateValues();
 
 		List<DestinationTopic.Properties> propertiesList =
-				new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
-						classifier, numPartitions, kafkaOperations,
-						FixedDelayStrategy.MULTIPLE_TOPICS,
-						dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy,
-						-1).createProperties();
+	new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
+classifier, numPartitions, kafkaOperations,
+FixedDelayStrategy.MULTIPLE_TOPICS,
+dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy,
+-1).createProperties();
 
 		List<DestinationTopic> destinationTopicList = propertiesList
-				.stream()
-				.map(properties -> new DestinationTopic("mainTopic" + properties.suffix(), properties))
-				.collect(Collectors.toList());
+	.stream()
+	.map(properties -> new DestinationTopic("mainTopic" + properties.suffix(), properties))
+	.collect(Collectors.toList());
 
 		// then
 		assertThat(propertiesList.size() == 4).isTrue();
@@ -352,15 +352,15 @@ class DestinationTopicPropertiesFactoryTests {
 
 		// when
 		List<DestinationTopic.Properties> propertiesList =
-				new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
-						classifier, numPartitions, kafkaOperations,
-						FixedDelayStrategy.SINGLE_TOPIC,
-						dltStrategy, suffixWithIndexTopicSuffixingStrategy,
-						multipleTopicsSameIntervalReuseStrategy, -1).createProperties();
+	new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
+classifier, numPartitions, kafkaOperations,
+FixedDelayStrategy.SINGLE_TOPIC,
+dltStrategy, suffixWithIndexTopicSuffixingStrategy,
+multipleTopicsSameIntervalReuseStrategy, -1).createProperties();
 
 		// then
 		IntStream.range(1, maxAttempts).forEach(index -> assertThat(propertiesList.get(index).suffix())
-				.isEqualTo(retryTopicSuffix + "-" + String.valueOf(index - 1)));
+	.isEqualTo(retryTopicSuffix + "-" + String.valueOf(index - 1)));
 	}
 
 	@Test
@@ -375,16 +375,16 @@ class DestinationTopicPropertiesFactoryTests {
 
 		// when
 		List<DestinationTopic.Properties> propertiesList =
-				new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
-						classifier, numPartitions, kafkaOperations,
-						FixedDelayStrategy.MULTIPLE_TOPICS,
-						dltStrategy, suffixWithIndexTopicSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy,
-						-1).createProperties();
+	new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix, backOffValues,
+classifier, numPartitions, kafkaOperations,
+FixedDelayStrategy.MULTIPLE_TOPICS,
+dltStrategy, suffixWithIndexTopicSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy,
+-1).createProperties();
 
 		// then
 		IntStream.range(1, maxAttempts)
-				.forEach(index -> assertThat(propertiesList.get(index).suffix()).isEqualTo(retryTopicSuffix +
-						"-" + String.valueOf(index - 1)));
+	.forEach(index -> assertThat(propertiesList.get(index).suffix()).isEqualTo(retryTopicSuffix +
+"-" + String.valueOf(index - 1)));
 	}
 
 	@Test
@@ -401,9 +401,9 @@ class DestinationTopicPropertiesFactoryTests {
 
 		// when
 		DestinationTopicPropertiesFactory factory = new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix,
-				backOffValues, classifier, numPartitions, kafkaOperations,
-				FixedDelayStrategy.MULTIPLE_TOPICS,
-				dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy, -1);
+	backOffValues, classifier, numPartitions, kafkaOperations,
+	FixedDelayStrategy.MULTIPLE_TOPICS,
+	dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy, -1);
 
 		List<DestinationTopic.Properties> propertiesList = factory.createProperties();
 
@@ -432,9 +432,9 @@ class DestinationTopicPropertiesFactoryTests {
 
 		// when
 		DestinationTopicPropertiesFactory factory = new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix,
-				backOffValues, classifier, numPartitions, kafkaOperations,
-				FixedDelayStrategy.MULTIPLE_TOPICS,
-				dltStrategy, suffixWithDelayValueSuffixingStrategy, singleTopicSameIntervalReuseStrategy, -1);
+	backOffValues, classifier, numPartitions, kafkaOperations,
+	FixedDelayStrategy.MULTIPLE_TOPICS,
+	dltStrategy, suffixWithDelayValueSuffixingStrategy, singleTopicSameIntervalReuseStrategy, -1);
 
 		List<DestinationTopic.Properties> propertiesList = factory.createProperties();
 
@@ -462,9 +462,9 @@ class DestinationTopicPropertiesFactoryTests {
 
 		// when
 		DestinationTopicPropertiesFactory factory = new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix,
-				backOffValues, classifier, numPartitions, kafkaOperations,
-				FixedDelayStrategy.MULTIPLE_TOPICS,
-				dltStrategy, suffixWithIndexTopicSuffixingStrategy, singleTopicSameIntervalReuseStrategy, -1);
+	backOffValues, classifier, numPartitions, kafkaOperations,
+	FixedDelayStrategy.MULTIPLE_TOPICS,
+	dltStrategy, suffixWithIndexTopicSuffixingStrategy, singleTopicSameIntervalReuseStrategy, -1);
 
 		List<DestinationTopic.Properties> propertiesList = factory.createProperties();
 
@@ -488,9 +488,9 @@ class DestinationTopicPropertiesFactoryTests {
 
 		// when
 		DestinationTopicPropertiesFactory factory = new DestinationTopicPropertiesFactory(retryTopicSuffix, dltSuffix,
-				backOffValues, classifier, numPartitions, kafkaOperations,
-				FixedDelayStrategy.SINGLE_TOPIC,
-				dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy, -1);
+	backOffValues, classifier, numPartitions, kafkaOperations,
+	FixedDelayStrategy.SINGLE_TOPIC,
+	dltStrategy, suffixWithDelayValueSuffixingStrategy, multipleTopicsSameIntervalReuseStrategy, -1);
 
 		List<DestinationTopic.Properties> propertiesList = factory.createProperties();
 
@@ -508,8 +508,8 @@ class DestinationTopicPropertiesFactoryTests {
 
 	@SuppressWarnings("deprecation")
 	private void assertRetryTopic(DestinationTopic.Properties topicProperties, int maxAttempts,
-			Long expectedDelay, String expectedSuffix, boolean expectedReusableTopic,
-			boolean expectedIsSingleTopicRetry) {
+Long expectedDelay, String expectedSuffix, boolean expectedReusableTopic,
+boolean expectedIsSingleTopicRetry) {
 		assertThat(topicProperties.suffix()).isEqualTo(expectedSuffix);
 		assertThat(topicProperties.isRetryTopic()).isTrue();
 		DestinationTopic topic = new DestinationTopic("irrelevant" + topicProperties.suffix(), topicProperties);

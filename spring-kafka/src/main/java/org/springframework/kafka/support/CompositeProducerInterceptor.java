@@ -70,12 +70,12 @@ public class CompositeProducerInterceptor<K, V> implements ProducerInterceptor<K
 				// if exception thrown, log and continue calling other interceptors.
 				if (record != null) {
 					CompositeProducerInterceptor.this.logger.warn(e, () ->
-							String.format("Error executing interceptor onSend callback for topic: %s, partition: %d",
-									record.topic(), record.partition()));
+				String.format("Error executing interceptor onSend callback for topic: %s, partition: %d",
+			record.topic(), record.partition()));
 				}
 				else {
 					CompositeProducerInterceptor.this.logger.warn(e, () -> "Error executing interceptor onSend callback: "
-							+ interceptor.toString());
+				+ interceptor.toString());
 				}
 			}
 		}
@@ -90,8 +90,8 @@ public class CompositeProducerInterceptor<K, V> implements ProducerInterceptor<K
 			}
 			catch (Exception e) {
 				// do not propagate interceptor exceptions, just log
-				CompositeProducerInterceptor.this.logger.warn(e, () ->  "Error executing interceptor onAcknowledgement callback: "
-						+ interceptor.toString());
+				CompositeProducerInterceptor.this.logger.warn(e, () -> "Error executing interceptor onAcknowledgement callback: "
+			+ interceptor.toString());
 			}
 		}
 	}
@@ -104,7 +104,7 @@ public class CompositeProducerInterceptor<K, V> implements ProducerInterceptor<K
 			}
 			catch (Exception e) {
 				CompositeProducerInterceptor.this.logger.warn(e, () -> "Failed to close producer interceptor: "
-						+ interceptor.toString());
+			+ interceptor.toString());
 			}
 		}
 	}

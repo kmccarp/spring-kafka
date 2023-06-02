@@ -54,15 +54,15 @@ public class SimpleKafkaHeaderMapperTests {
 		Headers target = new RecordHeaders();
 		mapper.fromHeaders(headers, target);
 		assertThat(target).containsExactlyInAnyOrder(
-				new RecordHeader("thisOnesAString", "foo".getBytes()),
-				new RecordHeader("thisOnesBytes", "bar".getBytes()),
-				new RecordHeader("neverConverted", "baz".getBytes()));
+	new RecordHeader("thisOnesAString", "foo".getBytes()),
+	new RecordHeader("thisOnesBytes", "bar".getBytes()),
+	new RecordHeader("neverConverted", "baz".getBytes()));
 		headersMap.clear();
 		mapper.toHeaders(target, headersMap);
 		assertThat(headersMap).contains(
-				entry("thisOnesAString", "foo"),
-				entry("thisOnesBytes", "bar".getBytes()),
-				entry("neverConverted", "baz".getBytes()));
+	entry("thisOnesAString", "foo"),
+	entry("thisOnesBytes", "bar".getBytes()),
+	entry("neverConverted", "baz".getBytes()));
 	}
 
 	@Test
@@ -79,13 +79,13 @@ public class SimpleKafkaHeaderMapperTests {
 		Headers target = new RecordHeaders();
 		mapper.fromHeaders(headers, target);
 		assertThat(target).containsExactlyInAnyOrder(
-				new RecordHeader("neverConverted", "baz".getBytes()),
-				new RecordHeader("thisOnesBytes", "bar".getBytes()));
+	new RecordHeader("neverConverted", "baz".getBytes()),
+	new RecordHeader("thisOnesBytes", "bar".getBytes()));
 		headersMap.clear();
 		mapper.toHeaders(target, headersMap);
 		assertThat(headersMap).contains(
-				entry("thisOnesBytes", "bar".getBytes()),
-				entry("neverConverted", "baz".getBytes()));
+	entry("thisOnesBytes", "bar".getBytes()),
+	entry("neverConverted", "baz".getBytes()));
 	}
 
 	@Test
@@ -103,15 +103,15 @@ public class SimpleKafkaHeaderMapperTests {
 		Headers target = new RecordHeaders();
 		mapper.fromHeaders(headers, target);
 		assertThat(target).containsExactlyInAnyOrder(
-				new RecordHeader("thisOnesAString", "foo".getBytes()),
-				new RecordHeader("thisOnesBytes", "bar".getBytes()),
-				new RecordHeader("neverConverted", "baz".getBytes()));
+	new RecordHeader("thisOnesAString", "foo".getBytes()),
+	new RecordHeader("thisOnesBytes", "bar".getBytes()),
+	new RecordHeader("neverConverted", "baz".getBytes()));
 		headersMap.clear();
 		mapper.toHeaders(target, headersMap);
 		assertThat(headersMap).contains(
-				entry("thisOnesAString", "foo".getBytes()),
-				entry("thisOnesBytes", "bar".getBytes()),
-				entry("neverConverted", "baz".getBytes()));
+	entry("thisOnesAString", "foo".getBytes()),
+	entry("thisOnesBytes", "bar".getBytes()),
+	entry("neverConverted", "baz".getBytes()));
 	}
 
 	@Test
@@ -126,11 +126,11 @@ public class SimpleKafkaHeaderMapperTests {
 		Headers target = new RecordHeaders();
 		mapper.fromHeaders(headers, target);
 		assertThat(target).contains(
-				new RecordHeader("thisOnePresent", "baz".getBytes()));
+	new RecordHeader("thisOnePresent", "baz".getBytes()));
 		headersMap.clear();
 		mapper.toHeaders(target, headersMap);
 		assertThat(headersMap).contains(
-				entry("thisOnePresent", "baz".getBytes()));
+	entry("thisOnePresent", "baz".getBytes()));
 	}
 
 	@Test
@@ -138,7 +138,7 @@ public class SimpleKafkaHeaderMapperTests {
 		SimpleKafkaHeaderMapper mapper = new SimpleKafkaHeaderMapper();
 		byte[] delivery = new byte[4];
 		ByteBuffer.wrap(delivery).putInt(42);
-		Headers headers = new RecordHeaders(new Header[] { new RecordHeader(KafkaHeaders.DELIVERY_ATTEMPT, delivery) });
+		Headers headers = new RecordHeaders(new Header[]{new RecordHeader(KafkaHeaders.DELIVERY_ATTEMPT, delivery)});
 		Map<String, Object> springHeaders = new HashMap<>();
 		mapper.toHeaders(headers, springHeaders);
 		assertThat(springHeaders.get(KafkaHeaders.DELIVERY_ATTEMPT)).isEqualTo(42);
@@ -151,7 +151,7 @@ public class SimpleKafkaHeaderMapperTests {
 	void listenerInfo() {
 		SimpleKafkaHeaderMapper mapper = new SimpleKafkaHeaderMapper();
 		Headers headers = new RecordHeaders(
-				new Header[] { new RecordHeader(KafkaHeaders.LISTENER_INFO, "info".getBytes()) });
+	new Header[]{new RecordHeader(KafkaHeaders.LISTENER_INFO, "info".getBytes())});
 		Map<String, Object> springHeaders = new HashMap<>();
 		mapper.toHeaders(headers, springHeaders);
 		assertThat(springHeaders.get(KafkaHeaders.LISTENER_INFO)).isEqualTo("info");
@@ -165,13 +165,13 @@ public class SimpleKafkaHeaderMapperTests {
 		SimpleKafkaHeaderMapper inboundMapper = SimpleKafkaHeaderMapper.forInboundOnlyWithMatchers();
 		Headers headers = new RecordHeaders();
 		headers.add("foo", "bar".getBytes());
-		headers.add(KafkaHeaders.DELIVERY_ATTEMPT, new byte[] { 0, 0, 0, 1 });
+		headers.add(KafkaHeaders.DELIVERY_ATTEMPT, new byte[]{0, 0, 0, 1});
 		Map<String, Object> mapped = new HashMap<>();
 		inboundMapper.toHeaders(headers, mapped);
 		assertThat(mapped).containsKey("foo")
-				.containsKey(KafkaHeaders.DELIVERY_ATTEMPT);
+	.containsKey(KafkaHeaders.DELIVERY_ATTEMPT);
 		assertThatIllegalStateException()
-				.isThrownBy(() -> inboundMapper.fromHeaders(new MessageHeaders(mapped), headers));
+	.isThrownBy(() -> inboundMapper.fromHeaders(new MessageHeaders(mapped), headers));
 	}
 
 	@Test
@@ -179,11 +179,11 @@ public class SimpleKafkaHeaderMapperTests {
 		SimpleKafkaHeaderMapper inboundMapper = SimpleKafkaHeaderMapper.forInboundOnlyWithMatchers("!foo", "*");
 		Headers headers = new RecordHeaders();
 		headers.add("foo", "bar".getBytes());
-		headers.add(KafkaHeaders.DELIVERY_ATTEMPT, new byte[] { 0, 0, 0, 1 });
+		headers.add(KafkaHeaders.DELIVERY_ATTEMPT, new byte[]{0, 0, 0, 1});
 		Map<String, Object> mapped = new HashMap<>();
 		inboundMapper.toHeaders(headers, mapped);
 		assertThat(mapped).doesNotContainKey("foo")
-				.containsKey(KafkaHeaders.DELIVERY_ATTEMPT);
+	.containsKey(KafkaHeaders.DELIVERY_ATTEMPT);
 	}
 
 }

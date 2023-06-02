@@ -63,7 +63,7 @@ public final class KafkaStreamBrancher<K, V> {
 	 * @return {@code this}
 	 */
 	public KafkaStreamBrancher<K, V> branch(Predicate<? super K, ? super V> predicate,
-			Consumer<? super KStream<K, V>> consumer) {
+Consumer<? super KStream<K, V>> consumer) {
 		this.predicateList.add(Objects.requireNonNull(predicate));
 		this.consumerList.add(Objects.requireNonNull(consumer));
 		return this;
@@ -91,7 +91,7 @@ public final class KafkaStreamBrancher<K, V> {
 			this.predicateList.add((k, v) -> true);
 			this.consumerList.add(this.defaultConsumer);
 		}
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@SuppressWarnings({"unchecked", "rawtypes"})
 		Predicate<? super K, ? super V>[] predicates = this.predicateList.toArray(new Predicate[0]);
 		@SuppressWarnings("deprecation")
 		KStream<K, V>[] result = stream.branch(predicates);

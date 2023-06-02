@@ -57,21 +57,21 @@ public class BackOffValuesGenerator {
 
 	public int getMaxAttemps(int providedMaxAttempts) {
 		return providedMaxAttempts != RetryTopicConstants.NOT_SET
-				? providedMaxAttempts
-				: RetryTopicConstants.DEFAULT_MAX_ATTEMPTS;
+	? providedMaxAttempts
+	: RetryTopicConstants.DEFAULT_MAX_ATTEMPTS;
 	}
 
 	public List<Long> generateValues() {
 		return NoBackOffPolicy.class.isAssignableFrom(this.backOffPolicy.getClass())
-				? generateFromNoBackOffPolicy(this.numberOfvaluesToCreate)
-				: generateFromSleepingBackOffPolicy(this.numberOfvaluesToCreate, this.backOffPolicy);
+	? generateFromNoBackOffPolicy(this.numberOfvaluesToCreate)
+	: generateFromSleepingBackOffPolicy(this.numberOfvaluesToCreate, this.backOffPolicy);
 	}
 
 	private void checkBackOffPolicyTipe(BackOffPolicy providedBackOffPolicy) {
 		if (!(SleepingBackOffPolicy.class.isAssignableFrom(providedBackOffPolicy.getClass())
-				|| NoBackOffPolicy.class.isAssignableFrom(providedBackOffPolicy.getClass()))) {
+	|| NoBackOffPolicy.class.isAssignableFrom(providedBackOffPolicy.getClass()))) {
 			throw new IllegalArgumentException("Either a SleepingBackOffPolicy or a NoBackOffPolicy must be provided. " +
-					"Provided BackOffPolicy: " + providedBackOffPolicy.getClass().getSimpleName());
+		"Provided BackOffPolicy: " + providedBackOffPolicy.getClass().getSimpleName());
 		}
 	}
 
@@ -82,20 +82,20 @@ public class BackOffValuesGenerator {
 		// UniformRandomBackOffPolicy loses the max value when a sleeper is set.
 		if (providedBackOffPolicy instanceof UniformRandomBackOffPolicy) {
 			((UniformRandomBackOffPolicy) retainingBackOffPolicy)
-					.setMaxBackOffPeriod(((UniformRandomBackOffPolicy) providedBackOffPolicy).getMaxBackOffPeriod());
+		.setMaxBackOffPeriod(((UniformRandomBackOffPolicy) providedBackOffPolicy).getMaxBackOffPeriod());
 		}
 		BackOffContext backOffContext = retainingBackOffPolicy.start(RetrySynchronizationManager.getContext());
 		IntStream.range(0, maxAttempts)
-				.forEach(index -> retainingBackOffPolicy.backOff(backOffContext));
+	.forEach(index -> retainingBackOffPolicy.backOff(backOffContext));
 
 		return sleeper.getBackoffValues();
 	}
 
 	private List<Long> generateFromNoBackOffPolicy(int maxAttempts) {
 		return LongStream
-				.range(0, maxAttempts)
-				.mapToObj(index -> 0L)
-				.collect(Collectors.toList());
+	.range(0, maxAttempts)
+	.mapToObj(index -> 0L)
+	.collect(Collectors.toList());
 	}
 
 	/**

@@ -161,7 +161,7 @@ class RetryTopicConfigurerTests {
 	@Mock
 	private KafkaListenerEndpointRegistrar registrar;
 
-	private Method getMethod(String methodName)  {
+	private Method getMethod(String methodName) {
 		try {
 			return this.getClass().getMethod(methodName);
 		}
@@ -175,13 +175,13 @@ class RetryTopicConfigurerTests {
 
 		// setup
 		RetryTopicConfigurer configurer = new RetryTopicConfigurer(destinationTopicProcessor, containerFactoryResolver,
-				listenerContainerFactoryConfigurer, new SuffixingRetryTopicNamesProviderFactory());
+	listenerContainerFactoryConfigurer, new SuffixingRetryTopicNamesProviderFactory());
 		configurer.setBeanFactory(beanFactory);
 
 		// when - then
 		assertThatIllegalArgumentException().isThrownBy(
-				() -> configurer.processMainAndRetryListeners(endpointProcessor, multiMethodEndpoint, configuration,
-						registrar, containerFactory, defaultFactoryBeanName));
+	() -> configurer.processMainAndRetryListeners(endpointProcessor, multiMethodEndpoint, configuration,
+registrar, containerFactory, defaultFactoryBeanName));
 	}
 
 	@Test
@@ -190,8 +190,8 @@ class RetryTopicConfigurerTests {
 		// given
 
 		List<DestinationTopic.Properties> destinationPropertiesList =
-				Arrays.asList(mainDestinationProperties, firstRetryDestinationProperties,
-						secondRetryDestinationProperties, dltDestinationProperties);
+	Arrays.asList(mainDestinationProperties, firstRetryDestinationProperties,
+secondRetryDestinationProperties, dltDestinationProperties);
 
 		RetryTopicConfigurer.EndpointProcessor endpointProcessor = endpoint -> {
 			endpoint.setTopics(topics.toArray(new String[]{}));
@@ -214,8 +214,8 @@ class RetryTopicConfigurerTests {
 
 		given(configuration.forContainerFactoryResolver()).willReturn(factoryResolverConfig);
 		willReturn(containerFactory).given(containerFactoryResolver)
-				.resolveFactoryForMainEndpoint(any(KafkaListenerContainerFactory.class),
-				eq(defaultFactoryBeanName), eq(factoryResolverConfig));
+	.resolveFactoryForMainEndpoint(any(KafkaListenerContainerFactory.class),
+eq(defaultFactoryBeanName), eq(factoryResolverConfig));
 		given(mainDestinationProperties.suffix()).willReturn(mainEndpointSuffix);
 		given(firstRetryDestinationProperties.suffix()).willReturn(firstRetrySuffix);
 		given(secondRetryDestinationProperties.suffix()).willReturn(secondRetrySuffix);
@@ -225,24 +225,24 @@ class RetryTopicConfigurerTests {
 		given(configuration.forContainerFactoryConfigurer()).willReturn(lcfcConfiguration);
 
 		willReturn(containerFactory).given(containerFactoryResolver).resolveFactoryForRetryEndpoint(containerFactory,
-				defaultFactoryBeanName, factoryResolverConfig);
+	defaultFactoryBeanName, factoryResolverConfig);
 		willReturn(containerFactory).given(this.listenerContainerFactoryConfigurer).decorateFactory(containerFactory,
-				lcfcConfiguration);
+	lcfcConfiguration);
 		willReturn(containerFactory).given(this.listenerContainerFactoryConfigurer).decorateFactoryWithoutSettingContainerProperties(containerFactory,
-				lcfcConfiguration);
+	lcfcConfiguration);
 
 		RetryTopicConfigurer configurer = new RetryTopicConfigurer(destinationTopicProcessor, containerFactoryResolver,
-				listenerContainerFactoryConfigurer, new SuffixingRetryTopicNamesProviderFactory());
+	listenerContainerFactoryConfigurer, new SuffixingRetryTopicNamesProviderFactory());
 		configurer.setBeanFactory(defaultListableBeanFactory);
 
 		// when
 		configurer.processMainAndRetryListeners(endpointProcessor, mainEndpoint, configuration, registrar,
-				containerFactory, defaultFactoryBeanName);
+	containerFactory, defaultFactoryBeanName);
 
 		// then
 
 		then(destinationTopicProcessor).should(times(1))
-				.processDestinationTopicProperties(destinationPropertiesProcessorCaptor.capture(), contextCaptor.capture());
+	.processDestinationTopicProperties(destinationPropertiesProcessorCaptor.capture(), contextCaptor.capture());
 		DestinationTopicProcessor.Context context = contextCaptor.getValue();
 		Consumer<DestinationTopic.Properties> destinationPropertiesConsumer = destinationPropertiesProcessorCaptor.getValue();
 
@@ -284,12 +284,12 @@ class RetryTopicConfigurerTests {
 		topicsConsumer.accept(topics);
 
 		then(defaultListableBeanFactory).should(times(2))
-				.registerSingleton(any(String.class), any(NewTopic.class));
+	.registerSingleton(any(String.class), any(NewTopic.class));
 	}
 
 	private void assertTopicNames(String retrySuffix, DestinationTopic.Properties destinationProperties, DestinationTopicProcessor.Context context, int index) {
 		then(destinationTopicProcessor).should(times(2)).registerDestinationTopic(mainTopicNameCaptor.capture(),
-				retryDltTopicNameCaptor.capture(), eq(destinationProperties), eq(context));
+	retryDltTopicNameCaptor.capture(), eq(destinationProperties), eq(context));
 
 		String firstTopicName = topics.get(0) + retrySuffix;
 		String secondTopicName = topics.get(1) + retrySuffix;
@@ -329,7 +329,7 @@ class RetryTopicConfigurerTests {
 		NoOpsClass noOps = new NoOpsClass();
 		willReturn(noOps).given(beanFactory).getBean(NoOpsClass.class);
 		EndpointHandlerMethod handlerMethod =
-				RetryTopicConfigurer.createHandlerMethodWith(NoOpsClass.class, noOpsMethodName);
+	RetryTopicConfigurer.createHandlerMethodWith(NoOpsClass.class, noOpsMethodName);
 
 		// given
 		Object resolvedBean = handlerMethod.resolveBean(this.beanFactory);
@@ -347,14 +347,14 @@ class RetryTopicConfigurerTests {
 		given(defaultListableBeanFactory.getBean(beanName)).willReturn(new NoOpsClass());
 		willThrow(NoSuchBeanDefinitionException.class).given(defaultListableBeanFactory).getBean(NoOpsClass.class);
 		EndpointHandlerMethod handlerMethod =
-				RetryTopicConfigurer.createHandlerMethodWith(NoOpsClass.class, noOpsMethodName);
+	RetryTopicConfigurer.createHandlerMethodWith(NoOpsClass.class, noOpsMethodName);
 
 		// given
 		Object resolvedBean = handlerMethod.resolveBean(this.defaultListableBeanFactory);
 
 		// then
 		then(defaultListableBeanFactory).should()
-				.registerBeanDefinition(eq(beanName), any(RootBeanDefinition.class));
+	.registerBeanDefinition(eq(beanName), any(RootBeanDefinition.class));
 		assertThat(NoOpsClass.class.isAssignableFrom(resolvedBean.getClass())).isTrue();
 
 	}
@@ -364,7 +364,7 @@ class RetryTopicConfigurerTests {
 	@SuppressWarnings("deprecation")
 	void shouldLogConsumerRecordMessage() {
 		RetryTopicConfigurer.LoggingDltListenerHandlerMethod method =
-				new RetryTopicConfigurer.LoggingDltListenerHandlerMethod();
+	new RetryTopicConfigurer.LoggingDltListenerHandlerMethod();
 		method.logMessage(consumerRecordMessage);
 		then(consumerRecordMessage).should().topic();
 	}
@@ -372,12 +372,13 @@ class RetryTopicConfigurerTests {
 	@Test
 	void shouldNotLogObjectMessage() {
 		RetryTopicConfigurer.LoggingDltListenerHandlerMethod method =
-				new RetryTopicConfigurer.LoggingDltListenerHandlerMethod();
+	new RetryTopicConfigurer.LoggingDltListenerHandlerMethod();
 		method.logMessage(objectMessage);
 		then(objectMessage).shouldHaveNoInteractions();
 	}
 
 	static class NoOpsClass {
-		void noOpsMethod() { };
+		void noOpsMethod() {
+		}
 	}
 }

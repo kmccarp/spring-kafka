@@ -51,12 +51,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  */
 @SpringJUnitConfig
 @DirtiesContext
-@EmbeddedKafka(partitions = 1,
-		topics = Configurer2Tests.STREAMING_TOPIC1,
-		brokerProperties = {
+@EmbeddedKafka(partitions = 1,topics = Configurer2Tests.STREAMING_TOPIC1,brokerProperties = {
 				"auto.create.topics.enable=${topics.autoCreate:false}",
-				"delete.topic.enable=${topic.delete:true}" },
-		brokerPropertiesLocation = "classpath:/${broker.filename:broker}.properties")
+				"delete.topic.enable=${topic.delete:true}"},brokerPropertiesLocation = "classpath:/${broker.filename:broker}.properties")
 public class Configurer2Tests {
 
 	public static final String STREAMING_TOPIC1 = "Configurer2Tests1";
@@ -81,7 +78,7 @@ public class Configurer2Tests {
 			props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Integer().getClass().getName());
 			props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
 			props.put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG,
-					WallclockTimestampExtractor.class.getName());
+		WallclockTimestampExtractor.class.getName());
 			props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "100");
 			return new KafkaStreamsConfiguration(props);
 		}
@@ -89,7 +86,8 @@ public class Configurer2Tests {
 		@Bean
 		public KStream<Integer, String> kStream(StreamsBuilder kStreamBuilder) {
 			KStream<Integer, String> stream = kStreamBuilder.stream(STREAMING_TOPIC1);
-			stream.foreach((K, v) -> { });
+			stream.foreach((K, v) -> {
+			});
 			return stream;
 		}
 

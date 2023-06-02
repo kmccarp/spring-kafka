@@ -46,9 +46,7 @@ import org.springframework.lang.Nullable;
  * @since 2.7
  *
  */
-public class KafkaBackoffAwareMessageListenerAdapter<K, V>
-		extends AbstractDelegatingMessageListenerAdapter<MessageListener<K, V>>
-		implements AcknowledgingConsumerAwareMessageListener<K, V> {
+public class KafkaBackoffAwareMessageListenerAdapter<K, V>extends AbstractDelegatingMessageListenerAdapter<MessageListener<K, V>>implements AcknowledgingConsumerAwareMessageListener<K, V> {
 
 	private final String listenerId;
 
@@ -71,10 +69,10 @@ public class KafkaBackoffAwareMessageListenerAdapter<K, V>
 	 * @since 2.7
 	 */
 	public KafkaBackoffAwareMessageListenerAdapter(MessageListener<K, V> delegate,
-												KafkaConsumerBackoffManager kafkaConsumerBackoffManager,
-												String listenerId,
-												String backoffTimestampHeader,
-												Clock clock) {
+KafkaConsumerBackoffManager kafkaConsumerBackoffManager,
+String listenerId,
+String backoffTimestampHeader,
+Clock clock) {
 		super(delegate);
 		this.listenerId = listenerId;
 		this.kafkaConsumerBackoffManager = kafkaConsumerBackoffManager;
@@ -83,16 +81,16 @@ public class KafkaBackoffAwareMessageListenerAdapter<K, V>
 	}
 
 	public KafkaBackoffAwareMessageListenerAdapter(MessageListener<K, V> adapter,
-			KafkaConsumerBackoffManager kafkaConsumerBackoffManager, String listenerId, Clock clock) throws KafkaBackoffException {
+KafkaConsumerBackoffManager kafkaConsumerBackoffManager, String listenerId, Clock clock) throws KafkaBackoffException {
 		this(adapter, kafkaConsumerBackoffManager, listenerId, RetryTopicHeaders.DEFAULT_HEADER_BACKOFF_TIMESTAMP, clock);
 	}
 
 	@Override
 	public void onMessage(ConsumerRecord<K, V> consumerRecord, @Nullable Acknowledgment acknowledgment,
-								@Nullable Consumer<?, ?> consumer) {
+@Nullable Consumer<?, ?> consumer) {
 		maybeGetBackoffTimestamp(consumerRecord)
-				.ifPresent(nextExecutionTimestamp -> this.kafkaConsumerBackoffManager
-						.backOffIfNecessary(createContext(consumerRecord, nextExecutionTimestamp, consumer)));
+	.ifPresent(nextExecutionTimestamp -> this.kafkaConsumerBackoffManager
+.backOffIfNecessary(createContext(consumerRecord, nextExecutionTimestamp, consumer)));
 		try {
 			invokeDelegateOnMessage(consumerRecord, acknowledgment, consumer);
 		}
@@ -111,16 +109,16 @@ public class KafkaBackoffAwareMessageListenerAdapter<K, V>
 	}
 
 	private KafkaConsumerBackoffManager.Context createContext(ConsumerRecord<K, V> data, long nextExecutionTimestamp,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 
 		return this.kafkaConsumerBackoffManager.createContext(nextExecutionTimestamp, this.listenerId,
-				new TopicPartition(data.topic(), data.partition()), consumer);
+	new TopicPartition(data.topic(), data.partition()), consumer);
 	}
 
 	private Optional<Long> maybeGetBackoffTimestamp(ConsumerRecord<K, V> data) {
 		return Optional
-				.ofNullable(data.headers().lastHeader(this.backoffTimestampHeader))
-				.map(timestampHeader -> new BigInteger(timestampHeader.value()).longValue());
+	.ofNullable(data.headers().lastHeader(this.backoffTimestampHeader))
+	.map(timestampHeader -> new BigInteger(timestampHeader.value()).longValue());
 	}
 
 

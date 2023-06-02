@@ -94,13 +94,15 @@ public class JsonSerializationTests {
 		List<String> list = Arrays.asList("dummy1", "dummy2");
 		entity.complexStruct = new HashMap<>();
 		entity.complexStruct.put((short) 4, list);
-		entityArray = new DummyEntity[] { entity };
+		entityArray = new DummyEntity[]{entity};
 
 		topic = "topic-name";
 
-		jsonReader = new JsonDeserializer<DummyEntity>() { };
+		jsonReader = new JsonDeserializer<DummyEntity>() {
+		};
 		jsonReader.close(); // does nothing, so may be called any time, or not called at all
-		jsonArrayReader = new JsonDeserializer<DummyEntity[]>() { };
+		jsonArrayReader = new JsonDeserializer<DummyEntity[]>() {
+		};
 		jsonArrayReader.configure(new HashMap<>(), false);
 		jsonArrayReader.close(); // does nothing, so may be called any time, or not called at all
 		jsonWriter = new JsonSerializer<>();
@@ -147,16 +149,16 @@ public class JsonSerializationTests {
 	@Test
 	void testDeserializeSerializedDummyException() {
 		assertThatExceptionOfType(SerializationException.class)
-				.isThrownBy(() -> jsonReader.deserialize(topic, stringWriter.serialize(topic, "dummy")))
-				.withMessageStartingWith("Can't deserialize data [")
-				.withCauseInstanceOf(JsonParseException.class);
+	.isThrownBy(() -> jsonReader.deserialize(topic, stringWriter.serialize(topic, "dummy")))
+	.withMessageStartingWith("Can't deserialize data [")
+	.withCauseInstanceOf(JsonParseException.class);
 
 		Headers headers = new RecordHeaders();
 		headers.add(AbstractJavaTypeMapper.DEFAULT_CLASSID_FIELD_NAME, "com.malware.DummyEntity".getBytes());
 		assertThatIllegalArgumentException()
-				.isThrownBy(() -> dummyEntityJsonDeserializer
-						.deserialize(topic, headers, jsonWriter.serialize(topic, entity)))
-				.withMessageContaining("not in the trusted packages");
+	.isThrownBy(() -> dummyEntityJsonDeserializer
+.deserialize(topic, headers, jsonWriter.serialize(topic, entity)))
+	.withMessageContaining("not in the trusted packages");
 	}
 
 	@Test
@@ -183,7 +185,7 @@ public class JsonSerializationTests {
 	void testExtraFieldIgnored() {
 		JsonDeserializer<DummyEntity> deser = new JsonDeserializer<>(DummyEntity.class);
 		assertThat(deser.deserialize(topic, "{\"intValue\":1,\"extra\":2}".getBytes()))
-				.isInstanceOf(DummyEntity.class);
+	.isInstanceOf(DummyEntity.class);
 		deser.close();
 	}
 
@@ -191,27 +193,27 @@ public class JsonSerializationTests {
 	void testDeserTypeHeadersConfig() {
 		this.jsonReader.configure(Collections.singletonMap(JsonDeserializer.USE_TYPE_INFO_HEADERS, false), false);
 		assertThat(KafkaTestUtils.getPropertyValue(this.jsonReader, "typeMapper.typePrecedence"))
-			.isEqualTo(TypePrecedence.INFERRED);
+	.isEqualTo(TypePrecedence.INFERRED);
 		DirectFieldAccessor dfa = new DirectFieldAccessor(this.jsonReader);
 		dfa.setPropertyValue("configured", false);
 		this.jsonReader.configure(Collections.singletonMap(JsonDeserializer.USE_TYPE_INFO_HEADERS, true), false);
 		assertThat(KafkaTestUtils.getPropertyValue(this.jsonReader, "typeMapper.typePrecedence"))
-			.isEqualTo(TypePrecedence.TYPE_ID);
+	.isEqualTo(TypePrecedence.TYPE_ID);
 		dfa.setPropertyValue("configured", false);
 		this.jsonReader.configure(Collections.singletonMap(JsonDeserializer.USE_TYPE_INFO_HEADERS, false), false);
 		assertThat(KafkaTestUtils.getPropertyValue(this.jsonReader, "typeMapper.typePrecedence"))
-			.isEqualTo(TypePrecedence.INFERRED);
+	.isEqualTo(TypePrecedence.INFERRED);
 		this.jsonReader.setUseTypeHeaders(true);
 		dfa.setPropertyValue("configured", false);
 		this.jsonReader.configure(Collections.emptyMap(), false);
 		assertThat(KafkaTestUtils.getPropertyValue(this.jsonReader, "typeMapper.typePrecedence"))
-			.isEqualTo(TypePrecedence.TYPE_ID);
+	.isEqualTo(TypePrecedence.TYPE_ID);
 		this.jsonReader.setTypeMapper(new DefaultJackson2JavaTypeMapper());
 		dfa.setPropertyValue("configured", false);
 		dfa.setPropertyValue("setterCalled", false);
 		this.jsonReader.configure(Collections.singletonMap(JsonDeserializer.USE_TYPE_INFO_HEADERS, true), false);
 		assertThat(KafkaTestUtils.getPropertyValue(this.jsonReader, "typeMapper.typePrecedence"))
-			.isEqualTo(TypePrecedence.INFERRED);
+	.isEqualTo(TypePrecedence.INFERRED);
 	}
 
 	@Test
@@ -227,7 +229,8 @@ public class JsonSerializationTests {
 	@Test
 	void testDeserializerTypeReference() {
 		JsonSerializer<List<DummyEntity>> ser = new JsonSerializer<>();
-		JsonDeserializer<List<DummyEntity>> de = new JsonDeserializer<>(new TypeReference<List<DummyEntity>>() { });
+		JsonDeserializer<List<DummyEntity>> de = new JsonDeserializer<>(new TypeReference<List<DummyEntity>>() {
+		});
 		List<DummyEntity> dummy = Arrays.asList(this.entityArray);
 		assertThat(de.deserialize(this.topic, ser.serialize(this.topic, dummy))).isEqualTo(dummy);
 		ser.close();
@@ -236,8 +239,10 @@ public class JsonSerializationTests {
 
 	@Test
 	void testDeserializerTypeForcedType() {
-		JsonSerializer<List<Parent>> ser = new JsonSerializer<>(new TypeReference<List<Parent>>() { });
-		JsonDeserializer<List<Parent>> de = new JsonDeserializer<>(new TypeReference<List<Parent>>() { });
+		JsonSerializer<List<Parent>> ser = new JsonSerializer<>(new TypeReference<List<Parent>>() {
+		});
+		JsonDeserializer<List<Parent>> de = new JsonDeserializer<>(new TypeReference<List<Parent>>() {
+		});
 		List<Parent> dummy = Arrays.asList(new Child(1), new Parent(2));
 		assertThat(de.deserialize(this.topic, ser.serialize(this.topic, dummy))).isEqualTo(dummy);
 		ser.close();
@@ -294,7 +299,7 @@ public class JsonSerializationTests {
 		Map<String, Object> props = Collections.singletonMap(JsonDeserializer.TRUSTED_PACKAGES, "foo, bar, \tbaz");
 		deser.configure(props, false);
 		assertThat(KafkaTestUtils.getPropertyValue(deser, "typeMapper.trustedPackages", Set.class))
-				.contains("foo", "bar", "baz");
+	.contains("foo", "bar", "baz");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -302,12 +307,12 @@ public class JsonSerializationTests {
 	void testTrustMappingPackages() {
 		JsonDeserializer<Object> deser = new JsonDeserializer<>();
 		Map<String, Object> props = Collections.singletonMap(JsonDeserializer.TYPE_MAPPINGS,
-				"foo:" + Foo.class.getName());
+	"foo:" + Foo.class.getName());
 		deser.configure(props, false);
 		assertThat(KafkaTestUtils.getPropertyValue(deser, "typeMapper.trustedPackages", Set.class))
-				.contains(Foo.class.getPackageName());
+	.contains(Foo.class.getPackageName());
 		assertThat(KafkaTestUtils.getPropertyValue(deser, "typeMapper.trustedPackages", Set.class))
-			.contains(Foo.class.getPackageName() + ".*");
+	.contains(Foo.class.getPackageName() + ".*");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -315,12 +320,12 @@ public class JsonSerializationTests {
 	void testTrustMappingPackagesForArray() {
 		JsonDeserializer<Object> deser = new JsonDeserializer<>();
 		Map<String, Object> props = Collections.singletonMap(JsonDeserializer.TYPE_MAPPINGS,
-				"foo:" + Foo[].class.getName());
+	"foo:" + Foo[].class.getName());
 		deser.configure(props, false);
 		assertThat(KafkaTestUtils.getPropertyValue(deser, "typeMapper.trustedPackages", Set.class))
-				.contains(Foo.class.getPackageName());
+	.contains(Foo.class.getPackageName());
 		assertThat(KafkaTestUtils.getPropertyValue(deser, "typeMapper.trustedPackages", Set.class))
-			.contains(Foo.class.getPackageName() + ".*");
+	.contains(Foo.class.getPackageName() + ".*");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -328,8 +333,8 @@ public class JsonSerializationTests {
 	void testTrustMappingPackagesWithAll() {
 		JsonDeserializer<Object> deser = new JsonDeserializer<>();
 		Map<String, Object> props = Map.of(
-				JsonDeserializer.TRUSTED_PACKAGES, "*",
-				JsonDeserializer.TYPE_MAPPINGS, "foo:" + Foo.class.getName());
+	JsonDeserializer.TRUSTED_PACKAGES, "*",
+	JsonDeserializer.TYPE_MAPPINGS, "foo:" + Foo.class.getName());
 		deser.configure(props, false);
 		assertThat(KafkaTestUtils.getPropertyValue(deser, "typeMapper.trustedPackages", Set.class)).isEmpty();
 	}
@@ -342,9 +347,9 @@ public class JsonSerializationTests {
 		mapper.setIdClassMapping(Collections.singletonMap("foo", Foo.class));
 		deser.setTypeMapper(mapper);
 		assertThat(KafkaTestUtils.getPropertyValue(deser, "typeMapper.trustedPackages", Set.class))
-				.contains(Foo.class.getPackageName());
+	.contains(Foo.class.getPackageName());
 		assertThat(KafkaTestUtils.getPropertyValue(deser, "typeMapper.trustedPackages", Set.class))
-			.contains(Foo.class.getPackageName() + ".*");
+	.contains(Foo.class.getPackageName() + ".*");
 	}
 
 	@Test
@@ -357,12 +362,12 @@ public class JsonSerializationTests {
 		deser.configure(props, false);
 		assertThat(deser.deserialize("", "{\"foo\":\"bar\"}".getBytes())).isInstanceOf(Foo.class);
 		assertThat(deser.deserialize("", new RecordHeaders(), "{\"bar\":\"baz\"}".getBytes()))
-				.isInstanceOf(Bar.class);
+	.isInstanceOf(Bar.class);
 
 		new DirectFieldAccessor(deser).setPropertyValue("configured", false);
 		deser.configure(props, true);
 		assertThat(deser.deserialize("", new RecordHeaders(), "\"foo\"".getBytes()))
-				.isEqualTo("foo");
+	.isEqualTo("foo");
 		deser.close();
 	}
 
@@ -376,34 +381,34 @@ public class JsonSerializationTests {
 		deser.configure(props, false);
 		assertThat(deser.deserialize("", "{\"foo\":\"bar\"}".getBytes())).isInstanceOf(Foo.class);
 		assertThat(deser.deserialize("", new RecordHeaders(), "{\"bar\":\"baz\"}".getBytes()))
-				.isInstanceOf(Bar.class);
+	.isInstanceOf(Bar.class);
 
 		new DirectFieldAccessor(deser).setPropertyValue("configured", false);
 		deser.configure(props, true);
 		assertThat(deser.deserialize("", new RecordHeaders(), "\"foo\"".getBytes()))
-				.isEqualTo("foo");
+	.isEqualTo("foo");
 		deser.close();
 	}
 
 	@Test
 	void testTypeFunctionDirect() {
 		JsonDeserializer<Object> deser = new JsonDeserializer<>()
-				.trustedPackages("*")
-				.typeFunction(JsonSerializationTests::fooBarJavaType);
+	.trustedPackages("*")
+	.typeFunction(JsonSerializationTests::fooBarJavaType);
 		assertThat(deser.deserialize("", "{\"foo\":\"bar\"}".getBytes())).isInstanceOf(Foo.class);
 		assertThat(deser.deserialize("", new RecordHeaders(), "{\"bar\":\"baz\"}".getBytes()))
-				.isInstanceOf(Bar.class);
+	.isInstanceOf(Bar.class);
 		deser.close();
 	}
 
 	@Test
 	void testTypeResolverDirect() {
 		JsonDeserializer<Object> deser = new JsonDeserializer<>()
-				.trustedPackages("*")
-				.typeResolver(JsonSerializationTests::fooBarJavaTypeForTopic);
+	.trustedPackages("*")
+	.typeResolver(JsonSerializationTests::fooBarJavaTypeForTopic);
 		assertThat(deser.deserialize("", "{\"foo\":\"bar\"}".getBytes())).isInstanceOf(Foo.class);
 		assertThat(deser.deserialize("", new RecordHeaders(), "{\"bar\":\"baz\"}".getBytes()))
-				.isInstanceOf(Bar.class);
+	.isInstanceOf(Bar.class);
 		deser.close();
 	}
 
@@ -482,14 +487,15 @@ public class JsonSerializationTests {
 
 	@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 	@JsonSubTypes({
-		@JsonSubTypes.Type(value = Parent.class, name = "parent"),
-		@JsonSubTypes.Type(value = Child.class, name = "child")
+@JsonSubTypes.Type(value = Parent.class, name = "parent"),
+@JsonSubTypes.Type(value = Child.class, name = "child")
 	})
 	public static class Parent {
 		@JsonProperty
 		private int number;
 
-		Parent() { }
+		Parent() {
+		}
 
 		Parent(int number) {
 			this.number = number;
@@ -511,7 +517,8 @@ public class JsonSerializationTests {
 	}
 
 	public static class Child extends Parent {
-		Child() { }
+		Child() {
+		}
 
 		Child(int number) {
 			super(number);

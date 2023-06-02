@@ -43,8 +43,7 @@ import org.springframework.kafka.support.TopicPartitionOffset;
  * @author Artem Bilan
  * @author Murali Reddy
  */
-public class ConcurrentKafkaListenerContainerFactory<K, V>
-		extends AbstractKafkaListenerContainerFactory<ConcurrentMessageListenerContainer<K, V>, K, V> {
+public class ConcurrentKafkaListenerContainerFactory<K, V>extends AbstractKafkaListenerContainerFactory<ConcurrentMessageListenerContainer<K, V>, K, V> {
 
 	private Integer concurrency;
 
@@ -79,7 +78,7 @@ public class ConcurrentKafkaListenerContainerFactory<K, V>
 
 	@Override
 	protected void initializeContainer(ConcurrentMessageListenerContainer<K, V> instance,
-			KafkaListenerEndpoint endpoint) {
+KafkaListenerEndpoint endpoint) {
 
 		super.initializeContainer(instance, endpoint);
 		Integer conc = endpoint.getConcurrency();

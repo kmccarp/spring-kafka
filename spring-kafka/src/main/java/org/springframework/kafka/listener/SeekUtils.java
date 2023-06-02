@@ -77,10 +77,10 @@ public final class SeekUtils {
 	 * @return true if the failed record was skipped.
 	 */
 	public static boolean doSeeks(List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, Exception exception,
-			boolean recoverable, BiPredicate<ConsumerRecord<?, ?>, Exception> skipper, LogAccessor logger) {
+boolean recoverable, BiPredicate<ConsumerRecord<?, ?>, Exception> skipper, LogAccessor logger) {
 
 		return doSeeks(records, consumer, exception, recoverable, (rec, ex, cont, cons) -> skipper.test(rec, ex), null,
-				logger);
+	logger);
 	}
 
 	/**
@@ -95,8 +95,8 @@ public final class SeekUtils {
 	 * @return true if the failed record was skipped.
 	 */
 	public static boolean doSeeks(List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer, Exception exception,
-			boolean recoverable, RecoveryStrategy recovery, @Nullable MessageListenerContainer container,
-			LogAccessor logger) {
+boolean recoverable, RecoveryStrategy recovery, @Nullable MessageListenerContainer container,
+LogAccessor logger) {
 
 		Map<TopicPartition, Long> partitions = new LinkedHashMap<>();
 		AtomicBoolean first = new AtomicBoolean(true);
@@ -110,12 +110,12 @@ public final class SeekUtils {
 				catch (Exception ex) {
 					if (isBackoffException(ex)) {
 						logger.debug(ex, () -> KafkaUtils.format(record)
-								+ " included in seeks due to retry back off");
+					+ " included in seeks due to retry back off");
 					}
 					else {
 						logger.error(ex, () -> "Failed to determine if this record ("
-								+ KafkaUtils.format(record)
-								+ ") should be recovererd, including in seeks");
+					+ KafkaUtils.format(record)
+					+ ") should be recovererd, including in seeks");
 					}
 					skipped.set(false);
 				}
@@ -125,7 +125,7 @@ public final class SeekUtils {
 			}
 			if (!recoverable || !first.get() || !skipped.get()) {
 				partitions.computeIfAbsent(new TopicPartition(record.topic(), record.partition()),
-						offset -> record.offset());
+			offset -> record.offset());
 			}
 			first.set(false);
 		});
@@ -141,7 +141,7 @@ public final class SeekUtils {
 	 * @since 2.5
 	 */
 	public static void seekPartitions(Consumer<?, ?> consumer, Map<TopicPartition, Long> partitions,
-			LogAccessor logger) {
+LogAccessor logger) {
 
 		partitions.forEach((topicPartition, offset) -> {
 			try {
@@ -167,11 +167,11 @@ public final class SeekUtils {
 	 * @since 2.5
 	 */
 	public static void seekOrRecover(Exception thrownException, List<ConsumerRecord<?, ?>> records,
-			Consumer<?, ?> consumer, MessageListenerContainer container, boolean commitRecovered,
-			BiPredicate<ConsumerRecord<?, ?>, Exception> skipPredicate, LogAccessor logger, Level level) {
+Consumer<?, ?> consumer, MessageListenerContainer container, boolean commitRecovered,
+BiPredicate<ConsumerRecord<?, ?>, Exception> skipPredicate, LogAccessor logger, Level level) {
 
 		seekOrRecover(thrownException, records, consumer, container, commitRecovered,
-				(rec, ex, cont, cons) -> skipPredicate.test(rec, ex), logger, level);
+	(rec, ex, cont, cons) -> skipPredicate.test(rec, ex), logger, level);
 
 	}
 
@@ -188,19 +188,19 @@ public final class SeekUtils {
 	 * @since 2.7
 	 */
 	public static void seekOrRecover(Exception thrownException, @Nullable List<ConsumerRecord<?, ?>> records,
-			Consumer<?, ?> consumer, MessageListenerContainer container, boolean commitRecovered,
-			RecoveryStrategy recovery, LogAccessor logger, Level level) {
+Consumer<?, ?> consumer, MessageListenerContainer container, boolean commitRecovered,
+RecoveryStrategy recovery, LogAccessor logger, Level level) {
 
 		if (ObjectUtils.isEmpty(records)) {
 			if (thrownException instanceof SerializationException) {
 				throw new IllegalStateException("This error handler cannot process 'SerializationException's directly; "
-						+ "please consider configuring an 'ErrorHandlingDeserializer' in the value and/or key "
-						+ "deserializer", thrownException);
+			+ "please consider configuring an 'ErrorHandlingDeserializer' in the value and/or key "
+			+ "deserializer", thrownException);
 			}
 			else {
 				throw new IllegalStateException("This error handler cannot process '"
-						+ thrownException.getClass().getName()
-						+ "'s; no record information is available", thrownException);
+			+ thrownException.getClass().getName()
+			+ "'s; no record information is available", thrownException);
 			}
 		}
 
@@ -211,8 +211,8 @@ public final class SeekUtils {
 			if (container.getContainerProperties().getAckMode().equals(AckMode.MANUAL_IMMEDIATE)) {
 				ConsumerRecord<?, ?> record = records.get(0);
 				Map<TopicPartition, OffsetAndMetadata> offsetToCommit = Collections.singletonMap(
-						new TopicPartition(record.topic(), record.partition()),
-						ListenerUtils.createOffsetAndMetadata(container, record.offset() + 1));
+			new TopicPartition(record.topic(), record.partition()),
+			ListenerUtils.createOffsetAndMetadata(container, record.offset() + 1));
 				if (container.getContainerProperties().isSyncCommits()) {
 					consumer.commitSync(offsetToCommit, container.getContainerProperties().getSyncCommitTimeout());
 				}
@@ -226,7 +226,7 @@ public final class SeekUtils {
 			}
 			else {
 				logger.debug(() -> "'commitRecovered' ignored, container AckMode must be MANUAL_IMMEDIATE, not "
-						+ container.getContainerProperties().getAckMode());
+			+ container.getContainerProperties().getAckMode());
 			}
 		}
 	}
@@ -239,7 +239,7 @@ public final class SeekUtils {
 	 */
 	public static boolean isBackoffException(Exception exception) {
 		return NestedRuntimeException.class.isAssignableFrom(exception.getClass()) // NOSONAR - unchecked cast
-				&& ((NestedRuntimeException) exception).contains(KafkaBackoffException.class);
+	&& ((NestedRuntimeException) exception).contains(KafkaBackoffException.class);
 	}
 
 }

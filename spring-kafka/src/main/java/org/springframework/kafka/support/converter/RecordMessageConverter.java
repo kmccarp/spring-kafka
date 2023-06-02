@@ -44,7 +44,7 @@ public interface RecordMessageConverter extends MessageConverter {
 	 */
 	@NonNull
 	Message<?> toMessage(ConsumerRecord<?, ?> record, Acknowledgment acknowledgment, Consumer<?, ?> consumer,
-			Type payloadType);
+Type payloadType);
 
 	/**
 	 * Convert a message to a producer record.

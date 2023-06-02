@@ -296,7 +296,7 @@ public interface ProducerFactory<K, V> {
 	 */
 	default ProducerFactory<K, V> copyWithConfigurationOverride(Map<String, Object> overrideProperties) {
 		throw new UnsupportedOperationException(
-				"This factory implementation doesn't support creating reconfigured copies.");
+	"This factory implementation doesn't support creating reconfigured copies.");
 	}
 
 	/**

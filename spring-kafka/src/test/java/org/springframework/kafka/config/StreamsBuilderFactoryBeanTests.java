@@ -134,7 +134,7 @@ public class StreamsBuilderFactoryBeanTests {
 		public KTable<?, ?> table(StreamsBuilder builder) {
 			KStream<Object, Object> stream = builder.stream(Pattern.compile("foo"));
 			return stream.groupByKey()
-					.count(Materialized.as("store"));
+		.count(Materialized.as("store"));
 
 		}
 	}

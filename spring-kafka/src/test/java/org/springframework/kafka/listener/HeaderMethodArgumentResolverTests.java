@@ -42,22 +42,22 @@ public class HeaderMethodArgumentResolverTests {
 		KafkaListenerAnnotationBeanPostProcessor bpp = new KafkaListenerAnnotationBeanPostProcessor<>();
 		MessageHandlerMethodFactory factory = bpp.getMessageHandlerMethodFactory();
 		InvocableHandlerMethod method = factory.createInvocableHandlerMethod(this, getClass().getDeclaredMethod(
-				"numbers", String.class,
-				long.class, int.class, short.class, byte.class, Long.class, Integer.class, Short.class, Byte.class));
+	"numbers", String.class,
+	long.class, int.class, short.class, byte.class, Long.class, Integer.class, Short.class, Byte.class));
 		method.invoke(new GenericMessage<>("foo", Map.of(
-				"l1", ByteBuffer.allocate(8).putLong(1L).array(),
-				"i1", ByteBuffer.allocate(4).putInt(2).array(),
-				"s1", ByteBuffer.allocate(2).putShort((short) 3).array(),
-				"b1", ByteBuffer.allocate(1).put((byte) 4).array(),
-				"l2", ByteBuffer.allocate(8).putLong(5L).array(),
-				"i2", ByteBuffer.allocate(4).putInt(6).array(),
-				"s2", ByteBuffer.allocate(2).putShort((short) 7).array(),
-				"b2", ByteBuffer.allocate(1).put((byte) 8).array())));
+	"l1", ByteBuffer.allocate(8).putLong(1L).array(),
+	"i1", ByteBuffer.allocate(4).putInt(2).array(),
+	"s1", ByteBuffer.allocate(2).putShort((short) 3).array(),
+	"b1", ByteBuffer.allocate(1).put((byte) 4).array(),
+	"l2", ByteBuffer.allocate(8).putLong(5L).array(),
+	"i2", ByteBuffer.allocate(4).putInt(6).array(),
+	"s2", ByteBuffer.allocate(2).putShort((short) 7).array(),
+	"b2", ByteBuffer.allocate(1).put((byte) 8).array())));
 	}
 
 	public void numbers(String payload,
-			@Header("l1") long l1, @Header("i1") int i1, @Header("s1") short s1, @Header("b1") byte b1,
-			@Header("l2") Long l2, @Header("i2") Integer i2, @Header("s2") Short s2, @Header("b2") Byte b2) {
+@Header("l1") long l1, @Header("i1") int i1, @Header("s1") short s1, @Header("b1") byte b1,
+@Header("l2") Long l2, @Header("i2") Integer i2, @Header("s2") Short s2, @Header("b2") Byte b2) {
 
 		assertThat(l1).isEqualTo(1L);
 		assertThat(i1).isEqualTo(2);

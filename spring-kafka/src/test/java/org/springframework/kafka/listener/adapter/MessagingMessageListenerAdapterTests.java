@@ -43,7 +43,7 @@ public class MessagingMessageListenerAdapterTests {
 	@Test
 	void testFallbackType() {
 		final class MyAdapter extends MessagingMessageListenerAdapter<String, String>
-				implements AcknowledgingMessageListener<String, String> {
+	implements AcknowledgingMessageListener<String, String> {
 
 			private MyAdapter() {
 				super(null, null);
@@ -71,13 +71,13 @@ public class MessagingMessageListenerAdapterTests {
 		KafkaListenerAnnotationBeanPostProcessor<String, String> bpp = new KafkaListenerAnnotationBeanPostProcessor<>();
 		Method method = getClass().getDeclaredMethod("test", Acknowledgment.class);
 		RecordMessagingMessageListenerAdapter<String, String> adapter =
-				new RecordMessagingMessageListenerAdapter<>(this, method);
+	new RecordMessagingMessageListenerAdapter<>(this, method);
 		adapter.setHandlerMethod(
-				new HandlerAdapter(bpp.getMessageHandlerMethodFactory().createInvocableHandlerMethod(this, method)));
+	new HandlerAdapter(bpp.getMessageHandlerMethodFactory().createInvocableHandlerMethod(this, method)));
 		assertThatExceptionOfType(ListenerExecutionFailedException.class).isThrownBy(() -> adapter.onMessage(
-						new ConsumerRecord<>("foo", 0, 0L, null, "foo"), null, null))
-				.withCauseExactlyInstanceOf(IllegalStateException.class)
-				.withStackTraceContaining("MANUAL");
+	new ConsumerRecord<>("foo", 0, 0L, null, "foo"), null, null))
+	.withCauseExactlyInstanceOf(IllegalStateException.class)
+	.withStackTraceContaining("MANUAL");
 	}
 
 	public void test(Acknowledgment ack) {

@@ -73,8 +73,7 @@ import org.springframework.util.Assert;
  * @since 2.1.3
  *
  */
-public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implements BatchMessageListener<K, R>,
-		InitializingBean, SmartLifecycle, DisposableBean, ReplyingKafkaOperations<K, V, R>, ConsumerSeekAware {
+public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implements BatchMessageListener<K, R>,InitializingBean, SmartLifecycle, DisposableBean, ReplyingKafkaOperations<K, V, R>, ConsumerSeekAware {
 
 	private static final String WITH_CORRELATION_ID = " with correlationId: ";
 
@@ -103,7 +102,7 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 	private boolean sharedReplyTopic;
 
 	private Function<ProducerRecord<K, V>, CorrelationKey> correlationStrategy =
-			ReplyingKafkaTemplate::defaultCorrelationIdStrategy;
+ReplyingKafkaTemplate::defaultCorrelationIdStrategy;
 
 	private boolean binaryCorrelation = true;
 
@@ -122,13 +121,13 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 	private volatile boolean schedulerInitialized;
 
 	public ReplyingKafkaTemplate(ProducerFactory<K, V> producerFactory,
-			GenericMessageListenerContainer<K, R> replyContainer) {
+GenericMessageListenerContainer<K, R> replyContainer) {
 
 		this(producerFactory, replyContainer, false);
 	}
 
 	public ReplyingKafkaTemplate(ProducerFactory<K, V> producerFactory,
-			GenericMessageListenerContainer<K, R> replyContainer, boolean autoFlush) {
+GenericMessageListenerContainer<K, R> replyContainer, boolean autoFlush) {
 
 		super(producerFactory, autoFlush);
 		Assert.notNull(replyContainer, "'replyContainer' cannot be null");
@@ -154,8 +153,8 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 			this.replyTopic = null;
 			this.replyPartition = null;
 			this.logger.debug(() -> "Could not determine container's reply topic/partition; senders must populate "
-					+ "at least the " + KafkaHeaders.REPLY_TOPIC + " header, and optionally the "
-					+ KafkaHeaders.REPLY_PARTITION + " header");
+		+ "at least the " + KafkaHeaders.REPLY_TOPIC + " header, and optionally the "
+		+ KafkaHeaders.REPLY_PARTITION + " header");
 		}
 		else {
 			this.replyTopic = tempReplyTopic.getBytes(StandardCharsets.UTF_8);
@@ -369,7 +368,7 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 
 	@Override
 	public <P> RequestReplyTypedMessageFuture<K, V, P> sendAndReceive(Message<?> message,
-			@Nullable ParameterizedTypeReference<P> returnType) {
+@Nullable ParameterizedTypeReference<P> returnType) {
 
 		return sendAndReceive(message, this.defaultReplyTimeout, returnType);
 	}
@@ -377,26 +376,26 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 	@SuppressWarnings("unchecked")
 	@Override
 	public <P> RequestReplyTypedMessageFuture<K, V, P> sendAndReceive(Message<?> message,
-			@Nullable Duration replyTimeout,
-			@Nullable ParameterizedTypeReference<P> returnType) {
+@Nullable Duration replyTimeout,
+@Nullable ParameterizedTypeReference<P> returnType) {
 
 		RequestReplyFuture<K, V, R> future = sendAndReceive((ProducerRecord<K, V>) getMessageConverter()
-				.fromMessage(message, getDefaultTopic()), replyTimeout);
+	.fromMessage(message, getDefaultTopic()), replyTimeout);
 		RequestReplyTypedMessageFuture<K, V, P> replyFuture =
-				new RequestReplyTypedMessageFuture<>(future.getSendFuture());
+	new RequestReplyTypedMessageFuture<>(future.getSendFuture());
 		future.whenComplete((result, ex) -> {
-				if (ex == null) {
-					try {
-						replyFuture.complete(getMessageConverter()
-							.toMessage(result, null, null, returnType == null ? null : returnType.getType()));
-					}
-					catch (Exception ex2) { // NOSONAR
-						replyFuture.completeExceptionally(ex2);
-					}
+			if (ex == null) {
+				try {
+					replyFuture.complete(getMessageConverter()
+				.toMessage(result, null, null, returnType == null ? null : returnType.getType()));
 				}
-				else {
-					replyFuture.completeExceptionally(ex);
+				catch (Exception ex2) { // NOSONAR
+					replyFuture.completeExceptionally(ex2);
 				}
+			}
+			else {
+				replyFuture.completeExceptionally(ex);
+			}
 		});
 
 		return replyFuture;
@@ -426,8 +425,8 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 		}
 		Object correlation = this.binaryCorrelation ? correlationId : correlationId.toString();
 		byte[] correlationValue = this.binaryCorrelation
-				? correlationId.getCorrelationId()
-				: ((String) correlation).getBytes(StandardCharsets.UTF_8);
+	? correlationId.getCorrelationId()
+	: ((String) correlation).getBytes(StandardCharsets.UTF_8);
 		headers.add(new RecordHeader(this.correlationHeaderName, correlationValue));
 		this.logger.debug(() -> "Sending: " + KafkaUtils.format(record) + WITH_CORRELATION_ID + correlationId);
 		RequestReplyFuture<K, V, R> future = new RequestReplyFuture<>();
@@ -448,7 +447,7 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 			RequestReplyFuture<K, V, R> removed = this.futures.remove(correlationId);
 			if (removed != null) {
 				this.logger.warn(() -> "Reply timed out for: " + KafkaUtils.format(record)
-						+ WITH_CORRELATION_ID + correlationId);
+			+ WITH_CORRELATION_ID + correlationId);
 				if (!handleTimeout(correlationId, removed)) {
 					removed.completeExceptionally(new KafkaReplyTimeoutException("Reply timed out"));
 				}
@@ -465,7 +464,7 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 	 * @since 2.3
 	 */
 	protected boolean handleTimeout(@SuppressWarnings("unused") Object correlationId,
-			@SuppressWarnings("unused") RequestReplyFuture<K, V, R> future) {
+@SuppressWarnings("unused") RequestReplyFuture<K, V, R> future) {
 
 		return false;
 	}
@@ -488,7 +487,7 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 	}
 
 	private static <K, V> CorrelationKey defaultCorrelationIdStrategy(
-			@SuppressWarnings("unused") ProducerRecord<K, V> record) {
+@SuppressWarnings("unused") ProducerRecord<K, V> record) {
 
 		UUID uuid = UUID.randomUUID();
 		byte[] bytes = new byte[16]; // NOSONAR magic #
@@ -505,13 +504,13 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 			Object correlationId = null;
 			if (correlationHeader != null) {
 				correlationId = this.binaryCorrelation
-						? new CorrelationKey(correlationHeader.value())
-						: new String(correlationHeader.value(), StandardCharsets.UTF_8);
+			? new CorrelationKey(correlationHeader.value())
+			: new String(correlationHeader.value(), StandardCharsets.UTF_8);
 			}
 			if (correlationId == null) {
 				this.logger.error(() -> "No correlationId found in reply: " + KafkaUtils.format(record)
-						+ " - to use request/reply semantics, the responding server must return the correlation id "
-						+ " in the '" + this.correlationHeaderName + "' header");
+			+ " - to use request/reply semantics, the responding server must return the correlation id "
+			+ " in the '" + this.correlationHeaderName + "' header");
 			}
 			else {
 				RequestReplyFuture<K, V, R> future = this.futures.remove(correlationId);
@@ -528,7 +527,7 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 					}
 					if (ok) {
 						this.logger.debug(() -> "Received: " + KafkaUtils.format(record)
-								+ WITH_CORRELATION_ID + correlationKey);
+					+ WITH_CORRELATION_ID + correlationKey);
 						future.complete(record);
 					}
 				}
@@ -569,17 +568,17 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 	@Nullable
 	public static DeserializationException checkDeserialization(ConsumerRecord<?, ?> record, LogAccessor logger) {
 		DeserializationException exception = ListenerUtils.getExceptionFromHeader(record,
-				SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER, logger);
+	SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER, logger);
 		if (exception != null) {
 			logger.error(exception, () -> "Reply value deserialization failed for " + record.topic() + "-"
-					+ record.partition() + "@" + record.offset());
+		+ record.partition() + "@" + record.offset());
 			return exception;
 		}
 		exception = ListenerUtils.getExceptionFromHeader(record,
-				SerializationUtils.KEY_DESERIALIZER_EXCEPTION_HEADER, logger);
+	SerializationUtils.KEY_DESERIALIZER_EXCEPTION_HEADER, logger);
 		if (exception != null) {
 			logger.error(exception, () -> "Reply key deserialization failed for " + record.topic() + "-"
-					+ record.partition() + "@" + record.offset());
+		+ record.partition() + "@" + record.offset());
 			return exception;
 		}
 		return null;
@@ -596,7 +595,7 @@ public class ReplyingKafkaTemplate<K, V, R> extends KafkaTemplate<K, V> implemen
 
 	private String missingCorrelationLogMessage(ConsumerRecord<K, R> record, Object correlationId) {
 		return "No pending reply: " + KafkaUtils.format(record) + WITH_CORRELATION_ID
-				+ correlationId + ", perhaps timed out, or using a shared reply topic";
+	+ correlationId + ", perhaps timed out, or using a shared reply topic";
 	}
 
 }

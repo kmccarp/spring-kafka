@@ -50,8 +50,7 @@ import org.springframework.messaging.support.GenericMessage;
  * @author Artem Bilan
  * @author Venil Noronha
  */
-public class RecordMessagingMessageListenerAdapter<K, V> extends MessagingMessageListenerAdapter<K, V>
-		implements AcknowledgingConsumerAwareMessageListener<K, V> {
+public class RecordMessagingMessageListenerAdapter<K, V> extends MessagingMessageListenerAdapter<K, V>implements AcknowledgingConsumerAwareMessageListener<K, V> {
 
 	private KafkaListenerErrorHandler errorHandler;
 
@@ -60,7 +59,7 @@ public class RecordMessagingMessageListenerAdapter<K, V> extends MessagingMessag
 	}
 
 	public RecordMessagingMessageListenerAdapter(Object bean, Method method,
-			@Nullable KafkaListenerErrorHandler errorHandler) {
+@Nullable KafkaListenerErrorHandler errorHandler) {
 
 		super(bean, method);
 		this.errorHandler = errorHandler;
@@ -76,7 +75,7 @@ public class RecordMessagingMessageListenerAdapter<K, V> extends MessagingMessag
 	 */
 	@Override
 	public void onMessage(ConsumerRecord<K, V> record, @Nullable Acknowledgment acknowledgment,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 
 		Message<?> message;
 		if (isConversionNeeded()) {
@@ -107,8 +106,8 @@ public class RecordMessagingMessageListenerAdapter<K, V> extends MessagingMessag
 				}
 				catch (Exception ex) {
 					throw new ListenerExecutionFailedException(createMessagingErrorMessage(// NOSONAR stack trace loss
-							"Listener error handler threw an exception for the incoming message",
-							message.getPayload()), ex);
+				"Listener error handler threw an exception for the incoming message",
+				message.getPayload()), ex);
 				}
 			}
 			else {

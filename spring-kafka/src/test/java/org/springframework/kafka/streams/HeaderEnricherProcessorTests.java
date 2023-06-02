@@ -58,8 +58,8 @@ public class HeaderEnricherProcessorTests {
 		headers.put("spel", parser.parseExpression("context.timestamp() + new String(key) + new String(value)"));
 		KStream<String, String> stream = builder.stream(INPUT);
 		stream
-				.process(() -> new HeaderEnricherProcessor<>(headers))
-				.to(OUTPUT);
+	.process(() -> new HeaderEnricherProcessor<>(headers))
+	.to(OUTPUT);
 
 		Properties config = new Properties();
 		config.put(StreamsConfig.APPLICATION_ID_CONFIG, "test");
@@ -69,10 +69,10 @@ public class HeaderEnricherProcessorTests {
 		TopologyTestDriver driver = new TopologyTestDriver(builder.build(), config);
 
 		TestInputTopic<String, String> inputTopic = driver.createInputTopic(INPUT, new StringSerializer(),
-				new StringSerializer());
+	new StringSerializer());
 		inputTopic.pipeInput("key", "value");
 		TestOutputTopic<String, String> outputTopic = driver.createOutputTopic(OUTPUT, new StringDeserializer(),
-				new StringDeserializer());
+	new StringDeserializer());
 		TestRecord<String, String> result = outputTopic.readRecord();
 		assertThat(result.headers().lastHeader("foo")).isNotNull();
 		assertThat(result.headers().lastHeader("foo").value()).isEqualTo("bar".getBytes());

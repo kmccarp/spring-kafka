@@ -81,31 +81,31 @@ public class KafkaStreamsCustomizerTests {
 
 	@Test
 	public void testKafkaStreamsCustomizer(@Autowired KafkaStreamsConfiguration configuration,
-			@Autowired KafkaStreamsConfig config) {
+@Autowired KafkaStreamsConfig config) {
 
 		KafkaStreams.State state = this.streamsBuilderFactoryBean.getKafkaStreams().state();
 		assertThat(STATE_LISTENER.getCurrentState()).isEqualTo(state);
 		Properties properties = configuration.asProperties();
 		assertThat(properties.get(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG))
-				.isEqualTo(Collections.singletonList(config.broker.getBrokersAsString()));
+	.isEqualTo(Collections.singletonList(config.broker.getBrokersAsString()));
 		assertThat(properties.get(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG))
-				.isEqualTo(Foo.class);
+	.isEqualTo(Foo.class);
 		assertThat(properties.get(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG))
-				.isEqualTo(1000);
+	.isEqualTo(1000);
 		assertThat(this.config.builderConfigured.get()).isTrue();
 		assertThat(this.config.topologyConfigured.get()).isTrue();
 		assertThat(this.meterRegistry.get("kafka.consumer.coordinator.join.total")
-				.tag("customTag", "stream")
-				.tag("spring.id", KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_BUILDER_BEAN_NAME)
-				.functionCounter()
-				.count())
-					.isGreaterThanOrEqualTo(0);
+	.tag("customTag", "stream")
+	.tag("spring.id", KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_BUILDER_BEAN_NAME)
+	.functionCounter()
+	.count())
+	.isGreaterThanOrEqualTo(0);
 		assertThat(this.meterRegistry.get("kafka.producer.incoming.byte.total")
-				.tag("customTag", "stream")
-				.tag("spring.id", KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_BUILDER_BEAN_NAME)
-				.functionCounter()
-				.count())
-					.isGreaterThanOrEqualTo(0);
+	.tag("customTag", "stream")
+	.tag("spring.id", KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_BUILDER_BEAN_NAME)
+	.functionCounter()
+	.count())
+	.isGreaterThanOrEqualTo(0);
 	}
 
 	@Configuration
@@ -137,9 +137,9 @@ public class KafkaStreamsCustomizerTests {
 				public void configureBuilder(StreamsBuilder builder) {
 					KafkaStreamsConfig.this.builderConfigured.set(true);
 					StoreBuilder<?> storeBuilder = Stores.keyValueStoreBuilder(
-							Stores.persistentKeyValueStore("testStateStore"),
-							Serdes.Integer(),
-							Serdes.String());
+				Stores.persistentKeyValueStore("testStateStore"),
+				Serdes.Integer(),
+				Serdes.String());
 					builder.addStateStore(storeBuilder);
 				}
 
@@ -150,7 +150,7 @@ public class KafkaStreamsCustomizerTests {
 
 			});
 			streamsBuilderFactoryBean.addListener(new KafkaStreamsMicrometerListener(meterRegistry(),
-					Collections.singletonList(new ImmutableTag("customTag", "stream"))));
+		Collections.singletonList(new ImmutableTag("customTag", "stream"))));
 			return streamsBuilderFactoryBean;
 		}
 
@@ -159,7 +159,7 @@ public class KafkaStreamsCustomizerTests {
 			Map<String, Object> props = new HashMap<>();
 			props.put(StreamsConfig.APPLICATION_ID_CONFIG, APPLICATION_ID);
 			props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG,
-					Collections.singletonList(this.broker.getBrokersAsString()));
+		Collections.singletonList(this.broker.getBrokersAsString()));
 			props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, Foo.class);
 			props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 1000);
 			return new KafkaStreamsConfiguration(props);
@@ -174,14 +174,14 @@ public class KafkaStreamsCustomizerTests {
 			KStream<String, String> stream = kStreamBuilder.stream("test_topic");
 
 			stream
-					.process(() -> new ContextualProcessor<String, String, String, String>() {
+		.process(() -> new ContextualProcessor<String, String, String, String>() {
 
-						@Override
-						public void process(Record<String, String> record) {
-						}
+			@Override
+			public void process(Record<String, String> record) {
+			}
 
-					}, "testStateStore")
-					.to("test_output");
+		}, "testStateStore")
+		.to("test_output");
 
 			return stream;
 		}
@@ -211,7 +211,7 @@ public class KafkaStreamsCustomizerTests {
 
 		@Override
 		public DeserializationHandlerResponse handle(ProcessorContext context, ConsumerRecord<byte[], byte[]> record,
-				Exception exception) {
+	Exception exception) {
 			return null;
 		}
 

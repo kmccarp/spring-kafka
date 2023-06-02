@@ -83,7 +83,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 public class ConcurrentMessageListenerContainerMockTests {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void testThreadStarvation() throws InterruptedException {
 		ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
@@ -97,11 +97,12 @@ public class ConcurrentMessageListenerContainerMockTests {
 			return new ConsumerRecords<>(Collections.emptyMap());
 		}).given(consumer).poll(any());
 		given(consumerFactory.createConsumer(anyString(), anyString(), anyString(),
-				eq(KafkaTestUtils.defaultPropertyOverrides())))
-						.willReturn(consumer);
+	eq(KafkaTestUtils.defaultPropertyOverrides())))
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
-		containerProperties.setMessageListener((MessageListener) record -> { });
+		containerProperties.setMessageListener((MessageListener) record -> {
+		});
 		containerProperties.setMissingTopicsFatal(false);
 		ThreadPoolTaskExecutor exec = new ThreadPoolTaskExecutor();
 		exec.setCorePoolSize(1);
@@ -109,7 +110,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		containerProperties.setListenerTaskExecutor(exec);
 		containerProperties.setConsumerStartTimeout(Duration.ofMillis(50));
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer<>(consumerFactory,
-				containerProperties);
+	containerProperties);
 		container.setConcurrency(2);
 		CountDownLatch startedLatch = new CountDownLatch(2);
 		CountDownLatch failedLatch = new CountDownLatch(1);
@@ -130,7 +131,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		exec.destroy();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
+	@SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
 	@Test
 	void testCorrectContainerForConsumerError() throws InterruptedException {
 		ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
@@ -144,13 +145,14 @@ public class ConcurrentMessageListenerContainerMockTests {
 			return new ConsumerRecords<>(Collections.emptyMap());
 		}).given(consumer).poll(any());
 		given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-			.willReturn(consumer);
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
-		containerProperties.setMessageListener((MessageListener) record -> { });
+		containerProperties.setMessageListener((MessageListener) record -> {
+		});
 		containerProperties.setMissingTopicsFatal(false);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer<>(consumerFactory,
-				containerProperties);
+	containerProperties);
 		CountDownLatch latch = new CountDownLatch(1);
 		AtomicReference<MessageListenerContainer> errorContainer = new AtomicReference<>();
 		container.setCommonErrorHandler(new CommonErrorHandler() {
@@ -162,7 +164,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 
 			@Override
 			public void handleOtherException(Exception thrownException, Consumer<?, ?> consumer,
-					MessageListenerContainer container, boolean batchListener) {
+		MessageListenerContainer container, boolean batchListener) {
 
 				errorContainer.set(container);
 				latch.countDown();
@@ -175,7 +177,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.stop();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void delayedIdleEvent() throws InterruptedException {
 		ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
@@ -183,21 +185,22 @@ public class ConcurrentMessageListenerContainerMockTests {
 		AtomicBoolean firstEvent = new AtomicBoolean(false);
 		Map<TopicPartition, List<ConsumerRecord<String, String>>> recordMap = new HashMap<>();
 		recordMap.put(new TopicPartition("foo", 0),
-				Collections.singletonList(new ConsumerRecord("foo", 0, 0, null, "bar")));
+	Collections.singletonList(new ConsumerRecord("foo", 0, 0, null, "bar")));
 		ConsumerRecords records = new ConsumerRecords<>(recordMap);
 		willAnswer(invocation -> {
 			Thread.sleep(50);
 			return firstEvent.getAndSet(false) ? records : new ConsumerRecords<>(Collections.emptyMap());
 		}).given(consumer).poll(any());
 		given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-			.willReturn(consumer);
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
-		containerProperties.setMessageListener((MessageListener) record -> { });
+		containerProperties.setMessageListener((MessageListener) record -> {
+		});
 		containerProperties.setMissingTopicsFatal(false);
 		containerProperties.setIdleEventInterval(100L);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer<>(consumerFactory,
-				containerProperties);
+	containerProperties);
 		CountDownLatch latch1 = new CountDownLatch(1);
 		CountDownLatch latch2 = new CountDownLatch(2);
 		AtomicReference<Long> eventTime = new AtomicReference<>();
@@ -218,7 +221,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.stop();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void testConsumerExitWhenNotAuthorized() throws InterruptedException {
 		ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
@@ -233,21 +236,22 @@ public class ConcurrentMessageListenerContainerMockTests {
 			return null;
 		}).given(consumer).close();
 		given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-			.willReturn(consumer);
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
-		containerProperties.setMessageListener((MessageListener) record -> { });
+		containerProperties.setMessageListener((MessageListener) record -> {
+		});
 		containerProperties.setMissingTopicsFatal(false);
 		containerProperties.setShutdownTimeout(10);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer<>(consumerFactory,
-				containerProperties);
+	containerProperties);
 		container.start();
 		assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
 		verify(consumer).close();
 		container.stop();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	@DisplayName("Seek on TL callback when idle")
 	void testSyncRelativeSeeks() throws InterruptedException {
@@ -266,23 +270,23 @@ public class ConcurrentMessageListenerContainerMockTests {
 		List<TopicPartition> assignments = Arrays.asList(tp0, tp1, tp2, tp3);
 		willAnswer(invocation -> {
 			((ConsumerRebalanceListener) invocation.getArgument(1))
-				.onPartitionsAssigned(assignments);
+		.onPartitionsAssigned(assignments);
 			return null;
 		}).given(consumer).subscribe(any(Collection.class), any());
 		given(consumer.position(any())).willReturn(100L);
 		given(consumer.beginningOffsets(any())).willReturn(assignments.stream()
-				.collect(Collectors.toMap(tp -> tp, tp -> 0L)));
+	.collect(Collectors.toMap(tp -> tp, tp -> 0L)));
 		given(consumer.endOffsets(any())).willReturn(assignments.stream()
-				.collect(Collectors.toMap(tp -> tp, tp -> 200L)));
+	.collect(Collectors.toMap(tp -> tp, tp -> 200L)));
 		given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-			.willReturn(consumer);
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		containerProperties.setMessageListener(listener);
 		containerProperties.setIdleEventInterval(10L);
 		containerProperties.setMissingTopicsFatal(false);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(consumerFactory,
-				containerProperties);
+	containerProperties);
 		container.start();
 		assertThat(listener.latch.await(10, TimeUnit.SECONDS)).isTrue();
 		verify(consumer).seek(tp0, 60L);
@@ -292,7 +296,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.stop();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	@DisplayName("Seek from activeListener")
 	void testAsyncRelativeSeeks() throws InterruptedException {
@@ -320,22 +324,22 @@ public class ConcurrentMessageListenerContainerMockTests {
 		}).given(consumer).poll(any());
 		willAnswer(invocation -> {
 			((ConsumerRebalanceListener) invocation.getArgument(1))
-				.onPartitionsAssigned(assignments);
+		.onPartitionsAssigned(assignments);
 			return null;
 		}).given(consumer).subscribe(any(Collection.class), any());
 		given(consumer.position(any())).willReturn(100L);
 		given(consumer.beginningOffsets(any())).willReturn(assignments.stream()
-				.collect(Collectors.toMap(tp -> tp, tp -> 0L)));
+	.collect(Collectors.toMap(tp -> tp, tp -> 0L)));
 		given(consumer.endOffsets(any())).willReturn(assignments.stream()
-				.collect(Collectors.toMap(tp -> tp, tp -> 200L)));
+	.collect(Collectors.toMap(tp -> tp, tp -> 200L)));
 		given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-			.willReturn(consumer);
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		containerProperties.setMessageListener(listener);
 		containerProperties.setMissingTopicsFatal(false);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(consumerFactory,
-				containerProperties);
+	containerProperties);
 		container.start();
 		assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
 		verify(consumer).seek(tp0, 70L);
@@ -347,7 +351,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.stop();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	@DisplayName("Seek timestamp TL callback when idle")
 	void testSyncTimestampSeeks() throws InterruptedException {
@@ -366,28 +370,28 @@ public class ConcurrentMessageListenerContainerMockTests {
 		List<TopicPartition> assignments = Arrays.asList(tp0, tp1, tp2, tp3);
 		willAnswer(invocation -> {
 			((ConsumerRebalanceListener) invocation.getArgument(1))
-				.onPartitionsAssigned(assignments);
+		.onPartitionsAssigned(assignments);
 			return null;
 		}).given(consumer).subscribe(any(Collection.class), any());
 		given(consumer.position(any())).willReturn(100L);
 		given(consumer.beginningOffsets(any())).willReturn(assignments.stream()
-				.collect(Collectors.toMap(tp -> tp, tp -> 0L)));
+	.collect(Collectors.toMap(tp -> tp, tp -> 0L)));
 		given(consumer.endOffsets(any())).willReturn(assignments.stream()
-				.collect(Collectors.toMap(tp -> tp, tp -> 200L)));
+	.collect(Collectors.toMap(tp -> tp, tp -> 200L)));
 		given(consumer.offsetsForTimes(Collections.singletonMap(tp0, 42L)))
-				.willReturn(Collections.singletonMap(tp0, new OffsetAndTimestamp(63L, 42L)));
+	.willReturn(Collections.singletonMap(tp0, new OffsetAndTimestamp(63L, 42L)));
 		given(consumer.offsetsForTimes(assignments.stream().collect(Collectors.toMap(tp -> tp, tp -> 43L))))
-				.willReturn(assignments.stream()
-						.collect(Collectors.toMap(tp -> tp, tp -> new OffsetAndTimestamp(82L, 43L))));
+	.willReturn(assignments.stream()
+.collect(Collectors.toMap(tp -> tp, tp -> new OffsetAndTimestamp(82L, 43L))));
 		given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-			.willReturn(consumer);
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		containerProperties.setMessageListener(listener);
 		containerProperties.setIdleEventInterval(10L);
 		containerProperties.setMissingTopicsFatal(false);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(consumerFactory,
-				containerProperties);
+	containerProperties);
 		container.start();
 		assertThat(listener.latch.await(10, TimeUnit.SECONDS)).isTrue();
 		verify(consumer).seek(tp0, 63L);
@@ -398,7 +402,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.stop();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	@DisplayName("Timestamp seek from activeListener")
 	void testAsyncTimestampSeeks() throws InterruptedException {
@@ -426,30 +430,30 @@ public class ConcurrentMessageListenerContainerMockTests {
 		}).given(consumer).poll(any());
 		willAnswer(invocation -> {
 			((ConsumerRebalanceListener) invocation.getArgument(1))
-				.onPartitionsAssigned(assignments);
+		.onPartitionsAssigned(assignments);
 			return null;
 		}).given(consumer).subscribe(any(Collection.class), any());
 		given(consumer.position(any())).willReturn(100L);
 		given(consumer.beginningOffsets(any())).willReturn(assignments.stream()
-				.collect(Collectors.toMap(tp -> tp, tp -> 0L)));
+	.collect(Collectors.toMap(tp -> tp, tp -> 0L)));
 		given(consumer.endOffsets(any())).willReturn(assignments.stream()
-				.collect(Collectors.toMap(tp -> tp, tp -> 200L)));
+	.collect(Collectors.toMap(tp -> tp, tp -> 200L)));
 		given(consumer.offsetsForTimes(Collections.singletonMap(tp0, 42L)))
-				.willReturn(Collections.singletonMap(tp0, new OffsetAndTimestamp(73L, 42L)));
+	.willReturn(Collections.singletonMap(tp0, new OffsetAndTimestamp(73L, 42L)));
 		Map<TopicPartition, OffsetAndTimestamp> map = new HashMap<>(assignments.stream()
-				.collect(Collectors.toMap(tp -> tp,
-						tp -> new OffsetAndTimestamp(tp.equals(tp0) ? 73L : 92L, 43L))));
+	.collect(Collectors.toMap(tp -> tp,
+tp -> new OffsetAndTimestamp(tp.equals(tp0) ? 73L : 92L, 43L))));
 		map.put(new TopicPartition("foo", 5), null);
 		given(consumer.offsetsForTimes(any()))
-				.willReturn(map);
+	.willReturn(map);
 		given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-			.willReturn(consumer);
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		containerProperties.setMessageListener(listener);
 		containerProperties.setMissingTopicsFatal(false);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(consumerFactory,
-				containerProperties);
+	containerProperties);
 		container.start();
 		assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
 		verify(consumer).seek(tp0, 73L);
@@ -507,7 +511,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		testIntercept(true, null, true);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	void testIntercept(boolean beforeTx, AssignmentCommitOption option, boolean batch) throws InterruptedException {
 		ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 		final Consumer consumer = mock(Consumer.class);
@@ -515,8 +519,8 @@ public class ConcurrentMessageListenerContainerMockTests {
 		ConsumerRecord record1 = new ConsumerRecord("foo", 0, 0L, "bar", "baz");
 		ConsumerRecord record2 = new ConsumerRecord("foo", 0, 1L, null, null);
 		ConsumerRecords records = batch
-				? new ConsumerRecords(Collections.singletonMap(tp0, List.of(record1, record2)))
-				: new ConsumerRecords(Collections.singletonMap(tp0, Collections.singletonList(record1)));
+	? new ConsumerRecords(Collections.singletonMap(tp0, List.of(record1, record2)))
+	: new ConsumerRecords(Collections.singletonMap(tp0, Collections.singletonList(record1)));
 		ConsumerRecords empty = new ConsumerRecords<>(Collections.emptyMap());
 		AtomicInteger firstOrSecondPoll = new AtomicInteger();
 		willAnswer(invocation -> {
@@ -526,12 +530,12 @@ public class ConcurrentMessageListenerContainerMockTests {
 		List<TopicPartition> assignments = Arrays.asList(tp0);
 		willAnswer(invocation -> {
 			((ConsumerRebalanceListener) invocation.getArgument(1))
-				.onPartitionsAssigned(assignments);
+		.onPartitionsAssigned(assignments);
 			return null;
 		}).given(consumer).subscribe(any(Collection.class), any());
 		given(consumer.position(any())).willReturn(0L);
 		given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-			.willReturn(consumer);
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		AtomicBoolean first = new AtomicBoolean(true);
@@ -566,7 +570,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		willAnswer(inv -> {
 			order.add("tx");
 			TransactionSynchronizationManager.bindResource(pf,
-					new KafkaResourceHolder<>(producer, Duration.ofSeconds(5L)));
+		new KafkaResourceHolder<>(producer, Duration.ofSeconds(5L)));
 			latch.countDown();
 			return null;
 		}).given(tm).getTransaction(any());
@@ -579,7 +583,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 			return null;
 		}).given(tm).rollback(any());
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(consumerFactory,
-				containerProperties);
+	containerProperties);
 		CountDownLatch successCalled = new CountDownLatch(1);
 		CountDownLatch failureCalled = new CountDownLatch(1);
 		container.setRecordInterceptor(new RecordInterceptor() {
@@ -640,7 +644,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 				}
 				else {
 					assertThat(order).containsExactly("tx", "interceptor", "tx", "failure", "interceptor", "tx",
-							"success"); // first one is on assignment
+				"success"); // first one is on assignment
 				}
 			}
 			else {
@@ -649,7 +653,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 				}
 				else {
 					assertThat(order).containsExactly("tx", "tx", "interceptor", "failure", "tx", "interceptor",
-							"success");
+				"success");
 				}
 			}
 			if (batch) {
@@ -662,14 +666,14 @@ public class ConcurrentMessageListenerContainerMockTests {
 	}
 
 	@Test
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	void testInterceptInTxNonKafkaTM() throws InterruptedException {
 		ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 		final Consumer consumer = mock(Consumer.class);
 		TopicPartition tp0 = new TopicPartition("foo", 0);
 		ConsumerRecord record1 = new ConsumerRecord("foo", 0, 0L, "bar", "baz");
 		ConsumerRecords records = new ConsumerRecords(
-				Collections.singletonMap(tp0, Collections.singletonList(record1)));
+	Collections.singletonMap(tp0, Collections.singletonList(record1)));
 		ConsumerRecords empty = new ConsumerRecords(Collections.emptyMap());
 		AtomicInteger firstOrSecondPoll = new AtomicInteger();
 		willAnswer(invocation -> {
@@ -679,12 +683,12 @@ public class ConcurrentMessageListenerContainerMockTests {
 		List<TopicPartition> assignments = Arrays.asList(tp0);
 		willAnswer(invocation -> {
 			((ConsumerRebalanceListener) invocation.getArgument(1))
-				.onPartitionsAssigned(assignments);
+		.onPartitionsAssigned(assignments);
 			return null;
 		}).given(consumer).subscribe(any(Collection.class), any());
 		given(consumer.position(any())).willReturn(0L);
 		given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-			.willReturn(consumer);
+	.willReturn(consumer);
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		AtomicReference<List<ConsumerRecord<String, String>>> received = new AtomicReference<>();
@@ -701,7 +705,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		}).given(tm).getTransaction(any());
 		containerProperties.setTransactionManager(tm);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(consumerFactory,
-				containerProperties);
+	containerProperties);
 		AtomicReference<CountDownLatch> successCalled = new AtomicReference<>(new CountDownLatch(1));
 		container.setRecordInterceptor(new RecordInterceptor() {
 
@@ -759,7 +763,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void testNoCommitOnAssignmentWithEarliest() throws InterruptedException {
 		Consumer consumer = mock(Consumer.class);
@@ -774,20 +778,21 @@ public class ConcurrentMessageListenerContainerMockTests {
 		List<TopicPartition> assignments = Arrays.asList(tp0);
 		willAnswer(invocation -> {
 			((ConsumerRebalanceListener) invocation.getArgument(1))
-				.onPartitionsAssigned(assignments);
+		.onPartitionsAssigned(assignments);
 			return null;
 		}).given(consumer).subscribe(any(Collection.class), any());
 		ConsumerFactory cf = mock(ConsumerFactory.class);
 		given(cf.createConsumer(any(), any(), any(), any())).willReturn(consumer);
 		given(cf.getConfigurationProperties())
-				.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
+	.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
-		containerProperties.setMessageListener((MessageListener) rec -> { });
+		containerProperties.setMessageListener((MessageListener) rec -> {
+		});
 		containerProperties.setMissingTopicsFatal(false);
 		containerProperties.setAssignmentCommitOption(AssignmentCommitOption.LATEST_ONLY);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(cf,
-				containerProperties);
+	containerProperties);
 		container.start();
 		assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
 		verify(consumer, never()).commitSync(any(), any());
@@ -803,7 +808,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		testInitialCommitIBasedOnCommitted(false);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void testInitialCommitIBasedOnCommitted(boolean committed) throws InterruptedException {
 		Consumer consumer = mock(Consumer.class);
 		ConsumerRecords records = new ConsumerRecords<>(Collections.emptyMap());
@@ -817,28 +822,29 @@ public class ConcurrentMessageListenerContainerMockTests {
 		List<TopicPartition> assignments = Arrays.asList(tp0);
 		willAnswer(invocation -> {
 			((ConsumerRebalanceListener) invocation.getArgument(1))
-				.onPartitionsAssigned(assignments);
+		.onPartitionsAssigned(assignments);
 			return null;
 		}).given(consumer).subscribe(any(Collection.class), any());
 		if (committed) {
 			given(consumer.committed(Collections.singleton(tp0)))
-					.willReturn(Collections.singletonMap(tp0, new OffsetAndMetadata(0L)));
+		.willReturn(Collections.singletonMap(tp0, new OffsetAndMetadata(0L)));
 		}
 		else {
 			given(consumer.committed(Collections.singleton(tp0)))
-					.willReturn(Collections.singletonMap(tp0, null));
+		.willReturn(Collections.singletonMap(tp0, null));
 		}
 		ConsumerFactory cf = mock(ConsumerFactory.class);
 		given(cf.createConsumer(any(), any(), any(), any())).willReturn(consumer);
 		given(cf.getConfigurationProperties())
-				.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"));
+	.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"));
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
-		containerProperties.setMessageListener((MessageListener) rec -> { });
+		containerProperties.setMessageListener((MessageListener) rec -> {
+		});
 		containerProperties.setMissingTopicsFatal(false);
 		containerProperties.setAssignmentCommitOption(AssignmentCommitOption.LATEST_ONLY);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(cf,
-				containerProperties);
+	containerProperties);
 		container.start();
 		assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
 		if (committed) {
@@ -849,7 +855,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void removeFromPartitionPauseRequestedWhenNotAssigned() throws InterruptedException {
 		Consumer consumer = mock(Consumer.class);
@@ -875,19 +881,20 @@ public class ConcurrentMessageListenerContainerMockTests {
 		ConsumerFactory cf = mock(ConsumerFactory.class);
 		given(cf.createConsumer(any(), any(), any(), any())).willReturn(consumer);
 		given(cf.getConfigurationProperties())
-				.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"));
+	.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest"));
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
-		containerProperties.setMessageListener((MessageListener) rec -> { });
+		containerProperties.setMessageListener((MessageListener) rec -> {
+		});
 		containerProperties.setMissingTopicsFatal(false);
 		containerProperties.setAssignmentCommitOption(AssignmentCommitOption.LATEST_ONLY);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(cf,
-				containerProperties);
+	containerProperties);
 		container.start();
 		assertThat(pollLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		container.pausePartition(tp0);
 		KafkaMessageListenerContainer child = (KafkaMessageListenerContainer) KafkaTestUtils
-				.getPropertyValue(container, "containers", List.class).get(0);
+	.getPropertyValue(container, "containers", List.class).get(0);
 		assertThat(child.isPartitionPauseRequested(tp0)).isTrue();
 		assertThat(pauseLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		rebal.get().onPartitionsRevoked(assignments);
@@ -904,7 +911,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.stop();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void pruneRevokedPartitionsFromRemainingRecordsWhenSeekAfterErrorFalseLegacyAssignor() throws InterruptedException {
 		TopicPartition tp0 = new TopicPartition("foo", 0);
@@ -949,14 +956,14 @@ public class ConcurrentMessageListenerContainerMockTests {
 		ConsumerFactory cf = mock(ConsumerFactory.class);
 		given(cf.createConsumer(any(), any(), any(), any())).willReturn(consumer);
 		given(cf.getConfigurationProperties())
-				.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
+	.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		containerProperties.setMessageListener((MessageListener) rec -> {
 			throw new RuntimeException("test");
 		});
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(cf,
-				containerProperties);
+	containerProperties);
 		container.setCommonErrorHandler(new CommonErrorHandler() {
 
 			@Override
@@ -966,7 +973,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 
 			@Override
 			public boolean handleOne(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-					MessageListenerContainer container) {
+		MessageListenerContainer container) {
 
 				return false; // not handled
 			}
@@ -997,12 +1004,12 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.start();
 		assertThat(subscribeLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		KafkaMessageListenerContainer child = (KafkaMessageListenerContainer) KafkaTestUtils
-				.getPropertyValue(container, "containers", List.class).get(0);
+	.getPropertyValue(container, "containers", List.class).get(0);
 		assertThat(pollLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(pauseLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(rebalLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		ConsumerRecords remaining = KafkaTestUtils.getPropertyValue(child, "listenerConsumer.remainingRecords",
-				ConsumerRecords.class);
+	ConsumerRecords.class);
 		assertThat(remaining).isNull();
 		continueLatch.countDown();
 		assertThat(resumeLatch.await(10, TimeUnit.SECONDS)).isTrue();
@@ -1012,7 +1019,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.stop();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void pruneRevokedPartitionsFromRemainingRecordsWhenSeekAfterErrorFalseCoopAssignor() throws InterruptedException {
 		TopicPartition tp0 = new TopicPartition("foo", 0);
@@ -1049,7 +1056,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		ConsumerFactory cf = mock(ConsumerFactory.class);
 		given(cf.createConsumer(any(), any(), any(), any())).willReturn(consumer);
 		given(cf.getConfigurationProperties())
-				.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
+	.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		List<ConsumerRecord> recordsDelivered = new ArrayList<>();
@@ -1060,7 +1067,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 			throw new RuntimeException("test");
 		});
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(cf,
-				containerProperties);
+	containerProperties);
 		container.setCommonErrorHandler(new CommonErrorHandler() {
 
 			@Override
@@ -1070,7 +1077,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 
 			@Override
 			public boolean handleOne(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-					MessageListenerContainer container) {
+		MessageListenerContainer container) {
 
 				return false; // not handled
 			}
@@ -1098,12 +1105,12 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.start();
 		assertThat(subscribeLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		KafkaMessageListenerContainer child = (KafkaMessageListenerContainer) KafkaTestUtils
-				.getPropertyValue(container, "containers", List.class).get(0);
+	.getPropertyValue(container, "containers", List.class).get(0);
 		assertThat(pollLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(pauseLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(rebalLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		ConsumerRecords remaining = KafkaTestUtils.getPropertyValue(child, "listenerConsumer.remainingRecords",
-				ConsumerRecords.class);
+	ConsumerRecords.class);
 		assertThat(remaining.count()).isEqualTo(2);
 		assertThat(remaining.partitions()).contains(tp1, tp3);
 		continueLatch.countDown();
@@ -1118,7 +1125,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		assertThat(recordsDelivered.get(2)).isEqualTo(record1);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void pruneRevokedPartitionsFromPendingOutOfOrderCommitsLegacyAssignor() throws InterruptedException {
 		TopicPartition tp0 = new TopicPartition("foo", 0);
@@ -1126,9 +1133,9 @@ public class ConcurrentMessageListenerContainerMockTests {
 		List<TopicPartition> allAssignments = Arrays.asList(tp0, tp1);
 		Map<TopicPartition, List<ConsumerRecord<String, String>>> allRecordMap = new HashMap<>();
 		allRecordMap.put(tp0,
-				List.of(new ConsumerRecord("foo", 0, 0, null, "bar"), new ConsumerRecord("foo", 0, 1, null, "bar")));
+	List.of(new ConsumerRecord("foo", 0, 0, null, "bar"), new ConsumerRecord("foo", 0, 1, null, "bar")));
 		allRecordMap.put(tp1,
-				List.of(new ConsumerRecord("foo", 1, 0, null, "bar"), new ConsumerRecord("foo", 1, 1, null, "bar")));
+	List.of(new ConsumerRecord("foo", 1, 0, null, "bar"), new ConsumerRecord("foo", 1, 1, null, "bar")));
 		ConsumerRecords allRecords = new ConsumerRecords<>(allRecordMap);
 		List<TopicPartition> afterRevokeAssignments = Arrays.asList(tp1);
 		AtomicInteger pollPhase = new AtomicInteger();
@@ -1151,14 +1158,14 @@ public class ConcurrentMessageListenerContainerMockTests {
 		ConsumerFactory cf = mock(ConsumerFactory.class);
 		given(cf.createConsumer(any(), any(), any(), any())).willReturn(consumer);
 		given(cf.getConfigurationProperties())
-				.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
+	.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		containerProperties.setAckMode(AckMode.MANUAL);
 		containerProperties.setMessageListener(ackOffset1());
 		containerProperties.setAsyncAcks(true);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(cf,
-				containerProperties);
+	containerProperties);
 		CountDownLatch pollLatch = new CountDownLatch(2);
 		CountDownLatch rebalLatch = new CountDownLatch(1);
 		CountDownLatch continueLatch = new CountDownLatch(1);
@@ -1181,7 +1188,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.start();
 		assertThat(subscribeLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		KafkaMessageListenerContainer child = (KafkaMessageListenerContainer) KafkaTestUtils
-				.getPropertyValue(container, "containers", List.class).get(0);
+	.getPropertyValue(container, "containers", List.class).get(0);
 		assertThat(pollLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(pauseLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(rebalLatch.await(10, TimeUnit.SECONDS)).isTrue();
@@ -1195,7 +1202,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.stop();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void pruneRevokedPartitionsFromPendingOutOfOrderCommitsCoopAssignor() throws InterruptedException {
 		TopicPartition tp0 = new TopicPartition("foo", 0);
@@ -1203,9 +1210,9 @@ public class ConcurrentMessageListenerContainerMockTests {
 		List<TopicPartition> allAssignments = Arrays.asList(tp0, tp1);
 		Map<TopicPartition, List<ConsumerRecord<String, String>>> allRecordMap = new HashMap<>();
 		allRecordMap.put(tp0,
-				List.of(new ConsumerRecord("foo", 0, 0, null, "bar"), new ConsumerRecord("foo", 0, 1, null, "bar")));
+	List.of(new ConsumerRecord("foo", 0, 0, null, "bar"), new ConsumerRecord("foo", 0, 1, null, "bar")));
 		allRecordMap.put(tp1,
-				List.of(new ConsumerRecord("foo", 1, 0, null, "bar"), new ConsumerRecord("foo", 1, 1, null, "bar")));
+	List.of(new ConsumerRecord("foo", 1, 0, null, "bar"), new ConsumerRecord("foo", 1, 1, null, "bar")));
 		ConsumerRecords allRecords = new ConsumerRecords<>(allRecordMap);
 		List<TopicPartition> afterRevokeAssignments = Arrays.asList(tp1);
 		AtomicInteger pollPhase = new AtomicInteger();
@@ -1228,14 +1235,14 @@ public class ConcurrentMessageListenerContainerMockTests {
 		ConsumerFactory cf = mock(ConsumerFactory.class);
 		given(cf.createConsumer(any(), any(), any(), any())).willReturn(consumer);
 		given(cf.getConfigurationProperties())
-				.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
+	.willReturn(Collections.singletonMap(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"));
 		ContainerProperties containerProperties = new ContainerProperties("foo");
 		containerProperties.setGroupId("grp");
 		containerProperties.setAckMode(AckMode.MANUAL);
 		containerProperties.setMessageListener(ackOffset1());
 		containerProperties.setAsyncAcks(true);
 		ConcurrentMessageListenerContainer container = new ConcurrentMessageListenerContainer(cf,
-				containerProperties);
+	containerProperties);
 		CountDownLatch pollLatch = new CountDownLatch(2);
 		CountDownLatch rebalLatch = new CountDownLatch(1);
 		CountDownLatch continueLatch = new CountDownLatch(1);
@@ -1258,7 +1265,7 @@ public class ConcurrentMessageListenerContainerMockTests {
 		container.start();
 		assertThat(subscribeLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		KafkaMessageListenerContainer child = (KafkaMessageListenerContainer) KafkaTestUtils
-				.getPropertyValue(container, "containers", List.class).get(0);
+	.getPropertyValue(container, "containers", List.class).get(0);
 		assertThat(pollLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(pauseLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(rebalLatch.await(10, TimeUnit.SECONDS)).isTrue();
@@ -1340,8 +1347,8 @@ public class ConcurrentMessageListenerContainerMockTests {
 			if (latch.getCount() > 0) {
 				callback.seekToTimestamp("foo", 0, 42L);
 				callback.seekToTimestamp(this.partitions.stream()
-						.filter(tp -> !tp.equals(new TopicPartition("foo", 0)))
-						.collect(Collectors.toList()), 43L);
+			.filter(tp -> !tp.equals(new TopicPartition("foo", 0)))
+			.collect(Collectors.toList()), 43L);
 			}
 			this.latch.countDown();
 		}

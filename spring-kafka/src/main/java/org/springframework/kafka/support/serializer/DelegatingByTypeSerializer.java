@@ -114,9 +114,9 @@ public class DelegatingByTypeSerializer implements Serializer<Object> {
 			Serializer<?> delegate = delegates.get(data.getClass());
 			if (delegate == null) {
 				throw new SerializationException("No matching delegate for type: " + data.getClass().getName()
-						+ "; supported types: " + this.delegates.keySet().stream()
-						.map(Class::getName)
-						.collect(Collectors.toList()));
+			+ "; supported types: " + this.delegates.keySet().stream()
+			.map(Class::getName)
+			.collect(Collectors.toList()));
 			}
 			return (Serializer<T>) delegate;
 		}
@@ -127,9 +127,9 @@ public class DelegatingByTypeSerializer implements Serializer<Object> {
 				}
 			}
 			throw new SerializationException("No matching delegate for type: " + data.getClass().getName()
-					+ "; supported types: " + this.delegates.keySet().stream()
-					.map(Class::getName)
-					.collect(Collectors.toList()));
+		+ "; supported types: " + this.delegates.keySet().stream()
+		.map(Class::getName)
+		.collect(Collectors.toList()));
 		}
 	}
 

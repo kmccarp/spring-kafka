@@ -100,8 +100,7 @@ import io.micrometer.observation.ObservationRegistry;
  * @author Gurps Bassi
  */
 @SuppressWarnings("deprecation")
-public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationContextAware, BeanNameAware,
-		ApplicationListener<ContextStoppedEvent>, DisposableBean, SmartInitializingSingleton {
+public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationContextAware, BeanNameAware,ApplicationListener<ContextStoppedEvent>, DisposableBean, SmartInitializingSingleton {
 
 	protected final LogAccessor logger = new LogAccessor(LogFactory.getLog(this.getClass())); //NOSONAR
 
@@ -216,7 +215,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 	 * @see Producer#flush()
 	 */
 	public KafkaTemplate(ProducerFactory<K, V> producerFactory, boolean autoFlush,
-			@Nullable Map<String, Object> configOverrides) {
+@Nullable Map<String, Object> configOverrides) {
 
 		Assert.notNull(producerFactory, "'producerFactory' cannot be null");
 		this.autoFlush = autoFlush;
@@ -299,7 +298,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 	 */
 	public void setMessagingConverter(SmartMessageConverter messageConverter) {
 		Assert.isTrue(!this.converterSet, "Cannot set the SmartMessageConverter when setting the messageConverter, "
-				+ "add the SmartConverter to the message converter instead");
+	+ "add the SmartConverter to the message converter instead");
 		((MessagingMessageConverter) this.messageConverter).setMessagingConverter(messageConverter);
 	}
 
@@ -378,7 +377,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 	 * @see #setObservationEnabled(boolean)
 	 */
 	public void setMicrometerTagsProvider(
-			@Nullable Function<ProducerRecord<?, ?>, Map<String, String>> micrometerTagsProvider) {
+@Nullable Function<ProducerRecord<?, ?>, Map<String, String>> micrometerTagsProvider) {
 
 		this.micrometerTagsProvider = micrometerTagsProvider;
 	}
@@ -475,12 +474,12 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 	public void afterSingletonsInstantiated() {
 		if (this.observationEnabled && this.applicationContext != null) {
 			this.observationRegistry = this.applicationContext.getBeanProvider(ObservationRegistry.class)
-					.getIfUnique(() -> this.observationRegistry);
+		.getIfUnique(() -> this.observationRegistry);
 			if (this.kafkaAdmin == null) {
 				this.kafkaAdmin = this.applicationContext.getBeanProvider(KafkaAdmin.class).getIfUnique();
 				if (this.kafkaAdmin != null) {
 					Object producerServers = this.producerFactory.getConfigurationProperties()
-							.get(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
+				.get(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
 					String adminServers = this.kafkaAdmin.getBootstrapServers();
 					if (!producerServers.equals(adminServers)) {
 						Map<String, Object> props = new HashMap<>(this.kafkaAdmin.getConfigurationProperties());
@@ -552,7 +551,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 
 	@Override
 	public CompletableFuture<SendResult<K, V>> send(String topic, Integer partition, Long timestamp, K key,
-			@Nullable V data) {
+@Nullable V data) {
 
 		ProducerRecord<K, V> producerRecord = new ProducerRecord<>(topic, partition, timestamp, key, data);
 		return observeSend(producerRecord);
@@ -672,7 +671,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 
 	@Override
 	public void sendOffsetsToTransaction(Map<TopicPartition, OffsetAndMetadata> offsets,
-			ConsumerGroupMetadata groupMetadata) {
+ConsumerGroupMetadata groupMetadata) {
 
 		producerForOffsets().sendOffsetsToTransaction(offsets, groupMetadata);
 	}
@@ -715,7 +714,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 
 	@Nullable
 	private ConsumerRecord<K, V> receiveOne(TopicPartition topicPartition, long offset, Duration pollTimeout,
-			Consumer<K, V> consumer) {
+Consumer<K, V> consumer) {
 
 		consumer.assign(Collections.singletonList(topicPartition));
 		consumer.seek(topicPartition, offset);
@@ -731,7 +730,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 		if (producer == null) {
 			@SuppressWarnings("unchecked")
 			KafkaResourceHolder<K, V> resourceHolder = (KafkaResourceHolder<K, V>) TransactionSynchronizationManager
-					.getResource(this.producerFactory);
+		.getResource(this.producerFactory);
 			Assert.isTrue(resourceHolder != null, "No transaction in process");
 			producer = resourceHolder.getProducer();
 		}
@@ -746,9 +745,9 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 
 	private CompletableFuture<SendResult<K, V>> observeSend(final ProducerRecord<K, V> producerRecord) {
 		Observation observation = KafkaTemplateObservation.TEMPLATE_OBSERVATION.observation(
-				this.observationConvention, DefaultKafkaTemplateObservationConvention.INSTANCE,
-				() -> new KafkaRecordSenderContext(producerRecord, this.beanName, this::clusterId),
-				this.observationRegistry);
+	this.observationConvention, DefaultKafkaTemplateObservationConvention.INSTANCE,
+	() -> new KafkaRecordSenderContext(producerRecord, this.beanName, this::clusterId),
+	this.observationRegistry);
 		try {
 			observation.start();
 			return doSend(producerRecord, observation);
@@ -759,6 +758,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 			throw ex;
 		}
 	}
+
 	/**
 	 * Send the producer record.
 	 * @param producerRecord the producer record.
@@ -767,7 +767,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 	 * RecordMetadata}.
 	 */
 	protected CompletableFuture<SendResult<K, V>> doSend(final ProducerRecord<K, V> producerRecord,
-			Observation observation) {
+Observation observation) {
 
 		final Producer<K, V> producer = getTheProducer(producerRecord.topic());
 		this.logger.trace(() -> "Sending: " + KafkaUtils.format(producerRecord));
@@ -780,7 +780,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 			this.producerInterceptor.onSend(producerRecord);
 		}
 		Future<RecordMetadata> sendFuture =
-				producer.send(producerRecord, buildCallback(producerRecord, producer, future, sample, observation));
+	producer.send(producerRecord, buildCallback(producerRecord, producer, future, sample, observation));
 		// May be an immediate failure
 		if (sendFuture.isDone()) {
 			try {
@@ -802,7 +802,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 	}
 
 	private Callback buildCallback(final ProducerRecord<K, V> producerRecord, final Producer<K, V> producer,
-			final CompletableFuture<SendResult<K, V>> future, @Nullable Object sample, Observation observation) {
+final CompletableFuture<SendResult<K, V>> future, @Nullable Object sample, Observation observation) {
 
 		return (metadata, exception) -> {
 			try {
@@ -811,7 +811,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 				}
 			}
 			catch (Exception e) {
-				KafkaTemplate.this.logger.warn(e, () ->  "Error executing interceptor onAcknowledgement callback");
+				KafkaTemplate.this.logger.warn(e, () -> "Error executing interceptor onAcknowledgement callback");
 			}
 			try {
 				if (exception == null) {
@@ -822,19 +822,19 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 						KafkaTemplate.this.producerListener.onSuccess(producerRecord, metadata);
 					}
 					KafkaTemplate.this.logger.trace(() -> "Sent ok: " + KafkaUtils.format(producerRecord)
-							+ ", metadata: " + metadata);
+				+ ", metadata: " + metadata);
 				}
 				else {
 					failureTimer(sample, exception, producerRecord);
 					observation.error(exception);
 					observation.stop();
 					future.completeExceptionally(
-							new KafkaProducerException(producerRecord, "Failed to send", exception));
+				new KafkaProducerException(producerRecord, "Failed to send", exception));
 					if (KafkaTemplate.this.producerListener != null) {
 						KafkaTemplate.this.producerListener.onError(producerRecord, metadata, exception);
 					}
 					KafkaTemplate.this.logger.debug(exception, () -> "Failed to send: "
-							+ KafkaUtils.format(producerRecord));
+				+ KafkaUtils.format(producerRecord));
 				}
 			}
 			finally {
@@ -877,8 +877,8 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 	@Override
 	public boolean inTransaction() {
 		return this.transactional && (this.producers.get() != null
-				|| TransactionSynchronizationManager.getResource(this.producerFactory) != null
-				|| TransactionSynchronizationManager.isActualTransactionActive());
+	|| TransactionSynchronizationManager.getResource(this.producerFactory) != null
+	|| TransactionSynchronizationManager.isActualTransactionActive());
 	}
 
 	private Producer<K, V> getTheProducer() {
@@ -890,11 +890,11 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 		if (transactionalProducer) {
 			boolean inTransaction = inTransaction();
 			Assert.state(this.allowNonTransactional || inTransaction,
-					"No transaction is in process; "
-						+ "possible solutions: run the template operation within the scope of a "
-						+ "template.executeInTransaction() operation, start a transaction with @Transactional "
-						+ "before invoking the template method, "
-						+ "run in a transaction started by a listener container when consuming a record");
+		"No transaction is in process; "
+	+ "possible solutions: run the template operation within the scope of a "
+	+ "template.executeInTransaction() operation, start a transaction with @Transactional "
+	+ "before invoking the template method, "
+	+ "run in a transaction started by a listener container when consuming a record");
 			if (!inTransaction) {
 				transactionalProducer = false;
 			}
@@ -905,7 +905,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 				return producer;
 			}
 			KafkaResourceHolder<K, V> holder = ProducerFactoryUtils
-					.getTransactionalResourceHolder(this.producerFactory, this.transactionIdPrefix, this.closeTimeout);
+		.getTransactionalResourceHolder(this.producerFactory, this.transactionIdPrefix, this.closeTimeout);
 			return holder.getProducer();
 		}
 		else if (this.allowNonTransactional) {
@@ -935,7 +935,7 @@ public class KafkaTemplate<K, V> implements KafkaOperations<K, V>, ApplicationCo
 					};
 				}
 				holder = new MicrometerHolder(this.applicationContext, this.beanName,
-						"spring.kafka.template", "KafkaTemplate Timer", mergedProvider);
+			"spring.kafka.template", "KafkaTemplate Timer", mergedProvider);
 			}
 		}
 		catch (@SuppressWarnings("unused") IllegalStateException ex) {

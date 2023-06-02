@@ -36,9 +36,9 @@ class EmbeddedKafkaContextCustomizerFactory implements ContextCustomizerFactory 
 
 	@Override
 	public ContextCustomizer createContextCustomizer(Class<?> testClass,
-			List<ContextConfigurationAttributes> configAttributes) {
+List<ContextConfigurationAttributes> configAttributes) {
 		EmbeddedKafka embeddedKafka =
-				AnnotatedElementUtils.findMergedAnnotation(testClass, EmbeddedKafka.class);
+	AnnotatedElementUtils.findMergedAnnotation(testClass, EmbeddedKafka.class);
 		return embeddedKafka != null ? new EmbeddedKafkaContextCustomizer(embeddedKafka) : null;
 	}
 

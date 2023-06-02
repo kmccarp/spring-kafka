@@ -167,7 +167,7 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 
 		public void processDltMessage(Object message) {
 			countdownIfCorrectInvocations(container.blockingAndTopicsListenerInvocations, 12,
-					container.dltProcessorLatch);
+		container.dltProcessorLatch);
 		}
 	}
 
@@ -192,7 +192,7 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 
 		public void processDltMessage(Object message) {
 			countdownIfCorrectInvocations(container.onlyRetryViaTopicListenerInvocations,
-					3, container.dltProcessorWithErrorLatch);
+		3, container.dltProcessorWithErrorLatch);
 			throw new RuntimeException("Dlt Error!");
 		}
 	}
@@ -203,7 +203,7 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 		CountDownLatchContainer container;
 
 		@RetryableTopic(exclude = ShouldRetryOnlyBlockingException.class, traversingCauses = "true",
-				backoff = @Backoff(50), kafkaTemplate = "kafkaTemplate")
+	backoff = @Backoff(50), kafkaTemplate = "kafkaTemplate")
 		@KafkaListener(topics = ONLY_RETRY_VIA_BLOCKING)
 		public void listenWithAnnotation(String message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			container.onlyRetryViaBlockingLatch.countDown();
@@ -216,7 +216,7 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 		public void annotatedDltMethod(Object message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			logger.debug("Received message in Dlt method " + receivedTopic);
 			countdownIfCorrectInvocations(container.onlyRetryViaBlockingListenerInvocations, 4,
-					container.annotatedDltOnlyBlockingLatch);
+		container.annotatedDltOnlyBlockingLatch);
 		}
 	}
 
@@ -238,7 +238,7 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 		public void annotatedDltMethod(Object message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			logger.debug("Received message in Dlt method " + receivedTopic);
 			countdownIfCorrectInvocations(container.userFatalListenerInvocations, 1,
-					container.annotatedDltUserFatalLatch);
+		container.annotatedDltUserFatalLatch);
 		}
 	}
 
@@ -261,7 +261,7 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 		public void annotatedDltMethod(Object message, @Header(KafkaHeaders.RECEIVED_TOPIC) String receivedTopic) {
 			logger.debug("Received message in annotated Dlt method!");
 			countdownIfCorrectInvocations(container.fatalFrameworkListenerInvocations, 1,
-					container.annotatedDltFrameworkFatalLatch);
+		container.annotatedDltFrameworkFatalLatch);
 			throw new ConversionException("Woooops... in topic " + receivedTopic, new RuntimeException("Test RTE"));
 		}
 	}
@@ -323,24 +323,24 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 		@Bean
 		public RetryTopicConfiguration blockingAndTopic(KafkaTemplate<String, String> template) {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.fixedBackOff(50)
-					.includeTopic(BLOCKING_AND_TOPIC_RETRY)
-					.dltHandlerMethod("dltProcessor", DLT_METHOD_NAME)
-					.create(template);
+		.newInstance()
+		.fixedBackOff(50)
+		.includeTopic(BLOCKING_AND_TOPIC_RETRY)
+		.dltHandlerMethod("dltProcessor", DLT_METHOD_NAME)
+		.create(template);
 		}
 
 		@Bean
 		@SuppressWarnings("deprecation")
 		public RetryTopicConfiguration onlyTopic(KafkaTemplate<String, String> template) {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.fixedBackOff(50)
-					.includeTopic(ONLY_RETRY_VIA_TOPIC)
-					.useSingleTopicForFixedDelays()
-					.doNotRetryOnDltFailure()
-					.dltHandlerMethod("dltProcessorWithError", DLT_METHOD_NAME)
-					.create(template);
+		.newInstance()
+		.fixedBackOff(50)
+		.includeTopic(ONLY_RETRY_VIA_TOPIC)
+		.useSingleTopicForFixedDelays()
+		.doNotRetryOnDltFailure()
+		.dltHandlerMethod("dltProcessorWithError", DLT_METHOD_NAME)
+		.create(template);
 		}
 
 		@Bean
@@ -396,8 +396,8 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 		@Override
 		protected void configureBlockingRetries(BlockingRetriesConfigurer blockingRetries) {
 			blockingRetries
-					.retryOn(ShouldRetryOnlyBlockingException.class, ShouldRetryViaBothException.class)
-					.backOff(new FixedBackOff(50, 3));
+		.retryOn(ShouldRetryOnlyBlockingException.class, ShouldRetryViaBothException.class)
+		.backOff(new FixedBackOff(50, 3));
 		}
 
 		@Override
@@ -416,14 +416,14 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 		public ProducerFactory<String, String> producerFactory() {
 			Map<String, Object> configProps = new HashMap<>();
 			configProps.put(
-					ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					this.broker.getBrokersAsString());
+		ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+		this.broker.getBrokersAsString());
 			configProps.put(
-					ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
+		ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+		StringSerializer.class);
 			configProps.put(
-					ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
+		ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+		StringSerializer.class);
 			return new DefaultKafkaProducerFactory<>(configProps);
 		}
 
@@ -451,19 +451,19 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 		public ConsumerFactory<String, String> consumerFactory() {
 			Map<String, Object> props = new HashMap<>();
 			props.put(
-					ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					this.broker.getBrokersAsString());
+		ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+		this.broker.getBrokersAsString());
 			props.put(
-					ConsumerConfig.GROUP_ID_CONFIG,
-					"groupId");
+		ConsumerConfig.GROUP_ID_CONFIG,
+		"groupId");
 			props.put(
-					ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
+		ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+		StringDeserializer.class);
 			props.put(
-					ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
+		ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+		StringDeserializer.class);
 			props.put(
-					ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
+		ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
 			props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
 			return new DefaultKafkaConsumerFactory<>(props);
@@ -471,7 +471,7 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> retryTopicListenerContainerFactory(
-				ConsumerFactory<String, String> consumerFactory) {
+	ConsumerFactory<String, String> consumerFactory) {
 
 			ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 			ContainerProperties props = factory.getContainerProperties();
@@ -481,13 +481,13 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 			factory.setConsumerFactory(consumerFactory);
 			factory.setConcurrency(1);
 			factory.setContainerCustomizer(
-					container -> container.getContainerProperties().setIdlePartitionEventInterval(100L));
+		container -> container.getContainerProperties().setIdlePartitionEventInterval(100L));
 			return factory;
 		}
 
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(
-				ConsumerFactory<String, String> consumerFactory) {
+	ConsumerFactory<String, String> consumerFactory) {
 
 			ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory);

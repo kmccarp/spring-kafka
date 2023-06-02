@@ -38,9 +38,7 @@ import org.springframework.util.Assert;
  * @author Gary Russell
  *
  */
-public class FilteringBatchMessageListenerAdapter<K, V>
-		extends AbstractFilteringMessageListener<K, V, BatchMessageListener<K, V>>
-		implements BatchAcknowledgingConsumerAwareMessageListener<K, V> {
+public class FilteringBatchMessageListenerAdapter<K, V>extends AbstractFilteringMessageListener<K, V, BatchMessageListener<K, V>>implements BatchAcknowledgingConsumerAwareMessageListener<K, V> {
 
 	private final boolean ackDiscarded;
 
@@ -50,7 +48,7 @@ public class FilteringBatchMessageListenerAdapter<K, V>
 	 * @param recordFilterStrategy the filter.
 	 */
 	public FilteringBatchMessageListenerAdapter(BatchMessageListener<K, V> delegate,
-			RecordFilterStrategy<K, V> recordFilterStrategy) {
+RecordFilterStrategy<K, V> recordFilterStrategy) {
 
 		super(delegate, recordFilterStrategy);
 		this.ackDiscarded = false;
@@ -67,7 +65,7 @@ public class FilteringBatchMessageListenerAdapter<K, V>
 	 * listener is configured for manual acks.
 	 */
 	public FilteringBatchMessageListenerAdapter(BatchMessageListener<K, V> delegate,
-			RecordFilterStrategy<K, V> recordFilterStrategy, boolean ackDiscarded) {
+RecordFilterStrategy<K, V> recordFilterStrategy, boolean ackDiscarded) {
 
 		super(delegate, recordFilterStrategy);
 		this.ackDiscarded = ackDiscarded;
@@ -75,18 +73,18 @@ public class FilteringBatchMessageListenerAdapter<K, V>
 
 	@Override
 	public void onMessage(List<ConsumerRecord<K, V>> records, @Nullable Acknowledgment acknowledgment,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 
 		List<ConsumerRecord<K, V>> consumerRecords = getRecordFilterStrategy().filterBatch(records);
 		Assert.state(consumerRecords != null, "filter returned null from filterBatch");
 		boolean consumerAware = this.delegateType.equals(ListenerType.ACKNOWLEDGING_CONSUMER_AWARE)
-						|| this.delegateType.equals(ListenerType.CONSUMER_AWARE);
+	|| this.delegateType.equals(ListenerType.CONSUMER_AWARE);
 		/*
 		 *  An empty list goes to the listener if ackDiscarded is false and the listener can ack
 		 *  either through the acknowledgment
 		 */
 		if (consumerRecords.size() > 0 || consumerAware
-				|| (!this.ackDiscarded && this.delegateType.equals(ListenerType.ACKNOWLEDGING))) {
+	|| (!this.ackDiscarded && this.delegateType.equals(ListenerType.ACKNOWLEDGING))) {
 			invokeDelegate(consumerRecords, acknowledgment, consumer);
 		}
 		else {
@@ -97,7 +95,7 @@ public class FilteringBatchMessageListenerAdapter<K, V>
 	}
 
 	private void invokeDelegate(List<ConsumerRecord<K, V>> consumerRecords, Acknowledgment acknowledgment,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 		switch (this.delegateType) {
 			case ACKNOWLEDGING_CONSUMER_AWARE:
 				this.delegate.onMessage(consumerRecords, acknowledgment, consumer);

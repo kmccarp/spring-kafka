@@ -90,10 +90,10 @@ public class RetryTopicConfigurationSupport implements ApplicationContextAware, 
 	public void afterSingletonsInstantiated() {
 		if (this.applicationContext != null) {
 			Map<String, RetryTopicConfigurationSupport> beans = this.applicationContext
-					.getBeansOfType(RetryTopicConfigurationSupport.class, false, false);
+		.getBeansOfType(RetryTopicConfigurationSupport.class, false, false);
 			if (beans.size() > 1) {
 				this.logger.warn(() -> "Only one RetryTopicConfigurationSupport object expected, found "
-						+ beans.keySet() + "; this may result in unexpected behavior");
+			+ beans.keySet() + "; this may result in unexpected behavior");
 			}
 		}
 	}
@@ -112,31 +112,31 @@ public class RetryTopicConfigurationSupport implements ApplicationContextAware, 
 	 */
 	@Bean(name = RetryTopicBeanNames.RETRY_TOPIC_CONFIGURER_BEAN_NAME)
 	public RetryTopicConfigurer retryTopicConfigurer(@Qualifier(KafkaListenerConfigUtils.KAFKA_CONSUMER_BACK_OFF_MANAGER_BEAN_NAME)
-			KafkaConsumerBackoffManager kafkaConsumerBackoffManager,
-			@Qualifier(RetryTopicBeanNames.DESTINATION_TOPIC_RESOLVER_BEAN_NAME)
-			DestinationTopicResolver destinationTopicResolver,
-			ObjectProvider<RetryTopicComponentFactory> componentFactoryProvider,
-			BeanFactory beanFactory) {
+	KafkaConsumerBackoffManager kafkaConsumerBackoffManager,
+@Qualifier(RetryTopicBeanNames.DESTINATION_TOPIC_RESOLVER_BEAN_NAME)
+DestinationTopicResolver destinationTopicResolver,
+ObjectProvider<RetryTopicComponentFactory> componentFactoryProvider,
+BeanFactory beanFactory) {
 
 		RetryTopicComponentFactory compFactory = componentFactoryProvider.getIfUnique(() -> this.componentFactory);
 		DestinationTopicProcessor destinationTopicProcessor = compFactory
-				.destinationTopicProcessor(destinationTopicResolver);
+	.destinationTopicProcessor(destinationTopicResolver);
 		DeadLetterPublishingRecovererFactory dlprf = compFactory
-				.deadLetterPublishingRecovererFactory(destinationTopicResolver);
+	.deadLetterPublishingRecovererFactory(destinationTopicResolver);
 		ListenerContainerFactoryConfigurer lcfc = compFactory
-				.listenerContainerFactoryConfigurer(kafkaConsumerBackoffManager,
-						dlprf, compFactory.internalRetryTopicClock());
+	.listenerContainerFactoryConfigurer(kafkaConsumerBackoffManager,
+dlprf, compFactory.internalRetryTopicClock());
 		ListenerContainerFactoryResolver factoryResolver = compFactory
-				.listenerContainerFactoryResolver(beanFactory);
+	.listenerContainerFactoryResolver(beanFactory);
 		RetryTopicNamesProviderFactory retryTopicNamesProviderFactory =
-				compFactory.retryTopicNamesProviderFactory();
+	compFactory.retryTopicNamesProviderFactory();
 
 		processDeadLetterPublishingContainerFactory(dlprf);
 		processListenerContainerFactoryConfigurer(lcfc);
 
 		RetryTopicConfigurer retryTopicConfigurer = compFactory
-				.retryTopicConfigurer(destinationTopicProcessor, lcfc,
-						factoryResolver, retryTopicNamesProviderFactory);
+	.retryTopicConfigurer(destinationTopicProcessor, lcfc,
+factoryResolver, retryTopicNamesProviderFactory);
 
 		Consumer<RetryTopicConfigurer> configurerConsumer = configureRetryTopicConfigurer();
 		Assert.notNull(configurerConsumer, "configureRetryTopicConfigurer cannot return null.");
@@ -160,13 +160,13 @@ public class RetryTopicConfigurationSupport implements ApplicationContextAware, 
 	 * @param deadLetterPublishingRecovererFactory the instance.
 	 */
 	private void processDeadLetterPublishingContainerFactory(
-			DeadLetterPublishingRecovererFactory deadLetterPublishingRecovererFactory) {
+DeadLetterPublishingRecovererFactory deadLetterPublishingRecovererFactory) {
 
 		CustomizersConfigurer customizersConfigurer = new CustomizersConfigurer();
 		configureCustomizers(customizersConfigurer);
 		JavaUtils.INSTANCE
-				.acceptIfNotNull(customizersConfigurer.getDeadLetterPublishingRecovererCustomizer(),
-						deadLetterPublishingRecovererFactory::setDeadLetterPublishingRecovererCustomizer);
+	.acceptIfNotNull(customizersConfigurer.getDeadLetterPublishingRecovererCustomizer(),
+deadLetterPublishingRecovererFactory::setDeadLetterPublishingRecovererCustomizer);
 		Consumer<DeadLetterPublishingRecovererFactory> dlprfConsumer = configureDeadLetterPublishingContainerFactory();
 		Assert.notNull(dlprfConsumer, "configureDeadLetterPublishingContainerFactory must not return null");
 		dlprfConsumer.accept(deadLetterPublishingRecovererFactory);
@@ -189,21 +189,21 @@ public class RetryTopicConfigurationSupport implements ApplicationContextAware, 
 	 * {@link ListenerContainerFactoryConfigurer} instance.
 	 */
 	private void processListenerContainerFactoryConfigurer(
-			ListenerContainerFactoryConfigurer listenerContainerFactoryConfigurer) {
+ListenerContainerFactoryConfigurer listenerContainerFactoryConfigurer) {
 
 		CustomizersConfigurer customizersConfigurer = new CustomizersConfigurer();
 		configureCustomizers(customizersConfigurer);
 		BlockingRetriesConfigurer blockingRetriesConfigurer = new BlockingRetriesConfigurer();
 		configureBlockingRetries(blockingRetriesConfigurer);
 		JavaUtils.INSTANCE
-				.acceptIfNotNull(blockingRetriesConfigurer.getBackOff(),
-						listenerContainerFactoryConfigurer::setBlockingRetriesBackOff)
-				.acceptIfNotNull(blockingRetriesConfigurer.getRetryableExceptions(),
-						listenerContainerFactoryConfigurer::setBlockingRetryableExceptions)
-				.acceptIfNotNull(customizersConfigurer.getErrorHandlerCustomizer(),
-						listenerContainerFactoryConfigurer::setErrorHandlerCustomizer)
-				.acceptIfNotNull(customizersConfigurer.getListenerContainerCustomizer(),
-						listenerContainerFactoryConfigurer::setContainerCustomizer);
+	.acceptIfNotNull(blockingRetriesConfigurer.getBackOff(),
+listenerContainerFactoryConfigurer::setBlockingRetriesBackOff)
+	.acceptIfNotNull(blockingRetriesConfigurer.getRetryableExceptions(),
+listenerContainerFactoryConfigurer::setBlockingRetryableExceptions)
+	.acceptIfNotNull(customizersConfigurer.getErrorHandlerCustomizer(),
+listenerContainerFactoryConfigurer::setErrorHandlerCustomizer)
+	.acceptIfNotNull(customizersConfigurer.getListenerContainerCustomizer(),
+listenerContainerFactoryConfigurer::setContainerCustomizer);
 		listenerContainerFactoryConfigurer.setRetainStandardFatal(true);
 		Consumer<ListenerContainerFactoryConfigurer> lcfcConfigurer = configureListenerContainerFactoryConfigurer();
 		Assert.notNull(lcfcConfigurer, "configureListenerContainerFactoryConfigurer must not return null.");
@@ -264,12 +264,12 @@ public class RetryTopicConfigurationSupport implements ApplicationContextAware, 
 	 */
 	@Bean(name = RetryTopicBeanNames.DESTINATION_TOPIC_RESOLVER_BEAN_NAME)
 	public DestinationTopicResolver destinationTopicResolver(
-			ObjectProvider<RetryTopicComponentFactory> componentFactoryProvider) {
+ObjectProvider<RetryTopicComponentFactory> componentFactoryProvider) {
 
 		RetryTopicComponentFactory compFactory = componentFactoryProvider.getIfUnique(() -> this.componentFactory);
 		DestinationTopicResolver destinationTopicResolver = compFactory.destinationTopicResolver();
 		JavaUtils.INSTANCE.acceptIfInstanceOf(DefaultDestinationTopicResolver.class, destinationTopicResolver,
-				this::configureNonBlockingFatalExceptions);
+	this::configureNonBlockingFatalExceptions);
 		Consumer<DestinationTopicResolver> resolverConsumer = configureDestinationTopicResolver();
 		Assert.notNull(resolverConsumer, "customizeDestinationTopicResolver must not return null");
 		resolverConsumer.accept(destinationTopicResolver);
@@ -278,10 +278,10 @@ public class RetryTopicConfigurationSupport implements ApplicationContextAware, 
 
 	private void configureNonBlockingFatalExceptions(DefaultDestinationTopicResolver destinationTopicResolver) {
 		List<Class<? extends Throwable>> fatalExceptions =
-				new ArrayList<>(ExceptionClassifier.defaultFatalExceptionsList());
+	new ArrayList<>(ExceptionClassifier.defaultFatalExceptionsList());
 		manageNonBlockingFatalExceptions(fatalExceptions);
 		destinationTopicResolver.setClassifications(fatalExceptions.stream()
-				.collect(Collectors.toMap(ex -> ex, ex -> false)), true);
+	.collect(Collectors.toMap(ex -> ex, ex -> false)), true);
 	}
 
 	/**
@@ -309,27 +309,27 @@ public class RetryTopicConfigurationSupport implements ApplicationContextAware, 
 	 */
 	@Bean(name = KafkaListenerConfigUtils.KAFKA_CONSUMER_BACK_OFF_MANAGER_BEAN_NAME)
 	public KafkaConsumerBackoffManager kafkaConsumerBackoffManager(ApplicationContext applicationContext,
-			@Qualifier(KafkaListenerConfigUtils.KAFKA_LISTENER_ENDPOINT_REGISTRY_BEAN_NAME)
-					ListenerContainerRegistry registry,
-					ObjectProvider<RetryTopicComponentFactory> componentFactoryProvider,
-					@Nullable RetryTopicSchedulerWrapper wrapper,
-					@Nullable TaskScheduler taskScheduler) {
+@Qualifier(KafkaListenerConfigUtils.KAFKA_LISTENER_ENDPOINT_REGISTRY_BEAN_NAME)
+ListenerContainerRegistry registry,
+ObjectProvider<RetryTopicComponentFactory> componentFactoryProvider,
+@Nullable RetryTopicSchedulerWrapper wrapper,
+@Nullable TaskScheduler taskScheduler) {
 
 		RetryTopicComponentFactory compFactory = componentFactoryProvider.getIfUnique(() -> this.componentFactory);
 		KafkaBackOffManagerFactory backOffManagerFactory =
-				compFactory.kafkaBackOffManagerFactory(registry, applicationContext);
+	compFactory.kafkaBackOffManagerFactory(registry, applicationContext);
 		JavaUtils.INSTANCE.acceptIfInstanceOf(ContainerPartitionPausingBackOffManagerFactory.class, backOffManagerFactory,
-				factory -> configurePartitionPausingFactory(factory, registry,
-						wrapper != null ? wrapper.getScheduler() : taskScheduler));
+	factory -> configurePartitionPausingFactory(factory, registry,
+wrapper != null ? wrapper.getScheduler() : taskScheduler));
 		return backOffManagerFactory.create();
 	}
 
 	private void configurePartitionPausingFactory(ContainerPartitionPausingBackOffManagerFactory factory,
-			ListenerContainerRegistry registry, @Nullable TaskScheduler scheduler) {
+ListenerContainerRegistry registry, @Nullable TaskScheduler scheduler) {
 
 		Assert.notNull(scheduler, "Either a RetryTopicSchedulerWrapper or TaskScheduler bean is required");
 		factory.setBackOffHandler(new ContainerPausingBackOffHandler(
-				new ListenerContainerPauseService(registry, scheduler)));
+	new ListenerContainerPauseService(registry, scheduler)));
 	}
 
 	/**

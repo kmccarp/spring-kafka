@@ -37,8 +37,7 @@ import org.springframework.kafka.listener.ListenerUtils;
  * @since 1.1
  *
  */
-public abstract class AbstractDelegatingMessageListenerAdapter<T>
-		implements ConsumerSeekAware, DelegatingMessageListener<T> {
+public abstract class AbstractDelegatingMessageListenerAdapter<T>implements ConsumerSeekAware, DelegatingMessageListener<T> {
 
 	protected final LogAccessor logger = new LogAccessor(LogFactory.getLog(this.getClass())); // NOSONAR
 

@@ -64,12 +64,12 @@ public class RetryTopicComponentFactory {
 	 * @return the instance.
 	 */
 	public RetryTopicConfigurer retryTopicConfigurer(DestinationTopicProcessor destinationTopicProcessor,
-			ListenerContainerFactoryConfigurer listenerContainerFactoryConfigurer,
-			ListenerContainerFactoryResolver factoryResolver,
-			RetryTopicNamesProviderFactory retryTopicNamesProviderFactory) {
+ListenerContainerFactoryConfigurer listenerContainerFactoryConfigurer,
+ListenerContainerFactoryResolver factoryResolver,
+RetryTopicNamesProviderFactory retryTopicNamesProviderFactory) {
 
 		return new RetryTopicConfigurer(destinationTopicProcessor, factoryResolver,
-				listenerContainerFactoryConfigurer, retryTopicNamesProviderFactory);
+	listenerContainerFactoryConfigurer, retryTopicNamesProviderFactory);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class RetryTopicComponentFactory {
 	 * @return the instance.
 	 */
 	public DeadLetterPublishingRecovererFactory deadLetterPublishingRecovererFactory(
-			DestinationTopicResolver destinationTopicResolver) {
+DestinationTopicResolver destinationTopicResolver) {
 
 		return new DeadLetterPublishingRecovererFactory(destinationTopicResolver);
 	}
@@ -131,8 +131,8 @@ public class RetryTopicComponentFactory {
 	 * @return the instance.
 	 */
 	public ListenerContainerFactoryConfigurer listenerContainerFactoryConfigurer(KafkaConsumerBackoffManager kafkaConsumerBackoffManager,
-			DeadLetterPublishingRecovererFactory deadLetterPublishingRecovererFactory,
-			Clock clock) {
+DeadLetterPublishingRecovererFactory deadLetterPublishingRecovererFactory,
+Clock clock) {
 
 		return new ListenerContainerFactoryConfigurer(kafkaConsumerBackoffManager, deadLetterPublishingRecovererFactory, clock);
 	}
@@ -155,7 +155,7 @@ public class RetryTopicComponentFactory {
 	 * @return the instance.
 	 */
 	public KafkaBackOffManagerFactory kafkaBackOffManagerFactory(ListenerContainerRegistry registry,
-			ApplicationContext applicationContext) {
+ApplicationContext applicationContext) {
 
 		return new ContainerPartitionPausingBackOffManagerFactory(registry, applicationContext);
 	}

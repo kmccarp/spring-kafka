@@ -68,12 +68,12 @@ public final class ErrorHandlingUtils {
 	 */
 	@Deprecated
 	public static void retryBatch(Exception thrownException, ConsumerRecords<?, ?> records, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener, BackOff backOff,
-			CommonErrorHandler seeker, BiConsumer<ConsumerRecords<?, ?>, Exception> recoverer, LogAccessor logger,
-			KafkaException.Level logLevel, List<RetryListener> retryListeners, BinaryExceptionClassifier classifier) {
+MessageListenerContainer container, Runnable invokeListener, BackOff backOff,
+CommonErrorHandler seeker, BiConsumer<ConsumerRecords<?, ?>, Exception> recoverer, LogAccessor logger,
+KafkaException.Level logLevel, List<RetryListener> retryListeners, BinaryExceptionClassifier classifier) {
 
 		retryBatch(thrownException, records, consumer, container, invokeListener, backOff, seeker, recoverer, logger,
-				logLevel, retryListeners, classifier, false);
+	logLevel, retryListeners, classifier, false);
 	}
 
 	/**
@@ -97,10 +97,10 @@ public final class ErrorHandlingUtils {
 	 * @since 2.9.7
 	 */
 	public static void retryBatch(Exception thrownException, ConsumerRecords<?, ?> records, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener, BackOff backOff,
-			CommonErrorHandler seeker, BiConsumer<ConsumerRecords<?, ?>, Exception> recoverer, LogAccessor logger,
-			KafkaException.Level logLevel, List<RetryListener> retryListeners, BinaryExceptionClassifier classifier,
-			boolean reClassifyOnExceptionChange) {
+MessageListenerContainer container, Runnable invokeListener, BackOff backOff,
+CommonErrorHandler seeker, BiConsumer<ConsumerRecords<?, ?>, Exception> recoverer, LogAccessor logger,
+KafkaException.Level logLevel, List<RetryListener> retryListeners, BinaryExceptionClassifier classifier,
+boolean reClassifyOnExceptionChange) {
 
 		BackOffExecution execution = backOff.start();
 		long nextBackOff = execution.nextBackOff();
@@ -113,7 +113,7 @@ public final class ErrorHandlingUtils {
 		MessageListenerContainer childOrSingle = container.getContainerFor(first.topic(), first.partition());
 		if (childOrSingle instanceof ConsumerPauseResumeEventPublisher) {
 			((ConsumerPauseResumeEventPublisher) childOrSingle)
-					.publishConsumerPausedEvent(assignment, "For batch retry");
+		.publishConsumerPausedEvent(assignment, "For batch retry");
 		}
 		try {
 			Exception recoveryException = thrownException;
@@ -126,7 +126,8 @@ public final class ErrorHandlingUtils {
 				}
 				catch (InterruptedException e1) {
 					Thread.currentThread().interrupt();
-					seeker.handleBatch(thrownException, records, consumer, container, () -> { });
+					seeker.handleBatch(thrownException, records, consumer, container, () -> {
+					});
 					throw new KafkaException("Interrupted during retry", logLevel, e1);
 				}
 				if (!container.isRunning()) {
@@ -147,7 +148,7 @@ public final class ErrorHandlingUtils {
 					recoveryException = ex;
 					Exception newException = unwrapIfNeeded(ex);
 					if (reClassifyOnExceptionChange && !newException.getClass().equals(lastException.getClass())
-							&& !classifier.classify(newException)) {
+				&& !classifier.classify(newException)) {
 
 						break;
 					}
@@ -162,7 +163,8 @@ public final class ErrorHandlingUtils {
 			catch (Exception ex) {
 				logger.error(ex, () -> "Recoverer threw an exception; re-seeking batch");
 				retryListeners.forEach(listener -> listener.recoveryFailed(records, thrownException, ex));
-				seeker.handleBatch(thrownException, records, consumer, container, () -> { });
+				seeker.handleBatch(thrownException, records, consumer, container, () -> {
+				});
 			}
 		}
 		finally {
@@ -175,7 +177,7 @@ public final class ErrorHandlingUtils {
 	} // NOSONAR NCSS line count
 
 	private static void listen(List<RetryListener> listeners, ConsumerRecords<?, ?> records,
-			Exception thrownException, int attempt) {
+Exception thrownException, int attempt) {
 
 		listeners.forEach(listener -> listener.failedDelivery(records, thrownException, attempt));
 	}
@@ -188,8 +190,8 @@ public final class ErrorHandlingUtils {
 	public static String recordsToString(ConsumerRecords<?, ?> records) {
 		StringBuffer sb = new StringBuffer();
 		records.spliterator().forEachRemaining(rec -> sb
-				.append(KafkaUtils.format(rec))
-				.append(','));
+	.append(KafkaUtils.format(rec))
+	.append(','));
 		sb.deleteCharAt(sb.length() - 1);
 		return sb.toString();
 	}
@@ -222,8 +224,8 @@ public final class ErrorHandlingUtils {
 	public static Exception findRootCause(Exception exception) {
 		Exception realException = exception;
 		while ((realException  instanceof ListenerExecutionFailedException
-				|| realException instanceof TimestampedException)
-						&& realException.getCause() instanceof Exception cause) {
+	|| realException instanceof TimestampedException)
+	&& realException.getCause() instanceof Exception cause) {
 
 			realException = cause;
 		}

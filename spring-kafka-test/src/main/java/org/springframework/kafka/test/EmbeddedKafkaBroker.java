@@ -137,13 +137,13 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		}
 		catch (NoSuchMethodException | SecurityException ex) {
 			throw new IllegalStateException("Failed to determine KafkaServer.brokerState() method; client version: "
-					+ AppInfoParser.getVersion(), ex);
+		+ AppInfoParser.getVersion(), ex);
 		}
 		try {
 			AtomicReference<Method> configsMethod = new AtomicReference<>();
 			ReflectionUtils.doWithMethods(TestUtils.class,
-					method -> configsMethod.set(method),
-					method -> method.getName().equals("createBrokerConfig"));
+		method -> configsMethod.set(method),
+		method -> method.getName().equals("createBrokerConfig"));
 			BROKER_CONFIGS_METHOD = configsMethod.get();
 			if (BROKER_CONFIGS_METHOD == null) {
 				throw new IllegalStateException();
@@ -151,7 +151,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		}
 		catch (IllegalStateException ex) {
 			throw new IllegalStateException("Failed to obtain TestUtils.createBrokerConfig method; client version: "
-					+ AppInfoParser.getVersion(), ex);
+		+ AppInfoParser.getVersion(), ex);
 		}
 	}
 
@@ -250,7 +250,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 	 */
 	public EmbeddedKafkaBroker kafkaPorts(int... ports) {
 		Assert.isTrue(ports.length == this.count, "A port must be provided for each instance ["
-				+ this.count + "], provided: " + Arrays.toString(ports) + ", use 0 for a random port");
+	+ this.count + "], provided: " + Arrays.toString(ports) + ", use 0 for a random port");
 		this.kafkaPorts = Arrays.copyOf(ports, ports.length);
 		return this;
 	}
@@ -356,7 +356,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 			brokerConfigProperties.setProperty(KafkaConfig.ControllerSocketTimeoutMsProp(), "1000");
 			brokerConfigProperties.setProperty(KafkaConfig.OffsetsTopicReplicationFactorProp(), "1");
 			brokerConfigProperties.setProperty(KafkaConfig.ReplicaHighWatermarkCheckpointIntervalMsProp(),
-					String.valueOf(Long.MAX_VALUE));
+		String.valueOf(Long.MAX_VALUE));
 			this.brokerProperties.forEach(brokerConfigProperties::put);
 			if (!this.brokerProperties.containsKey(KafkaConfig.NumPartitionsProp())) {
 				brokerConfigProperties.setProperty(KafkaConfig.NumPartitionsProp(), "" + this.partitionsPerTopic);
@@ -384,7 +384,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 	private void logDir(Properties brokerConfigProperties) {
 		try {
 			brokerConfigProperties.put(KafkaConfig.LogDirProp(),
-					Files.createTempDirectory("spring.kafka." + UUID.randomUUID()).toString());
+		Files.createTempDirectory("spring.kafka." + UUID.randomUUID()).toString());
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException(e);
@@ -415,21 +415,21 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		try {
 			if (BROKER_CONFIGS_METHOD.getParameterTypes().length == 21) { // 3.3.2
 				return (Properties) BROKER_CONFIGS_METHOD.invoke(null, i, this.zkConnect, this.controlledShutdown,
-					true, this.kafkaPorts[i],
-					scala.Option.apply(null),
-					scala.Option.apply(null),
-					scala.Option.apply(null),
-					true, false, 0, false, 0, false, 0, scala.Option.apply(null), 1, false,
-					this.partitionsPerTopic, (short) this.count, false);
+			true, this.kafkaPorts[i],
+			scala.Option.apply(null),
+			scala.Option.apply(null),
+			scala.Option.apply(null),
+			true, false, 0, false, 0, false, 0, scala.Option.apply(null), 1, false,
+			this.partitionsPerTopic, (short) this.count, false);
 			}
 			else {
 				return (Properties) BROKER_CONFIGS_METHOD.invoke(null, i, this.zkConnect, this.controlledShutdown,
-						true, this.kafkaPorts[i],
-						scala.Option.apply(null),
-						scala.Option.apply(null),
-						scala.Option.apply(null),
-						true, false, 0, false, 0, false, 0, scala.Option.apply(null), 1, false,
-						this.partitionsPerTopic, (short) this.count);
+			true, this.kafkaPorts[i],
+			scala.Option.apply(null),
+			scala.Option.apply(null),
+			scala.Option.apply(null),
+			true, false, 0, false, 0, false, 0, scala.Option.apply(null), 1, false,
+			this.partitionsPerTopic, (short) this.count);
 			}
 		}
 		catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
@@ -460,9 +460,9 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		for (NewTopic topic : topicsToAdd) {
 			Assert.isTrue(this.topics.add(topic.name()), () -> "topic already exists: " + topic);
 			Assert.isTrue(topic.replicationFactor() <= this.count
-							&& (topic.replicasAssignments() == null
-							|| topic.replicasAssignments().size() <= this.count),
-					() -> "Embedded kafka does not support the requested replication factor: " + topic);
+		&& (topic.replicasAssignments() == null
+		|| topic.replicasAssignments().size() <= this.count),
+		() -> "Embedded kafka does not support the requested replication factor: " + topic);
 		}
 
 		doWithAdmin(admin -> createTopics(admin, Arrays.asList(topicsToAdd)));
@@ -475,9 +475,9 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 	private void createKafkaTopics(Set<String> topicsToCreate) {
 		doWithAdmin(admin -> {
 			createTopics(admin,
-					topicsToCreate.stream()
-						.map(t -> new NewTopic(t, this.partitionsPerTopic, (short) this.count))
-						.collect(Collectors.toList()));
+		topicsToCreate.stream()
+	.map(t -> new NewTopic(t, this.partitionsPerTopic, (short) this.count))
+	.collect(Collectors.toList()));
 		});
 	}
 
@@ -517,9 +517,9 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		for (NewTopic topic : topicsToAdd) {
 			Assert.isTrue(this.topics.add(topic.name()), () -> "topic already exists: " + topic);
 			Assert.isTrue(topic.replicationFactor() <= this.count
-							&& (topic.replicasAssignments() == null
-							|| topic.replicasAssignments().size() <= this.count),
-					() -> "Embedded kafka does not support the requested replication factor: " + topic);
+		&& (topic.replicasAssignments() == null
+		|| topic.replicasAssignments().size() <= this.count),
+		() -> "Embedded kafka does not support the requested replication factor: " + topic);
 		}
 
 		return doWithAdminFunction(admin -> createTopicsWithResults(admin, Arrays.asList(topicsToAdd)));
@@ -535,9 +535,9 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 	private Map<String, Exception> createKafkaTopicsWithResults(Set<String> topicsToCreate) {
 		return doWithAdminFunction(admin -> {
 			return createTopicsWithResults(admin,
-					topicsToCreate.stream()
-						.map(t -> new NewTopic(t, this.partitionsPerTopic, (short) this.count))
-						.collect(Collectors.toList()));
+		topicsToCreate.stream()
+	.map(t -> new NewTopic(t, this.partitionsPerTopic, (short) this.count))
+	.collect(Collectors.toList()));
 		});
 	}
 
@@ -545,20 +545,20 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		CreateTopicsResult createTopics = admin.createTopics(newTopics);
 		Map<String, Exception> results = new HashMap<>();
 		createTopics.values()
-				.entrySet()
-				.stream()
-				.map(entry -> {
-					Exception result;
-					try {
-						entry.getValue().get(this.adminTimeout.getSeconds(), TimeUnit.SECONDS);
-						result = null;
-					}
-					catch (InterruptedException | ExecutionException | TimeoutException e) {
-						result = e;
-					}
-					return new SimpleEntry<>(entry.getKey(), result);
-				})
-				.forEach(entry -> results.put(entry.getKey(), entry.getValue()));
+	.entrySet()
+	.stream()
+	.map(entry -> {
+		Exception result;
+		try {
+			entry.getValue().get(this.adminTimeout.getSeconds(), TimeUnit.SECONDS);
+			result = null;
+		}
+		catch (InterruptedException | ExecutionException | TimeoutException e) {
+			result = e;
+		}
+		return new SimpleEntry<>(entry.getKey(), result);
+	})
+	.forEach(entry -> results.put(entry.getKey(), entry.getValue()));
 		return results;
 	}
 
@@ -669,7 +669,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 	public synchronized ZooKeeperClient getZooKeeperClient() {
 		if (this.zooKeeperClient == null) {
 			this.zooKeeperClient = new ZooKeeperClient(this.zkConnect, zkSessionTimeout, zkConnectionTimeout,
-					1, Time.SYSTEM, "embeddedKafkaZK", "embeddedKafkaZK", new ZKClientConfig(), "embeddedKafkaZK");
+		1, Time.SYSTEM, "embeddedKafkaZK", "embeddedKafkaZK", new ZKClientConfig(), "embeddedKafkaZK");
 		}
 		return this.zooKeeperClient;
 	}
@@ -710,7 +710,7 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		// retry restarting repeatedly, first attempts may fail
 
 		SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(10, // NOSONAR magic #
-				Collections.singletonMap(Exception.class, true));
+	Collections.singletonMap(Exception.class, true));
 
 		ExponentialBackOffPolicy backOffPolicy = new ExponentialBackOffPolicy();
 		backOffPolicy.setInitialInterval(100); // NOSONAR magic #
@@ -796,8 +796,8 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 	 */
 	public void consumeFromEmbeddedTopics(Consumer<?, ?> consumer, boolean seekToEnd, String... topicsToConsume) {
 		List<String> notEmbedded = Arrays.stream(topicsToConsume)
-				.filter(topic -> !this.topics.contains(topic))
-				.collect(Collectors.toList());
+	.filter(topic -> !this.topics.contains(topic))
+	.collect(Collectors.toList());
 		if (notEmbedded.size() > 0) {
 			throw new IllegalStateException("topic(s):'" + notEmbedded + "' are not in embedded topic list");
 		}
@@ -821,9 +821,9 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 		}
 		if (assigned.get() != null) {
 			logger.debug(() -> "Partitions assigned "
-					+ assigned.get()
-					+ "; re-seeking to "
-					+ (seekToEnd ? "end; " : "beginning"));
+		+ assigned.get()
+		+ "; re-seeking to "
+		+ (seekToEnd ? "end; " : "beginning"));
 			if (seekToEnd) {
 				consumer.seekToEnd(assigned.get());
 			}
@@ -865,8 +865,8 @@ public class EmbeddedKafkaBroker implements InitializingBean, DisposableBean {
 			this.snapshotDir = TestUtils.tempDir();
 			this.logDir = TestUtils.tempDir();
 			System.setProperty("zookeeper.forceSync", "no"); // disable fsync to ZK txn
-																// log in tests to avoid
-																// timeout
+			// log in tests to avoid
+			// timeout
 			this.zookeeper = new ZooKeeperServer(this.snapshotDir, this.logDir, TICK_TIME);
 			this.factory = new NIOServerCnxnFactory();
 			InetSocketAddress addr = new InetSocketAddress(LOOPBACK, zkPort == 0 ? TestUtils.RandomPort() : zkPort);

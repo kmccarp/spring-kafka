@@ -114,7 +114,7 @@ public class KafkaListenerEndpointRegistrar implements BeanFactoryAware, Initial
 	 */
 	public void setMessageHandlerMethodFactory(MessageHandlerMethodFactory kafkaHandlerMethodFactory) {
 		Assert.isNull(this.validator,
-				"A validator cannot be provided with a custom message handler factory");
+	"A validator cannot be provided with a custom message handler factory");
 		this.messageHandlerMethodFactory = kafkaHandlerMethodFactory;
 	}
 
@@ -177,7 +177,7 @@ public class KafkaListenerEndpointRegistrar implements BeanFactoryAware, Initial
 	 */
 	public void setValidator(Validator validator) {
 		Assert.isNull(this.messageHandlerMethodFactory,
-				"A validator cannot be provided with a custom message handler factory");
+	"A validator cannot be provided with a custom message handler factory");
 		this.validator = validator;
 	}
 
@@ -190,11 +190,11 @@ public class KafkaListenerEndpointRegistrar implements BeanFactoryAware, Initial
 		synchronized (this.endpointDescriptors) {
 			for (KafkaListenerEndpointDescriptor descriptor : this.endpointDescriptors) {
 				if (descriptor.endpoint instanceof MultiMethodKafkaListenerEndpoint
-						&& this.validator != null) {
+			&& this.validator != null) {
 					((MultiMethodKafkaListenerEndpoint) descriptor.endpoint).setValidator(this.validator);
 				}
 				this.endpointRegistry.registerListenerContainer(
-						descriptor.endpoint, resolveContainerFactory(descriptor));
+			descriptor.endpoint, resolveContainerFactory(descriptor));
 			}
 			this.startImmediately = true;  // trigger immediate startup
 		}
@@ -210,13 +210,13 @@ public class KafkaListenerEndpointRegistrar implements BeanFactoryAware, Initial
 		else if (this.containerFactoryBeanName != null) {
 			Assert.state(this.beanFactory != null, "BeanFactory must be set to obtain container factory by bean name");
 			this.containerFactory = this.beanFactory.getBean(
-					this.containerFactoryBeanName, KafkaListenerContainerFactory.class);
+		this.containerFactoryBeanName, KafkaListenerContainerFactory.class);
 			return this.containerFactory;  // Consider changing this if live change of the factory is required
 		}
 		else {
 			throw new IllegalStateException("Could not resolve the " +
-					KafkaListenerContainerFactory.class.getSimpleName() + " to use for [" +
-					descriptor.endpoint + "] no factory was given and no default is set.");
+		KafkaListenerContainerFactory.class.getSimpleName() + " to use for [" +
+		descriptor.endpoint + "] no factory was given and no default is set.");
 		}
 	}
 
@@ -236,7 +236,7 @@ public class KafkaListenerEndpointRegistrar implements BeanFactoryAware, Initial
 		synchronized (this.endpointDescriptors) {
 			if (this.startImmediately) { // Register and start immediately
 				this.endpointRegistry.registerListenerContainer(descriptor.endpoint,
-						resolveContainerFactory(descriptor), true);
+			resolveContainerFactory(descriptor), true);
 			}
 			else {
 				this.endpointDescriptors.add(descriptor);
@@ -263,7 +263,7 @@ public class KafkaListenerEndpointRegistrar implements BeanFactoryAware, Initial
 		private final KafkaListenerContainerFactory<?> containerFactory;
 
 		private KafkaListenerEndpointDescriptor(KafkaListenerEndpoint endpoint,
-				@Nullable KafkaListenerContainerFactory<?> containerFactory) {
+	@Nullable KafkaListenerContainerFactory<?> containerFactory) {
 
 			this.endpoint = endpoint;
 			this.containerFactory = containerFactory;

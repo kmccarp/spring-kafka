@@ -85,7 +85,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 @SuppressWarnings("deprecation")
 public class DeadLetterPublishingRecovererTests {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void testTxNoTx() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -99,7 +99,7 @@ public class DeadLetterPublishingRecovererTests {
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, "bar", "baz");
 		Consumer consumer = mock(Consumer.class);
 		given(consumer.partitionsFor("foo.DLT", Duration.ofSeconds(5)))
-				.willReturn(Collections.singletonList(new PartitionInfo("foo", 0, null, null, null)));
+	.willReturn(Collections.singletonList(new PartitionInfo("foo", 0, null, null, null)));
 		recoverer.accept(record, consumer, new RuntimeException());
 		verify(template, never()).executeInTransaction(any());
 		ArgumentCaptor<ProducerRecord> captor = ArgumentCaptor.forClass(ProducerRecord.class);
@@ -113,7 +113,7 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(captor.getValue().partition()).isNull();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void testTxExisting() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -129,7 +129,7 @@ public class DeadLetterPublishingRecovererTests {
 		verify(template).send(any(ProducerRecord.class));
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void testNonTx() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -145,7 +145,7 @@ public class DeadLetterPublishingRecovererTests {
 		verify(template).send(any(ProducerRecord.class));
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void testTxNewTx() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -166,7 +166,7 @@ public class DeadLetterPublishingRecovererTests {
 		verify(template).send(any(ProducerRecord.class));
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void valueHeaderStripped() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -181,7 +181,7 @@ public class DeadLetterPublishingRecovererTests {
 		future.complete(new Object());
 		willReturn(future).given(template).send(any(ProducerRecord.class));
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, 0L, TimestampType.CREATE_TIME,
-				0, 0, "bar", "baz", headers, Optional.empty());
+	0, 0, "bar", "baz", headers, Optional.empty());
 		recoverer.accept(record, new RuntimeException("testV"));
 		ArgumentCaptor<ProducerRecord> captor = ArgumentCaptor.forClass(ProducerRecord.class);
 		verify(template).send(captor.capture());
@@ -196,7 +196,7 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(headers.lastHeader(KafkaHeaders.DLT_EXCEPTION_MESSAGE).value()).isEqualTo("testV".getBytes());
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void keyHeaderStripped() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -207,7 +207,7 @@ public class DeadLetterPublishingRecovererTests {
 		future.complete(new Object());
 		willReturn(future).given(template).send(any(ProducerRecord.class));
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, 0L, TimestampType.CREATE_TIME,
-				0, 0, "bar", "baz", headers, Optional.empty());
+	0, 0, "bar", "baz", headers, Optional.empty());
 		recoverer.accept(record, new RuntimeException());
 		ArgumentCaptor<ProducerRecord> captor = ArgumentCaptor.forClass(ProducerRecord.class);
 		verify(template).send(captor.capture());
@@ -215,7 +215,7 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(headers.lastHeader(SerializationUtils.KEY_DESERIALIZER_EXCEPTION_HEADER)).isNull();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void keyDeserOnly() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -223,12 +223,12 @@ public class DeadLetterPublishingRecovererTests {
 		Headers headers = new RecordHeaders();
 		DeserializationException deserEx = createDeserEx(true);
 		headers.add(
-				new RecordHeader(SerializationUtils.KEY_DESERIALIZER_EXCEPTION_HEADER, header(true, deserEx)));
+	new RecordHeader(SerializationUtils.KEY_DESERIALIZER_EXCEPTION_HEADER, header(true, deserEx)));
 		CompletableFuture future = new CompletableFuture();
 		future.complete(new Object());
 		willReturn(future).given(template).send(any(ProducerRecord.class));
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, 0L, TimestampType.CREATE_TIME,
-				0, 0, "bar", "baz", headers, Optional.empty());
+	0, 0, "bar", "baz", headers, Optional.empty());
 		recoverer.accept(record, deserEx);
 		ArgumentCaptor<ProducerRecord> captor = ArgumentCaptor.forClass(ProducerRecord.class);
 		verify(template).send(captor.capture());
@@ -238,7 +238,7 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(headers.lastHeader(KafkaHeaders.DLT_EXCEPTION_STACKTRACE)).isNull();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void headersNotStripped() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -251,7 +251,7 @@ public class DeadLetterPublishingRecovererTests {
 		future.complete(new Object());
 		willReturn(future).given(template).send(any(ProducerRecord.class));
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, 0L, TimestampType.CREATE_TIME,
-				0, 0, "bar", "baz", headers, Optional.empty());
+	0, 0, "bar", "baz", headers, Optional.empty());
 		recoverer.accept(record, new RuntimeException());
 		ArgumentCaptor<ProducerRecord> captor = ArgumentCaptor.forClass(ProducerRecord.class);
 		verify(template).send(captor.capture());
@@ -262,7 +262,7 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(headers.lastHeader(KafkaHeaders.DLT_EXCEPTION_MESSAGE).value()).isEqualTo("testV".getBytes());
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void tombstoneWithMultiTemplates() {
 		KafkaOperations<?, ?> template1 = mock(KafkaOperations.class);
@@ -279,7 +279,7 @@ public class DeadLetterPublishingRecovererTests {
 		verify(template1).send(any(ProducerRecord.class));
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void tombstoneWithMultiTemplatesExplicit() {
 		KafkaOperations<?, ?> template1 = mock(KafkaOperations.class);
@@ -302,8 +302,8 @@ public class DeadLetterPublishingRecovererTests {
 
 	private DeserializationException createDeserEx(boolean isKey) {
 		return new DeserializationException(
-				isKey ? "testK" : "testV",
-				isKey ? "key".getBytes() : "value".getBytes(), isKey, null);
+	isKey ? "testK" : "testV",
+	isKey ? "key".getBytes() : "value".getBytes(), isKey, null);
 	}
 
 	private byte[] header(boolean isKey, DeserializationException deserEx) {
@@ -344,7 +344,7 @@ public class DeadLetterPublishingRecovererTests {
 		CompletableFuture future = mock(CompletableFuture.class);
 		given(template.send(any(ProducerRecord.class))).willReturn(future);
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, 1234L,
-				TimestampType.CREATE_TIME, 123, 123, "bar", null, new RecordHeaders(), Optional.empty());
+	TimestampType.CREATE_TIME, 123, 123, "bar", null, new RecordHeaders(), Optional.empty());
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
 		recoverer.setAppendOriginalHeaders(false);
 		recoverer.accept(record, new RuntimeException(new IllegalStateException()));
@@ -362,7 +362,7 @@ public class DeadLetterPublishingRecovererTests {
 		Header firstExceptionStackTrace = headers.lastHeader(KafkaHeaders.DLT_EXCEPTION_STACKTRACE);
 
 		ConsumerRecord<String, String> anotherRecord = new ConsumerRecord<>("bar", 1, 12L, 4321L,
-				TimestampType.LOG_APPEND_TIME, 321, 321, "bar", null, new RecordHeaders(), Optional.empty());
+	TimestampType.LOG_APPEND_TIME, 321, 321, "bar", null, new RecordHeaders(), Optional.empty());
 		headers.forEach(header -> anotherRecord.headers().add(header));
 		recoverer.accept(anotherRecord, new RuntimeException(new IllegalStateException()));
 		ArgumentCaptor<ProducerRecord> anotherProducerRecordCaptor = ArgumentCaptor.forClass(ProducerRecord.class);
@@ -373,16 +373,16 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_ORIGINAL_OFFSET)).isSameAs(originalOffsetHeader);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_ORIGINAL_TIMESTAMP)).isSameAs(originalTimestampHeader);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_ORIGINAL_TIMESTAMP_TYPE))
-				.isSameAs(originalTimestampType);
+	.isSameAs(originalTimestampType);
 		Iterator<Header> originalTopics = anotherHeaders.headers(KafkaHeaders.DLT_ORIGINAL_TOPIC).iterator();
 		assertThat(originalTopics.next()).isSameAs(originalTopicHeader);
 		assertThat(originalTopics.hasNext()).isFalse();
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_EXCEPTION_FQCN)).isNotSameAs(firstExceptionType);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_EXCEPTION_CAUSE_FQCN))
-				.isNotSameAs(firstExceptionCauseType);
+	.isNotSameAs(firstExceptionCauseType);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_EXCEPTION_MESSAGE)).isNotSameAs(firstExceptionMessage);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_EXCEPTION_STACKTRACE))
-				.isNotSameAs(firstExceptionStackTrace);
+	.isNotSameAs(firstExceptionStackTrace);
 		Iterator<Header> exceptionHeaders = anotherHeaders.headers(KafkaHeaders.DLT_EXCEPTION_FQCN).iterator();
 		assertThat(exceptionHeaders.next()).isNotSameAs(firstExceptionType);
 		assertThat(exceptionHeaders.hasNext()).isFalse();
@@ -395,12 +395,12 @@ public class DeadLetterPublishingRecovererTests {
 		CompletableFuture future = mock(CompletableFuture.class);
 		given(template.send(any(ProducerRecord.class))).willReturn(future);
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, 1234L,
-				TimestampType.CREATE_TIME, 123, 123, "bar", null, new RecordHeaders(), Optional.empty());
+	TimestampType.CREATE_TIME, 123, 123, "bar", null, new RecordHeaders(), Optional.empty());
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
 		recoverer.setAppendOriginalHeaders(true);
 		recoverer.setStripPreviousExceptionHeaders(false);
 		recoverer.accept(record, new ListenerExecutionFailedException("Listener failed",
-				new TimestampedException(new RuntimeException("ex1 msg", new IllegalStateException()))));
+	new TimestampedException(new RuntimeException("ex1 msg", new IllegalStateException()))));
 		ArgumentCaptor<ProducerRecord> producerRecordCaptor = ArgumentCaptor.forClass(ProducerRecord.class);
 		then(template).should(times(1)).send(producerRecordCaptor.capture());
 		Headers headers = producerRecordCaptor.getValue().headers();
@@ -418,40 +418,40 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(new String(firstExceptionCauseType.value())).isEqualTo(RuntimeException.class.getName());
 
 		ConsumerRecord<String, String> anotherRecord = new ConsumerRecord<>("bar", 1, 12L, 4321L,
-				TimestampType.LOG_APPEND_TIME, 321, 321, "bar", null, new RecordHeaders(), Optional.empty());
+	TimestampType.LOG_APPEND_TIME, 321, 321, "bar", null, new RecordHeaders(), Optional.empty());
 		headers.forEach(header -> anotherRecord.headers().add(header));
 		recoverer.accept(anotherRecord, new ListenerExecutionFailedException("Listener failed",
-				new TimestampedException(new RuntimeException("ex2 msg", new IllegalStateException()))));
+	new TimestampedException(new RuntimeException("ex2 msg", new IllegalStateException()))));
 		ArgumentCaptor<ProducerRecord> anotherProducerRecordCaptor = ArgumentCaptor.forClass(ProducerRecord.class);
 		then(template).should(times(2)).send(anotherProducerRecordCaptor.capture());
 		Headers anotherHeaders = anotherProducerRecordCaptor.getAllValues().get(1).headers();
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_ORIGINAL_TOPIC)).isNotSameAs(originalTopicHeader);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_ORIGINAL_PARTITION))
-				.isNotSameAs(originalPartitionHeader);
+	.isNotSameAs(originalPartitionHeader);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_ORIGINAL_OFFSET)).isNotSameAs(originalOffsetHeader);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_ORIGINAL_TIMESTAMP))
-				.isNotSameAs(originalTimestampHeader);
+	.isNotSameAs(originalTimestampHeader);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_ORIGINAL_TIMESTAMP_TYPE))
-				.isNotSameAs(originalTimestampType);
+	.isNotSameAs(originalTimestampType);
 		Iterator<Header> originalTopics = anotherHeaders.headers(KafkaHeaders.DLT_ORIGINAL_TOPIC).iterator();
 		assertThat(originalTopics.next()).isSameAs(originalTopicHeader);
 		assertThat(originalTopics.next()).isNotNull();
 		assertThat(originalTopics.hasNext()).isFalse();
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_EXCEPTION_FQCN)).isNotSameAs(firstExceptionType);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_EXCEPTION_CAUSE_FQCN))
-				.isNotSameAs(firstExceptionCauseType);
+	.isNotSameAs(firstExceptionCauseType);
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_EXCEPTION_MESSAGE)).isNotSameAs(firstExceptionMessage);
 		assertThat(new String(anotherHeaders.lastHeader(KafkaHeaders.DLT_EXCEPTION_MESSAGE).value()))
-				.isEqualTo("Listener failed; ex2 msg");
+	.isEqualTo("Listener failed; ex2 msg");
 		assertThat(anotherHeaders.lastHeader(KafkaHeaders.DLT_EXCEPTION_STACKTRACE))
-				.isNotSameAs(firstExceptionStackTrace);
+	.isNotSameAs(firstExceptionStackTrace);
 		Iterator<Header> exceptionHeaders = anotherHeaders.headers(KafkaHeaders.DLT_EXCEPTION_FQCN).iterator();
 		assertThat(exceptionHeaders.next()).isSameAs(firstExceptionType);
 		assertThat(exceptionHeaders.next()).isNotNull();
 		assertThat(exceptionHeaders.hasNext()).isFalse();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void failIfSendResultIsError() throws Exception {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -471,11 +471,11 @@ public class DeadLetterPublishingRecovererTests {
 		recoverer.setWaitForSendResultTimeout(waitForSendResultTimeout);
 		recoverer.setTimeoutBuffer(0L);
 		assertThatThrownBy(() -> recoverer.accept(record, new RuntimeException()))
-				.isExactlyInstanceOf(KafkaException.class);
+	.isExactlyInstanceOf(KafkaException.class);
 		assertThat(timeoutCaptor.getValue()).isEqualTo(waitForSendResultTimeout.toMillis());
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void sendTimeoutDefault() throws Exception {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -499,7 +499,7 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(timeoutCaptor.getValue()).isEqualTo(Duration.ofSeconds(125).toMillis());
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void sendTimeoutConfig() throws Exception {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -547,7 +547,7 @@ public class DeadLetterPublishingRecovererTests {
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template, (cr, e) -> null);
 		recoverer.setThrowIfNoDestinationReturned(true);
 		assertThatThrownBy(() -> recoverer.accept(record, new RuntimeException()))
-				.isExactlyInstanceOf(IllegalArgumentException.class);
+	.isExactlyInstanceOf(IllegalArgumentException.class);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -569,7 +569,7 @@ public class DeadLetterPublishingRecovererTests {
 		given(template.send(any(ProducerRecord.class))).willReturn(future);
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, "bar", null);
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template,
-				(cr, e) -> new TopicPartition("foo", 0));
+	(cr, e) -> new TopicPartition("foo", 0));
 		recoverer.accept(record, new ClassCastException());
 		verify(template, never()).send(any(ProducerRecord.class));
 		recoverer.addNotRetryableExceptions(IllegalStateException.class);
@@ -589,7 +589,7 @@ public class DeadLetterPublishingRecovererTests {
 		given(template.send(any(ProducerRecord.class))).willReturn(future);
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, "bar", null);
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template,
-				(cr, e) -> new TopicPartition("foo", 0));
+	(cr, e) -> new TopicPartition("foo", 0));
 		recoverer.setSkipSameTopicFatalExceptions(false);
 		recoverer.accept(record, new ClassCastException());
 		verify(template).send(any(ProducerRecord.class));
@@ -602,7 +602,7 @@ public class DeadLetterPublishingRecovererTests {
 		verify(template, times(3)).send(any(ProducerRecord.class));
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void headerBitsTurnedOffOneByOne() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -799,7 +799,7 @@ public class DeadLetterPublishingRecovererTests {
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void headerCreator() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -825,7 +825,7 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(headers.lastHeader("foo")).isNotNull();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void addHeaderFunctionsProcessedInOrder() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -834,13 +834,13 @@ public class DeadLetterPublishingRecovererTests {
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, "bar", null);
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
 		recoverer.setHeadersFunction((rec, ex) -> {
-			return new RecordHeaders(new RecordHeader[] { new RecordHeader("foo", "one".getBytes()) });
+			return new RecordHeaders(new RecordHeader[]{new RecordHeader("foo", "one".getBytes())});
 		});
 		recoverer.addHeadersFunction((rec, ex) -> {
-			return new RecordHeaders(new RecordHeader[] { new RecordHeader("bar", "two".getBytes()) });
+			return new RecordHeaders(new RecordHeader[]{new RecordHeader("bar", "two".getBytes())});
 		});
 		recoverer.addHeadersFunction((rec, ex) -> {
-			return new RecordHeaders(new RecordHeader[] { new RecordHeader("foo", "three".getBytes()) });
+			return new RecordHeaders(new RecordHeader[]{new RecordHeader("foo", "three".getBytes())});
 		});
 		recoverer.accept(record, new ListenerExecutionFailedException("test", "group", new RuntimeException()));
 		ArgumentCaptor<ProducerRecord> producerRecordCaptor = ArgumentCaptor.forClass(ProducerRecord.class);
@@ -862,7 +862,7 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(headers.lastHeader("bar")).extracting("value").isEqualTo("two".getBytes());
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void immutableHeaders() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -871,12 +871,12 @@ public class DeadLetterPublishingRecovererTests {
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, "bar", null);
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
 		recoverer.setHeadersFunction((rec, ex) -> {
-			RecordHeaders headers = new RecordHeaders(new RecordHeader[] { new RecordHeader("foo", "one".getBytes()) });
+			RecordHeaders headers = new RecordHeaders(new RecordHeader[]{new RecordHeader("foo", "one".getBytes())});
 			headers.setReadOnly();
 			return headers;
 		});
 		recoverer.addHeadersFunction((rec, ex) -> {
-			return new RecordHeaders(new RecordHeader[] { new RecordHeader("bar", "two".getBytes()) });
+			return new RecordHeaders(new RecordHeader[]{new RecordHeader("bar", "two".getBytes())});
 		});
 		recoverer.accept(record, new ListenerExecutionFailedException("test", "group", new RuntimeException()));
 		ArgumentCaptor<ProducerRecord> producerRecordCaptor = ArgumentCaptor.forClass(ProducerRecord.class);
@@ -886,7 +886,7 @@ public class DeadLetterPublishingRecovererTests {
 		assertThat(KafkaTestUtils.getPropertyValue(headers, "headers", List.class)).hasSize(12);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void replaceNotAppendHeader() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -894,11 +894,11 @@ public class DeadLetterPublishingRecovererTests {
 		given(template.send(any(ProducerRecord.class))).willReturn(future);
 		Headers headers = new RecordHeaders().add(new RecordHeader("foo", "orig".getBytes()));
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE,
-				-1, -1, null, "bar", headers, Optional.empty());
+	-1, -1, null, "bar", headers, Optional.empty());
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
 		recoverer.setHeadersFunction((rec, ex) -> {
 			RecordHeaders toReplace = new RecordHeaders(
-					new RecordHeader[] { new SingleRecordHeader("foo", "one".getBytes()) });
+		new RecordHeader[]{new SingleRecordHeader("foo", "one".getBytes())});
 			return toReplace;
 		});
 		recoverer.accept(record, new ListenerExecutionFailedException("test", "group", new RuntimeException()));
@@ -930,11 +930,11 @@ public class DeadLetterPublishingRecovererTests {
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(template);
 		recoverer.setFailIfSendResultIsError(true);
 		assertThatThrownBy(() -> recoverer.accept(record, new RuntimeException()))
-				.isExactlyInstanceOf(KafkaException.class);
+	.isExactlyInstanceOf(KafkaException.class);
 		assertThat(timeoutCaptor.getValue()).isEqualTo(Duration.ofSeconds(125).toMillis());
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void blockingRetryRuntimeException() {
 		KafkaOperations<?, ?> template = mock(KafkaOperations.class);
@@ -945,8 +945,8 @@ public class DeadLetterPublishingRecovererTests {
 		recoverer.defaultFalse(true);
 		recoverer.addRetryableExceptions(RuntimeException.class);
 		recoverer.accept(record, new ListenerExecutionFailedException("test", "group",
-				new TimestampedException(
-						new ListenerExecutionFailedException("test", new ConversionException("test", null)))));
+	new TimestampedException(
+new ListenerExecutionFailedException("test", new ConversionException("test", null)))));
 		ArgumentCaptor<ProducerRecord> producerRecordCaptor = ArgumentCaptor.forClass(ProducerRecord.class);
 		verify(template).send(producerRecordCaptor.capture());
 		ProducerRecord outRecord = producerRecordCaptor.getValue();

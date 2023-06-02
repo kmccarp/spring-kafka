@@ -86,19 +86,19 @@ public class AliasPropertiesTests {
 		assertThat(this.repeatable.latch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(this.config.kafkaListenerEndpointRegistry()).isSameAs(this.kafkaListenerEndpointRegistry);
 		assertThat(this.kafkaListenerEndpointRegistry.getListenerContainer("onMethodInConfigClass").getGroupId())
-				.isEqualTo("onMethodInConfigClass.Config.listen1");
+	.isEqualTo("onMethodInConfigClass.Config.listen1");
 		assertThat(this.kafkaListenerEndpointRegistry.getListenerContainer("onMethod").getGroupId())
-				.isEqualTo("onMethod.ClassAndMethodLevelListener.listen1");
+	.isEqualTo("onMethod.ClassAndMethodLevelListener.listen1");
 		assertThat(this.kafkaListenerEndpointRegistry.getListenerContainer("onClass").getGroupId())
-				.isEqualTo("onClass.ClassAndMethodLevelListener");
+	.isEqualTo("onClass.ClassAndMethodLevelListener");
 		assertThat(this.kafkaListenerEndpointRegistry.getListenerContainer("onMethodRepeatable1").getGroupId())
-				.isEqualTo("onMethodRepeatable1.RepeatableClassAndMethodLevelListener.listen1");
+	.isEqualTo("onMethodRepeatable1.RepeatableClassAndMethodLevelListener.listen1");
 		assertThat(this.kafkaListenerEndpointRegistry.getListenerContainer("onClassRepeatable1").getGroupId())
-				.isEqualTo("onClassRepeatable1.RepeatableClassAndMethodLevelListener");
+	.isEqualTo("onClassRepeatable1.RepeatableClassAndMethodLevelListener");
 		assertThat(this.kafkaListenerEndpointRegistry.getListenerContainer("onMethodRepeatable2").getGroupId())
-				.isEqualTo("onMethodRepeatable2.RepeatableClassAndMethodLevelListener.listen1");
+	.isEqualTo("onMethodRepeatable2.RepeatableClassAndMethodLevelListener.listen1");
 		assertThat(this.kafkaListenerEndpointRegistry.getListenerContainer("onClassRepeatable2").getGroupId())
-				.isEqualTo("onClassRepeatable2.RepeatableClassAndMethodLevelListener");
+	.isEqualTo("onClassRepeatable2.RepeatableClassAndMethodLevelListener");
 		assertThat(Config.orderedCalledFirst.get()).isTrue();
 	}
 
@@ -114,9 +114,9 @@ public class AliasPropertiesTests {
 		public static AnnotationEnhancer mainEnhancer() {
 			return (attrs, element) -> {
 				attrs.put("groupId", attrs.get("id") + "." + (element instanceof Class
-						? ((Class<?>) element).getSimpleName()
-						: ((Method) element).getDeclaringClass().getSimpleName()
-								+  "." + ((Method) element).getName()));
+			? ((Class<?>) element).getSimpleName()
+			: ((Method) element).getDeclaringClass().getSimpleName()
+			+  "." + ((Method) element).getName()));
 				orderedCalledFirst.set(true);
 				return attrs;
 			};
@@ -140,7 +140,7 @@ public class AliasPropertiesTests {
 		@Bean
 		public KafkaListenerContainerFactory<?> kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory());
 			return factory;
 		}
@@ -153,7 +153,7 @@ public class AliasPropertiesTests {
 		@Bean
 		public Map<String, Object> consumerConfigs() {
 			Map<String, Object> consumerProps =
-					KafkaTestUtils.consumerProps("myAliasGroup", "false", embeddedKafka());
+		KafkaTestUtils.consumerProps("myAliasGroup", "false", embeddedKafka());
 			return consumerProps;
 		}
 
@@ -238,7 +238,7 @@ public class AliasPropertiesTests {
 
 	}
 
-	@Target({ ElementType.METHOD, ElementType.TYPE })
+	@Target({ElementType.METHOD, ElementType.TYPE})
 	@Retention(RetentionPolicy.RUNTIME)
 	@KafkaListener
 	public @interface MyListener {

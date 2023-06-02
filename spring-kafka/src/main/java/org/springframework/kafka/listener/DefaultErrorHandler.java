@@ -101,7 +101,7 @@ public class DefaultErrorHandler extends FailedBatchProcessor implements CommonE
 	 * @since 2.9
 	 */
 	public DefaultErrorHandler(@Nullable ConsumerRecordRecoverer recoverer, BackOff backOff,
-			@Nullable BackOffHandler backOffHandler) {
+@Nullable BackOffHandler backOffHandler) {
 
 		super(recoverer, backOff, backOffHandler, createFallback(backOff, recoverer));
 	}
@@ -151,7 +151,7 @@ public class DefaultErrorHandler extends FailedBatchProcessor implements CommonE
 
 	@Override
 	public boolean handleOne(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		try {
 			return getFailureTracker().recovered(record, thrownException, container, consumer);
@@ -169,46 +169,46 @@ public class DefaultErrorHandler extends FailedBatchProcessor implements CommonE
 
 	@Override
 	public void handleRemaining(Exception thrownException, List<ConsumerRecord<?, ?>> records,
-			Consumer<?, ?> consumer, MessageListenerContainer container) {
+Consumer<?, ?> consumer, MessageListenerContainer container) {
 
 		SeekUtils.seekOrRecover(thrownException, records, consumer, container, isCommitRecovered(), // NOSONAR
-				getFailureTracker()::recovered, this.logger, getLogLevel());
+	getFailureTracker()::recovered, this.logger, getLogLevel());
 	}
 
 	@Override
 	public void handleBatch(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener) {
+MessageListenerContainer container, Runnable invokeListener) {
 
 		doHandle(thrownException, data, consumer, container, invokeListener);
 	}
 
 	@Override
 	public <K, V> ConsumerRecords<K, V> handleBatchAndReturnRemaining(Exception thrownException,
-			ConsumerRecords<?, ?> data, Consumer<?, ?> consumer, MessageListenerContainer container,
-			Runnable invokeListener) {
+ConsumerRecords<?, ?> data, Consumer<?, ?> consumer, MessageListenerContainer container,
+Runnable invokeListener) {
 
 		return handle(thrownException, data, consumer, container, invokeListener);
 	}
 
 	@Override
 	public void handleOtherException(Exception thrownException, Consumer<?, ?> consumer,
-			MessageListenerContainer container, boolean batchListener) {
+MessageListenerContainer container, boolean batchListener) {
 
 		if (thrownException instanceof SerializationException) {
 			throw new IllegalStateException("This error handler cannot process 'SerializationException's directly; "
-					+ "please consider configuring an 'ErrorHandlingDeserializer' in the value and/or key "
-					+ "deserializer", thrownException);
+		+ "please consider configuring an 'ErrorHandlingDeserializer' in the value and/or key "
+		+ "deserializer", thrownException);
 		}
 		else {
 			throw new IllegalStateException("This error handler cannot process '"
-					+ thrownException.getClass().getName()
-					+ "'s; no record information is available", thrownException);
+		+ thrownException.getClass().getName()
+		+ "'s; no record information is available", thrownException);
 		}
 	}
 
 	@Override
 	public void onPartitionsAssigned(Consumer<?, ?> consumer, Collection<TopicPartition> partitions,
-			Runnable publishPause) {
+Runnable publishPause) {
 
 		getFallbackBatchHandler().onPartitionsAssigned(consumer, partitions, publishPause);
 	}

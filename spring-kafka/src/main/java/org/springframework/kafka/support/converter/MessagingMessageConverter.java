@@ -156,10 +156,10 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 
 	@Override
 	public Message<?> toMessage(ConsumerRecord<?, ?> record, Acknowledgment acknowledgment, Consumer<?, ?> consumer,
-			Type type) {
+Type type) {
 
 		KafkaMessageHeaders kafkaMessageHeaders = new KafkaMessageHeaders(this.generateMessageId,
-				this.generateTimestamp);
+	this.generateTimestamp);
 
 		Map<String, Object> rawHeaders = kafkaMessageHeaders.getRawHeaders();
 		if (record.headers() != null) {
@@ -167,14 +167,14 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 		}
 		String ttName = record.timestampType() != null ? record.timestampType().name() : null;
 		commonHeaders(acknowledgment, consumer, rawHeaders, record.key(), record.topic(), record.partition(),
-				record.offset(), ttName, record.timestamp());
+	record.offset(), ttName, record.timestamp());
 		if (this.rawRecordHeader) {
 			rawHeaders.put(KafkaHeaders.RAW_DATA, record);
 		}
 		Message<?> message = MessageBuilder.createMessage(extractAndConvertValue(record, type), kafkaMessageHeaders);
 		if (this.messagingConverter != null && !message.getPayload().equals(KafkaNull.INSTANCE)) {
 			Class<?> clazz = type instanceof Class ? (Class<?>) type : type instanceof ParameterizedType
-					? (Class<?>) ((ParameterizedType) type).getRawType() : Object.class;
+		? (Class<?>) ((ParameterizedType) type).getRawType() : Object.class;
 			Object payload = this.messagingConverter.fromMessage(message, clazz, type);
 			if (payload != null) {
 				message = new GenericMessage<>(payload, message.getHeaders());
@@ -189,19 +189,19 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 		}
 		else {
 			this.logger.debug(() ->
-					"No header mapper is available; Jackson is required for the default mapper; "
-					+ "headers (if present) are not mapped but provided raw in "
-					+ KafkaHeaders.NATIVE_HEADERS);
+		"No header mapper is available; Jackson is required for the default mapper; "
+	+ "headers (if present) are not mapped but provided raw in "
+	+ KafkaHeaders.NATIVE_HEADERS);
 			rawHeaders.put(KafkaHeaders.NATIVE_HEADERS, record.headers());
 			Header contentType = record.headers().lastHeader(MessageHeaders.CONTENT_TYPE);
 			if (contentType != null) {
 				rawHeaders.put(MessageHeaders.CONTENT_TYPE,
-						new String(contentType.value(), StandardCharsets.UTF_8));
+			new String(contentType.value(), StandardCharsets.UTF_8));
 			}
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public ProducerRecord<?, ?> fromMessage(Message<?> messageArg, String defaultTopic) {
 		Message<?> message = messageArg;
@@ -225,7 +225,7 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 		}
 		else {
 			throw new IllegalStateException(KafkaHeaders.TOPIC + " must be a String or byte[], not "
-					+ topicHeader.getClass());
+		+ topicHeader.getClass());
 		}
 		Integer partition = headers.get(KafkaHeaders.PARTITION, Integer.class);
 		Object key = headers.get(KafkaHeaders.KEY);
@@ -236,7 +236,7 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 			this.headerMapper.fromHeaders(headers, recordHeaders);
 		}
 		return new ProducerRecord(topic == null ? defaultTopic : topic, partition, timestamp, key, payload,
-				recordHeaders);
+	recordHeaders);
 	}
 
 	/**

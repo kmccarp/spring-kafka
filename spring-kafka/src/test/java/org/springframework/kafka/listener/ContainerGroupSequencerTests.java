@@ -60,33 +60,33 @@ public class ContainerGroupSequencerTests {
 	private static final LogAccessor LOGGER = new LogAccessor(LogFactory.getLog(ContainerGroupSequencerTests.class));
 
 	@Test
-	@LogLevels(classes = { ContainerGroupSequencerTests.class, ContainerGroupSequencer.class }, level = "DEBUG")
+	@LogLevels(classes = {ContainerGroupSequencerTests.class, ContainerGroupSequencer.class}, level = "DEBUG")
 	void sequenceCompletes(@Autowired Config config, @Autowired KafkaTemplate<Integer, String> template,
-			@Autowired ContainerGroupSequencer sequencer)
-			throws InterruptedException {
+@Autowired ContainerGroupSequencer sequencer)
+throws InterruptedException {
 
 		sequencer.start();
 		template.send("ContainerGroupSequencerTests", "test");
 		assertThat(config.stopped.await(10, TimeUnit.SECONDS))
-				.as("stopped latch still has a count of %d", config.stopped.getCount())
-				.isTrue();
+	.as("stopped latch still has a count of %d", config.stopped.getCount())
+	.isTrue();
 		List<String> order = config.order;
 		String expected = order.get(0);
 		assertThat(expected)
-				.as("out of order %s", expected)
-				.isIn("one", "two");
+	.as("out of order %s", expected)
+	.isIn("one", "two");
 		expected = order.get(1);
 		assertThat(expected)
-				.as("out of order %s", expected)
-				.isIn("one", "two");
+	.as("out of order %s", expected)
+	.isIn("one", "two");
 		expected = order.get(2);
 		assertThat(expected)
-				.as("out of order %s", expected)
-				.isIn("three", "four");
+	.as("out of order %s", expected)
+	.isIn("three", "four");
 		expected = order.get(3);
 		assertThat(expected)
-				.as("out of order %s", expected)
-				.isIn("three", "four");
+	.as("out of order %s", expected)
+	.isIn("three", "four");
 		assertThat(config.receivedAt.get(3) - config.receivedAt.get(0)).isGreaterThanOrEqualTo(1000);
 	}
 
@@ -160,10 +160,10 @@ public class ContainerGroupSequencerTests {
 
 		@Bean
 		ConcurrentKafkaListenerContainerFactory<Integer, String> kafkaListenerContainerFactory(
-				ConsumerFactory<Integer, String> cf) {
+	ConsumerFactory<Integer, String> cf) {
 
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(cf);
 			factory.getContainerProperties().setPollTimeout(200);
 			return factory;

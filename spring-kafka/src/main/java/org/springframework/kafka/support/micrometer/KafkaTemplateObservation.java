@@ -86,12 +86,12 @@ public enum KafkaTemplateObservation implements ObservationDocumentation {
 		 * A singleton instance of the convention.
 		 */
 		public static final DefaultKafkaTemplateObservationConvention INSTANCE =
-				new DefaultKafkaTemplateObservationConvention();
+	new DefaultKafkaTemplateObservationConvention();
 
 		@Override
 		public KeyValues getLowCardinalityKeyValues(KafkaRecordSenderContext context) {
 			return KeyValues.of(KafkaTemplateObservation.TemplateLowCardinalityTags.BEAN_NAME.asString(),
-							context.getBeanName());
+		context.getBeanName());
 		}
 
 		@Override

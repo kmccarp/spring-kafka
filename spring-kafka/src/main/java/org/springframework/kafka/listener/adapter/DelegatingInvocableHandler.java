@@ -66,7 +66,7 @@ public class DelegatingInvocableHandler {
 	private final ConcurrentMap<Class<?>, InvocableHandlerMethod> cachedHandlers = new ConcurrentHashMap<>();
 
 	private final ConcurrentMap<InvocableHandlerMethod, MethodParameter> payloadMethodParameters =
-			new ConcurrentHashMap<>();
+new ConcurrentHashMap<>();
 
 	private final InvocableHandlerMethod defaultHandler;
 
@@ -98,10 +98,10 @@ public class DelegatingInvocableHandler {
 	 * @since 2.5.11
 	 */
 	public DelegatingInvocableHandler(List<InvocableHandlerMethod> handlers,
-			@Nullable InvocableHandlerMethod defaultHandler, Object bean,
-			@Nullable BeanExpressionResolver beanExpressionResolver,
-			@Nullable BeanExpressionContext beanExpressionContext,
-			@Nullable BeanFactory beanFactory, @Nullable Validator validator) {
+@Nullable InvocableHandlerMethod defaultHandler, Object bean,
+@Nullable BeanExpressionResolver beanExpressionResolver,
+@Nullable BeanExpressionContext beanExpressionContext,
+@Nullable BeanFactory beanFactory, @Nullable Validator validator) {
 
 		this.handlers = new ArrayList<>(handlers);
 		for (InvocableHandlerMethod handler : handlers) {
@@ -113,8 +113,8 @@ public class DelegatingInvocableHandler {
 		this.resolver = beanExpressionResolver;
 		this.beanExpressionContext = beanExpressionContext;
 		this.beanFactory = beanFactory instanceof ConfigurableListableBeanFactory
-				? (ConfigurableListableBeanFactory) beanFactory
-				: null;
+	? (ConfigurableListableBeanFactory) beanFactory
+	: null;
 		this.validator = validator == null ? null : new PayloadValidator(validator);
 	}
 
@@ -217,7 +217,7 @@ public class DelegatingInvocableHandler {
 			String[] destinations = ann.value();
 			if (destinations.length > 1) {
 				throw new IllegalStateException("Invalid @" + SendTo.class.getSimpleName() + " annotation on '"
-						+ element + "' one destination must be set (got " + Arrays.toString(destinations) + ")");
+			+ element + "' one destination must be set (got " + Arrays.toString(destinations) + ")");
 			}
 			replyTo = destinations.length == 1 ? destinations[0] : null;
 			if (replyTo != null && this.beanFactory != null) {
@@ -250,7 +250,7 @@ public class DelegatingInvocableHandler {
 					boolean resultIsDefault = result.equals(this.defaultHandler);
 					if (!handler.equals(this.defaultHandler) && !resultIsDefault) {
 						throw new KafkaException("Ambiguous methods for payload type: " + payloadClass + ": " +
-								result.getMethod().getName() + " and " + handler.getMethod().getName());
+					result.getMethod().getName() + " and " + handler.getMethod().getName());
 					}
 					if (!resultIsDefault) {
 						continue; // otherwise replace the result with the actual match
@@ -269,8 +269,8 @@ public class DelegatingInvocableHandler {
 		if (parameterAnnotations.length == 1) {
 			MethodParameter methodParameter = new MethodParameter(method, 0);
 			if ((methodParameter.getParameterAnnotations().length == 0
-					|| !methodParameter.hasParameterAnnotation(Header.class))
-					&& methodParameter.getParameterType().isAssignableFrom(payloadClass)) {
+		|| !methodParameter.hasParameterAnnotation(Header.class))
+		&& methodParameter.getParameterType().isAssignableFrom(payloadClass)) {
 				if (this.validator != null) {
 					this.payloadMethodParameters.put(handler, methodParameter);
 				}
@@ -286,13 +286,13 @@ public class DelegatingInvocableHandler {
 	}
 
 	private MethodParameter findCandidate(Class<? extends Object> payloadClass, Method method,
-			Annotation[][] parameterAnnotations) {
+Annotation[][] parameterAnnotations) {
 		MethodParameter foundCandidate = null;
 		for (int i = 0; i < parameterAnnotations.length; i++) {
 			MethodParameter methodParameter = new MethodParameter(method, i);
 			if ((methodParameter.getParameterAnnotations().length == 0
-					|| !methodParameter.hasParameterAnnotation(Header.class))
-					&& methodParameter.getParameterType().isAssignableFrom(payloadClass)) {
+		|| !methodParameter.hasParameterAnnotation(Header.class))
+		&& methodParameter.getParameterType().isAssignableFrom(payloadClass)) {
 				if (foundCandidate != null) {
 					throw new KafkaException("Ambiguous payload parameter for " + method.toGenericString());
 				}

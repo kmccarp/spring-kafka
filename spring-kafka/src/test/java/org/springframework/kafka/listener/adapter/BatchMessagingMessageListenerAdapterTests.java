@@ -52,8 +52,8 @@ public class BatchMessagingMessageListenerAdapterTests {
 	@Test
 	public void testKafkaNullInList(@Autowired KafkaListenerEndpointRegistry registry, @Autowired Foo foo) {
 		BatchMessagingMessageListenerAdapter<String, String> adapter =
-				(BatchMessagingMessageListenerAdapter<String, String>) registry
-					.getListenerContainer("foo").getContainerProperties().getMessageListener();
+	(BatchMessagingMessageListenerAdapter<String, String>) registry
+.getListenerContainer("foo").getContainerProperties().getMessageListener();
 		KafkaUtils.setConsumerGroupId("test.group");
 		adapter.onMessage(Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, null, null)), null, null);
 		assertThat(foo.value).isNull();
@@ -85,14 +85,14 @@ public class BatchMessagingMessageListenerAdapterTests {
 			return new Foo();
 		}
 
-		@SuppressWarnings({ "rawtypes" })
+		@SuppressWarnings({"rawtypes"})
 		@Bean
 		public ConsumerFactory consumerFactory() {
 			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 			return consumerFactory;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();

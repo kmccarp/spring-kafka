@@ -62,7 +62,7 @@ public class MockProducerFactory<K, V> implements ProducerFactory<K, V> {
 	 * @param defaultTxId the default transactional id.
 	 */
 	public MockProducerFactory(BiFunction<Boolean, String, MockProducer<K, V>> producerProvider,
-			@Nullable String defaultTxId) {
+@Nullable String defaultTxId) {
 
 		this.producerProvider = producerProvider;
 		this.defaultTxId = defaultTxId;
@@ -82,8 +82,8 @@ public class MockProducerFactory<K, V> implements ProducerFactory<K, V> {
 	@Override
 	public Producer<K, V> createProducer(@Nullable String txIdPrefix) {
 		return txIdPrefix == null && this.defaultTxId == null
-				? this.producerProvider.apply(false, null)
-				: this.producerProvider.apply(true, txIdPrefix == null ? this.defaultTxId : txIdPrefix);
+	? this.producerProvider.apply(false, null)
+	: this.producerProvider.apply(true, txIdPrefix == null ? this.defaultTxId : txIdPrefix);
 	}
 
 	@Override

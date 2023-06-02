@@ -64,7 +64,7 @@ public class EmbeddedKafkaCondition implements ExecutionCondition, AfterAllCallb
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
+throws ParameterResolutionException {
 
 		if (BROKERS.get() == null) {
 			return false;
@@ -76,7 +76,7 @@ public class EmbeddedKafkaCondition implements ExecutionCondition, AfterAllCallb
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext context)
-			throws ParameterResolutionException {
+throws ParameterResolutionException {
 
 		EmbeddedKafkaBroker broker = getBrokerFromStore(context);
 		Assert.state(broker != null, "Could not find embedded broker instance");
@@ -113,10 +113,10 @@ public class EmbeddedKafkaCondition implements ExecutionCondition, AfterAllCallb
 
 	private boolean springTestContext(AnnotatedElement annotatedElement) {
 		return AnnotatedElementUtils.findAllMergedAnnotations(annotatedElement, ExtendWith.class)
-				.stream()
-				.filter(extended -> Arrays.asList(extended.value()).contains(SpringExtension.class))
-				.findFirst()
-				.isPresent();
+	.stream()
+	.filter(extended -> Arrays.asList(extended.value()).contains(SpringExtension.class))
+	.findFirst()
+	.isPresent();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -124,12 +124,12 @@ public class EmbeddedKafkaCondition implements ExecutionCondition, AfterAllCallb
 		EmbeddedKafkaBroker broker;
 		int[] ports = setupPorts(embedded);
 		broker = new EmbeddedKafkaBroker(embedded.count(), embedded.controlledShutdown(),
-						embedded.partitions(), embedded.topics())
-				.zkPort(embedded.zookeeperPort())
-				.kafkaPorts(ports)
-				.zkConnectionTimeout(embedded.zkConnectionTimeout())
-				.zkSessionTimeout(embedded.zkSessionTimeout())
-				.adminTimeout(embedded.adminTimeout());
+	embedded.partitions(), embedded.topics())
+	.zkPort(embedded.zookeeperPort())
+	.kafkaPorts(ports)
+	.zkConnectionTimeout(embedded.zkConnectionTimeout())
+	.zkSessionTimeout(embedded.zkSessionTimeout())
+	.adminTimeout(embedded.adminTimeout());
 		Properties properties = new Properties();
 
 		for (String pair : embedded.brokerProperties()) {
@@ -141,16 +141,16 @@ public class EmbeddedKafkaCondition implements ExecutionCondition, AfterAllCallb
 			}
 			catch (Exception ex) {
 				throw new IllegalStateException("Failed to load broker property from [" + pair + "]",
-						ex);
+			ex);
 			}
 		}
 		if (StringUtils.hasText(embedded.brokerPropertiesLocation())) {
 			Resource propertiesResource = new PathMatchingResourcePatternResolver()
-					.getResource(embedded.brokerPropertiesLocation());
+		.getResource(embedded.brokerPropertiesLocation());
 			if (!propertiesResource.exists()) {
 				throw new IllegalStateException(
-						"Failed to load broker properties from [" + propertiesResource
-								+ "]: resource does not exist.");
+			"Failed to load broker properties from [" + propertiesResource
+		+ "]: resource does not exist.");
 			}
 			try (InputStream in = propertiesResource.getInputStream()) {
 				Properties p = new Properties();
@@ -159,7 +159,7 @@ public class EmbeddedKafkaCondition implements ExecutionCondition, AfterAllCallb
 			}
 			catch (IOException ex) {
 				throw new IllegalStateException(
-						"Failed to load broker properties from [" + propertiesResource + "]", ex);
+			"Failed to load broker properties from [" + propertiesResource + "]", ex);
 			}
 		}
 		broker.brokerProperties((Map<String, String>) (Map<?, ?>) properties);
@@ -180,8 +180,8 @@ public class EmbeddedKafkaCondition implements ExecutionCondition, AfterAllCallb
 
 	private EmbeddedKafkaBroker getBrokerFromStore(ExtensionContext context) {
 		return getParentStore(context).get(EMBEDDED_BROKER, EmbeddedKafkaBroker.class) == null
-				? getStore(context).get(EMBEDDED_BROKER, EmbeddedKafkaBroker.class)
-				: getParentStore(context).get(EMBEDDED_BROKER, EmbeddedKafkaBroker.class);
+	? getStore(context).get(EMBEDDED_BROKER, EmbeddedKafkaBroker.class)
+	: getParentStore(context).get(EMBEDDED_BROKER, EmbeddedKafkaBroker.class);
 	}
 
 	private Store getStore(ExtensionContext context) {

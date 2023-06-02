@@ -52,101 +52,104 @@ import org.springframework.messaging.support.MessageBuilder;
 @SpringBootApplication
 public class Application {
 
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
+	private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] args) {
-        System.setProperty("spring.kafka.producer.value-serializer", ByteArraySerializer.class.getName());
-        System.setProperty("spring.kafka.consumer.value-deserializer", ByteArrayDeserializer.class.getName());
-        SpringApplication.run(Application.class, args).close();
-    }
+	public static void main(String[] args) {
+		System.setProperty("spring.kafka.producer.value-serializer", ByteArraySerializer.class.getName());
+		System.setProperty("spring.kafka.consumer.value-deserializer", ByteArrayDeserializer.class.getName());
+		SpringApplication.run(Application.class, args).close();
+	}
 
-    @Bean
-    public KafkaAdmin.NewTopics topics() {
-        return new KafkaAdmin.NewTopics(
-                TopicBuilder.name("requests")
-                        .partitions(10)
-                        .replicas(1)
-                        .build(),
-                TopicBuilder.name("replies")
-                        .partitions(10)
-                        .replicas(1)
-                        .build());
-    }
+	@Bean
+	public KafkaAdmin.NewTopics topics() {
+		return new KafkaAdmin.NewTopics(
+	TopicBuilder.name("requests")
+.partitions(10)
+.replicas(1)
+.build(),
+	TopicBuilder.name("replies")
+.partitions(10)
+.replicas(1)
+.build());
+	}
 
-    @Bean
-    KafkaTemplate<Object, Object> kafkaTemplate(ProducerFactory<Object, Object> pf) {
-        return new KafkaTemplate<>(pf);
-    }
+	@Bean
+	KafkaTemplate<Object, Object> kafkaTemplate(ProducerFactory<Object, Object> pf) {
+		return new KafkaTemplate<>(pf);
+	}
 
- // tag::beans[]
-    @Bean
-    ReplyingKafkaTemplate<String, String, String> template(
-            ProducerFactory<String, String> pf,
-            ConcurrentKafkaListenerContainerFactory<String, String> factory) {
+	// tag::beans[]
+	@Bean
+	ReplyingKafkaTemplate<String, String, String> template(
+ProducerFactory<String, String> pf,
+ConcurrentKafkaListenerContainerFactory<String, String> factory) {
 
-        ConcurrentMessageListenerContainer<String, String> replyContainer =
-                factory.createContainer("replies");
-        replyContainer.getContainerProperties().setGroupId("request.replies");
-        ReplyingKafkaTemplate<String, String, String> template =
-                new ReplyingKafkaTemplate<>(pf, replyContainer);
-        template.setMessageConverter(new ByteArrayJsonMessageConverter());
-        template.setDefaultTopic("requests");
-        return template;
-    }
- // end::beans[]
+		ConcurrentMessageListenerContainer<String, String> replyContainer =
+	factory.createContainer("replies");
+		replyContainer.getContainerProperties().setGroupId("request.replies");
+		ReplyingKafkaTemplate<String, String, String> template =
+	new ReplyingKafkaTemplate<>(pf, replyContainer);
+		template.setMessageConverter(new ByteArrayJsonMessageConverter());
+		template.setDefaultTopic("requests");
+		return template;
+	}
 
-    @Bean
-    ApplicationRunner runner(ReplyingKafkaTemplate<String, String, String> template) {
-        return args -> {
+	// end::beans[]
+
+	@Bean
+	ApplicationRunner runner(ReplyingKafkaTemplate<String, String, String> template) {
+		return args -> {
 // tag::sendReceive[]
-            RequestReplyTypedMessageFuture<String, String, Thing> future1 =
-                    template.sendAndReceive(MessageBuilder.withPayload("getAThing").build(),
-                            new ParameterizedTypeReference<Thing>() { });
-            log.info(future1.getSendFuture().get(10, TimeUnit.SECONDS).getRecordMetadata().toString());
-            Thing thing = future1.get(10, TimeUnit.SECONDS).getPayload();
-            log.info(thing.toString());
+			RequestReplyTypedMessageFuture<String, String, Thing> future1 =
+		template.sendAndReceive(MessageBuilder.withPayload("getAThing").build(),
+	new ParameterizedTypeReference<Thing>() {
+	});
+			log.info(future1.getSendFuture().get(10, TimeUnit.SECONDS).getRecordMetadata().toString());
+			Thing thing = future1.get(10, TimeUnit.SECONDS).getPayload();
+			log.info(thing.toString());
 
-            RequestReplyTypedMessageFuture<String, String, List<Thing>> future2 =
-                    template.sendAndReceive(MessageBuilder.withPayload("getThings").build(),
-                            new ParameterizedTypeReference<List<Thing>>() { });
-            log.info(future2.getSendFuture().get(10, TimeUnit.SECONDS).getRecordMetadata().toString());
-            List<Thing> things = future2.get(10, TimeUnit.SECONDS).getPayload();
-            things.forEach(thing1 -> log.info(thing1.toString()));
+			RequestReplyTypedMessageFuture<String, String, List<Thing>> future2 =
+		template.sendAndReceive(MessageBuilder.withPayload("getThings").build(),
+	new ParameterizedTypeReference<List<Thing>>() {
+	});
+			log.info(future2.getSendFuture().get(10, TimeUnit.SECONDS).getRecordMetadata().toString());
+			List<Thing> things = future2.get(10, TimeUnit.SECONDS).getPayload();
+			things.forEach(thing1 -> log.info(thing1.toString()));
 // end::sendReceive[]
-        };
-    }
+		};
+	}
 
-    @KafkaListener(id = "myId", topics = "requests", properties = "auto.offset.reset:earliest")
-    @SendTo
-    public byte[] listen(String in) {
-        log.info(in);
-        if (in.equals("\"getAThing\"")) {
-            return ("{\"thingProp\":\"someValue\"}").getBytes();
-        }
-        if (in.equals("\"getThings\"")) {
-            return ("[{\"thingProp\":\"someValue1\"},{\"thingProp\":\"someValue2\"}]").getBytes();
-        }
-        return in.toUpperCase().getBytes();
-    }
+	@KafkaListener(id = "myId", topics = "requests", properties = "auto.offset.reset:earliest")
+	@SendTo
+	public byte[] listen(String in) {
+		log.info(in);
+		if (in.equals("\"getAThing\"")) {
+			return ("{\"thingProp\":\"someValue\"}").getBytes();
+		}
+		if (in.equals("\"getThings\"")) {
+			return ("[{\"thingProp\":\"someValue1\"},{\"thingProp\":\"someValue2\"}]").getBytes();
+		}
+		return in.toUpperCase().getBytes();
+	}
 
-    public static class Thing {
+	public static class Thing {
 
-        private String thingProp;
+		private String thingProp;
 
-        public String getThingProp() {
-            return this.thingProp;
-        }
+		public String getThingProp() {
+			return this.thingProp;
+		}
 
-        public void setThingProp(String thingProp) {
-            this.thingProp = thingProp;
-        }
+		public void setThingProp(String thingProp) {
+			this.thingProp = thingProp;
+		}
 
-        @Override
-        public String toString() {
-            return "Thing [thingProp=" + this.thingProp + "]";
-        }
+		@Override
+		public String toString() {
+			return "Thing [thingProp=" + this.thingProp + "]";
+		}
 
-    }
+	}
 
 }
 

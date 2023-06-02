@@ -65,9 +65,9 @@ public class AddressableEmbeddedBrokerTests {
 		assertThat(broker.getBrokersAsString()).isEqualTo("127.0.0.1:" + this.config.kafkaPort);
 		assertThat(broker.getZkPort()).isEqualTo(this.config.zkPort);
 		assertThat(broker.getBrokersAsString())
-				.isEqualTo(System.getProperty(EmbeddedKafkaBroker.SPRING_EMBEDDED_KAFKA_BROKERS));
+	.isEqualTo(System.getProperty(EmbeddedKafkaBroker.SPRING_EMBEDDED_KAFKA_BROKERS));
 		assertThat(broker.getZookeeperConnectionString())
-				.isEqualTo(System.getProperty(EmbeddedKafkaBroker.SPRING_EMBEDDED_ZOOKEEPER_CONNECT));
+	.isEqualTo(System.getProperty(EmbeddedKafkaBroker.SPRING_EMBEDDED_ZOOKEEPER_CONNECT));
 	}
 
 	@Test
@@ -107,8 +107,8 @@ public class AddressableEmbeddedBrokerTests {
 			ss.close();
 
 			return new EmbeddedKafkaBroker(1, true, TEST_EMBEDDED)
-					.zkPort(this.zkPort)
-					.kafkaPorts(this.kafkaPort);
+		.zkPort(this.zkPort)
+		.kafkaPorts(this.kafkaPort);
 		}
 
 	}

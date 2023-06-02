@@ -58,8 +58,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  */
 @SpringJUnitConfig
 @DirtiesContext
-@EmbeddedKafka(topics = { RetryTopicConfigurationManualAssignmentIntegrationTests.TOPIC1,
-		RetryTopicConfigurationManualAssignmentIntegrationTests.TOPIC2 }, partitions = 1)
+@EmbeddedKafka(topics = {RetryTopicConfigurationManualAssignmentIntegrationTests.TOPIC1,RetryTopicConfigurationManualAssignmentIntegrationTests.TOPIC2}, partitions = 1)
 class RetryTopicConfigurationManualAssignmentIntegrationTests {
 
 	public static final String TOPIC1 = "RetryTopicConfigurationManualAssignmentIntegrationTests.1";
@@ -68,18 +67,18 @@ class RetryTopicConfigurationManualAssignmentIntegrationTests {
 
 	@Test
 	void includeTopic(@Autowired EmbeddedKafkaBroker broker, @Autowired ConsumerFactory<Integer, String> cf,
-			@Autowired KafkaTemplate<Integer, String> template, @Autowired Config config) throws InterruptedException {
+@Autowired KafkaTemplate<Integer, String> template, @Autowired Config config) throws InterruptedException {
 
 		Consumer<Integer, String> consumer = cf.createConsumer("grp2", "");
 		Map<String, List<PartitionInfo>> topics = consumer.listTopics();
 		assertThat(topics.keySet()).contains("RetryTopicConfigurationManualAssignmentIntegrationTests.1",
-				"RetryTopicConfigurationManualAssignmentIntegrationTests.1-dlt",
-				"RetryTopicConfigurationManualAssignmentIntegrationTests.1-retry-100",
-				"RetryTopicConfigurationManualAssignmentIntegrationTests.1-retry-110",
-				"RetryTopicConfigurationManualAssignmentIntegrationTests.2",
-				"RetryTopicConfigurationManualAssignmentIntegrationTests.2-dlt",
-				"RetryTopicConfigurationManualAssignmentIntegrationTests.2-retry-100",
-				"RetryTopicConfigurationManualAssignmentIntegrationTests.2-retry-110");
+	"RetryTopicConfigurationManualAssignmentIntegrationTests.1-dlt",
+	"RetryTopicConfigurationManualAssignmentIntegrationTests.1-retry-100",
+	"RetryTopicConfigurationManualAssignmentIntegrationTests.1-retry-110",
+	"RetryTopicConfigurationManualAssignmentIntegrationTests.2",
+	"RetryTopicConfigurationManualAssignmentIntegrationTests.2-dlt",
+	"RetryTopicConfigurationManualAssignmentIntegrationTests.2-retry-100",
+	"RetryTopicConfigurationManualAssignmentIntegrationTests.2-retry-110");
 		template.send(TOPIC1, "foo");
 		assertThat(config.latch.await(120, TimeUnit.SECONDS)).isTrue();
 	}
@@ -91,9 +90,9 @@ class RetryTopicConfigurationManualAssignmentIntegrationTests {
 		private final CountDownLatch latch = new CountDownLatch(1);
 
 		@KafkaListener(id = TOPIC1, topicPartitions = {
-				@TopicPartition(topic = TOPIC1, partitions = "0"),
-				@TopicPartition(topic = TOPIC1, partitions = "1"),
-				@TopicPartition(topic = TOPIC2, partitions = "0") })
+	@TopicPartition(topic = TOPIC1, partitions = "0"),
+	@TopicPartition(topic = TOPIC1, partitions = "1"),
+	@TopicPartition(topic = TOPIC2, partitions = "0")})
 		void listen1(String in) {
 			throw new RuntimeException("test");
 		}
@@ -104,10 +103,10 @@ class RetryTopicConfigurationManualAssignmentIntegrationTests {
 
 		@Bean
 		KafkaListenerContainerFactory<?> kafkaListenerContainerFactory(KafkaTemplate<Integer, String> template,
-				ConsumerFactory<Integer, String> consumerFactory) {
+	ConsumerFactory<Integer, String> consumerFactory) {
 
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory);
 			factory.setReplyTemplate(template);
 			return factory;
@@ -118,7 +117,7 @@ class RetryTopicConfigurationManualAssignmentIntegrationTests {
 			Map<String, Object> props = KafkaTestUtils.consumerProps("retryConfig", "false", embeddedKafka);
 			props.put(ConsumerConfig.DEFAULT_API_TIMEOUT_MS_CONFIG, 2000);
 			return new DefaultKafkaConsumerFactory<>(
-					props);
+		props);
 		}
 
 		@Bean
@@ -139,10 +138,10 @@ class RetryTopicConfigurationManualAssignmentIntegrationTests {
 		@Bean
 		RetryTopicConfiguration retryTopicConfiguration1(KafkaTemplate<Integer, String> template) {
 			return RetryTopicConfigurationBuilder.newInstance()
-					.includeTopics(List.of(TOPIC1, TOPIC2))
-					.exponentialBackoff(100, 1.1, 110)
-					.dltHandlerMethod("retryTopicConfigurationManualAssignmentIntegrationTests.Config", "dlt")
-					.create(template);
+		.includeTopics(List.of(TOPIC1, TOPIC2))
+		.exponentialBackoff(100, 1.1, 110)
+		.dltHandlerMethod("retryTopicConfigurationManualAssignmentIntegrationTests.Config", "dlt")
+		.create(template);
 		}
 
 		@Bean

@@ -44,13 +44,13 @@ public abstract class FailedRecordProcessor extends ExceptionClassifier implemen
 	private static final BackOff NO_RETRIES_OR_DELAY_BACKOFF = new FixedBackOff(0L, 0L);
 
 	private final BiFunction<ConsumerRecord<?, ?>, Exception, BackOff> noRetriesForClassified =
-			(rec, ex) -> {
-				Exception theEx = ErrorHandlingUtils.unwrapIfNeeded(ex);
-				if (!getClassifier().classify(theEx) || theEx instanceof KafkaBackoffException) {
-					return NO_RETRIES_OR_DELAY_BACKOFF;
-				}
-				return this.userBackOffFunction.apply(rec, ex);
-			};
+(rec, ex) -> {
+	Exception theEx = ErrorHandlingUtils.unwrapIfNeeded(ex);
+	if (!getClassifier().classify(theEx) || theEx instanceof KafkaBackoffException) {
+		return NO_RETRIES_OR_DELAY_BACKOFF;
+	}
+	return this.userBackOffFunction.apply(rec, ex);
+};
 
 	protected final LogAccessor logger = new LogAccessor(LogFactory.getLog(getClass())); // NOSONAR
 
@@ -69,7 +69,7 @@ public abstract class FailedRecordProcessor extends ExceptionClassifier implemen
 	}
 
 	protected FailedRecordProcessor(@Nullable BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer,
-			BackOff backOff, @Nullable BackOffHandler backOffHandler) {
+BackOff backOff, @Nullable BackOffHandler backOffHandler) {
 
 		this.failureTracker = new FailedRecordTracker(recoverer, backOff, backOffHandler, this.logger);
 		this.failureTracker.setBackOffFunction(this.noRetriesForClassified);

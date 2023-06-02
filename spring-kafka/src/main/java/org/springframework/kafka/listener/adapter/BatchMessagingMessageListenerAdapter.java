@@ -58,8 +58,7 @@ import org.springframework.util.Assert;
  * @author Venil Noronha
  * @since 1.1
  */
-public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessageListenerAdapter<K, V>
-		implements BatchAcknowledgingConsumerAwareMessageListener<K, V> {
+public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessageListenerAdapter<K, V>implements BatchAcknowledgingConsumerAwareMessageListener<K, V> {
 
 	private BatchMessageConverter batchMessageConverter = new BatchMessagingMessageConverter();
 
@@ -83,7 +82,7 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 	 * @param errorHandler the error handler.
 	 */
 	public BatchMessagingMessageListenerAdapter(Object bean, Method method,
-			@Nullable KafkaListenerErrorHandler errorHandler) {
+@Nullable KafkaListenerErrorHandler errorHandler) {
 
 		super(bean, method);
 		this.errorHandler = errorHandler;
@@ -128,7 +127,7 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 
 	@Override
 	public void onMessage(ConsumerRecords<K, V> records, @Nullable Acknowledgment acknowledgment,
-			Consumer<K, V> consumer) {
+Consumer<K, V> consumer) {
 		invoke(records, acknowledgment, consumer, NULL_MESSAGE);
 	}
 
@@ -143,7 +142,7 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 	 */
 	@Override
 	public void onMessage(List<ConsumerRecord<K, V>> records, @Nullable Acknowledgment acknowledgment,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 
 		Message<?> message;
 		if (!isConsumerRecordList()) {
@@ -173,7 +172,7 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 	}
 
 	protected void invoke(Object records, @Nullable Acknowledgment acknowledgment, Consumer<?, ?> consumer,
-			final Message<?> messageArg) {
+final Message<?> messageArg) {
 
 		Message<?> message = messageArg;
 		try {
@@ -195,8 +194,8 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 				}
 				catch (Exception ex) {
 					throw new ListenerExecutionFailedException(createMessagingErrorMessage(// NOSONAR stack trace loss
-							"Listener error handler threw an exception for the incoming message",
-							message.getPayload()), ex);
+				"Listener error handler threw an exception for the incoming message",
+				message.getPayload()), ex);
 				}
 			}
 			else {
@@ -205,9 +204,9 @@ public class BatchMessagingMessageListenerAdapter<K, V> extends MessagingMessage
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	protected Message<?> toMessagingMessage(List records, @Nullable Acknowledgment acknowledgment,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 
 		return getBatchMessageConverter().toMessage(records, acknowledgment, consumer, getType());
 	}

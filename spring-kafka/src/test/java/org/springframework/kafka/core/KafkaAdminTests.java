@@ -88,14 +88,14 @@ public class KafkaAdminTests {
 	@Test
 	public void testTopicConfigs() {
 		assertThat(topic1.configs()).containsEntry(
-				TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT);
+	TopicConfig.CLEANUP_POLICY_CONFIG, TopicConfig.CLEANUP_POLICY_COMPACT);
 		assertThat(topic2.replicasAssignments())
-			.isEqualTo(Collections.singletonMap(0, Collections.singletonList(0)));
+	.isEqualTo(Collections.singletonMap(0, Collections.singletonList(0)));
 		assertThat(topic2.configs()).containsEntry(
-				TopicConfig.COMPRESSION_TYPE_CONFIG, "zstd");
+	TopicConfig.COMPRESSION_TYPE_CONFIG, "zstd");
 		assertThat(TopicBuilder.name("foo")
-					.replicas(3)
-					.build().replicationFactor()).isEqualTo((short) 3);
+	.replicas(3)
+	.build().replicationFactor()).isEqualTo((short) 3);
 		assertThat(topic3.replicasAssignments()).hasSize(3);
 	}
 
@@ -112,65 +112,65 @@ public class KafkaAdminTests {
 		await().until(() -> {
 			results.putAll(this.admin.describeTopics("foo", "bar"));
 			TopicDescription foo = results.values().stream()
-					.filter(tp -> tp.name().equals("foo"))
-					.findFirst()
-					.get();
+		.filter(tp -> tp.name().equals("foo"))
+		.findFirst()
+		.get();
 			TopicDescription bar = results.values().stream()
-					.filter(tp -> tp.name().equals("bar"))
-					.findFirst()
-					.get();
+		.filter(tp -> tp.name().equals("bar"))
+		.findFirst()
+		.get();
 			return foo.partitions().size() == 4 && bar.partitions().size() == 3;
 		});
 		results.forEach((name, td) -> assertThat(td.partitions()).hasSize(name.equals("foo") ? 4 : 3));
 		new DirectFieldAccessor(this.topic1).setPropertyValue("numPartitions", Optional.of(5));
 		this.admin.createOrModifyTopics(this.topic1,
-				TopicBuilder.name("qux")
-					.partitions(5)
-					.build());
+	TopicBuilder.name("qux")
+.partitions(5)
+.build());
 		results.clear();
 		await().until(() -> {
 			results.putAll(this.admin.describeTopics("foo", "qux"));
 			TopicDescription foo = results.values().stream()
-					.filter(tp -> tp.name().equals("foo"))
-					.findFirst()
-					.get();
+		.filter(tp -> tp.name().equals("foo"))
+		.findFirst()
+		.get();
 			return foo.partitions().size() == 5;
 		});
 		results.forEach((name, td) -> assertThat(td.partitions()).hasSize(5));
 
 		await().until(() -> {
 			adminClient.incrementalAlterConfigs(
-					Map.of(
-							new ConfigResource(Type.TOPIC, "mismatchconfig"),
-							List.of(new AlterConfigOp(new ConfigEntry("retention.bytes", "10"), OpType.SET),
-									new AlterConfigOp(new ConfigEntry("retention.ms", "11"), OpType.SET))));
+		Map.of(
+	new ConfigResource(Type.TOPIC, "mismatchconfig"),
+	List.of(new AlterConfigOp(new ConfigEntry("retention.bytes", "10"), OpType.SET),
+new AlterConfigOp(new ConfigEntry("retention.ms", "11"), OpType.SET))));
 			DescribeConfigsResult describeConfigsResult = this.adminClient
-					.describeConfigs(List.of(new ConfigResource(Type.TOPIC, "mismatchconfig")));
+		.describeConfigs(List.of(new ConfigResource(Type.TOPIC, "mismatchconfig")));
 			Map<ConfigResource, org.apache.kafka.clients.admin.Config> configResourceConfigMap = describeConfigsResult.all()
-					.get();
+		.get();
 			return configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig")).get("retention.bytes").value().equals("10")
-					&& configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig")).get("retention.ms").value().equals("11");
+		&& configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig")).get("retention.ms").value().equals("11");
 		});
 
 		this.admin.createOrModifyTopics(mismatchconfig,
-				TopicBuilder.name("noConfigAddLater")
-						.partitions(2)
-						.replicas(1)
-						.config("retention.ms", "1000")
-						.build());
+	TopicBuilder.name("noConfigAddLater")
+.partitions(2)
+.replicas(1)
+.config("retention.ms", "1000")
+.build());
 
 		await().until(() -> {
 			DescribeConfigsResult describeConfigsResult = this.adminClient
-					.describeConfigs(List.of(new ConfigResource(Type.TOPIC, "mismatchconfig"),
-							new ConfigResource(Type.TOPIC, "noConfigAddLater")));
+		.describeConfigs(List.of(new ConfigResource(Type.TOPIC, "mismatchconfig"),
+	new ConfigResource(Type.TOPIC, "noConfigAddLater")));
 			Map<ConfigResource, org.apache.kafka.clients.admin.Config> configResourceConfigMap = describeConfigsResult.all()
-					.get();
+		.get();
 			return configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig"))
-					.get("retention.bytes").value().equals("1024")
-					&& configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig"))
-					.get("retention.ms").value().equals("1111")
-					&& configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "noConfigAddLater"))
-					.get("retention.ms").value().equals("1000");
+		.get("retention.bytes").value().equals("1024")
+		&& configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig"))
+		.get("retention.ms").value().equals("1111")
+		&& configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "noConfigAddLater"))
+		.get("retention.ms").value().equals("1000");
 		});
 	}
 
@@ -198,21 +198,21 @@ public class KafkaAdminTests {
 			var topicDescription = results.get("optBoth");
 			assertThat(topicDescription.partitions()).hasSize(2);
 			assertThat(topicDescription.partitions().stream()
-					.map(tpi -> tpi.replicas())
-					.flatMap(nodes -> nodes.stream())
-					.count()).isEqualTo(4);
+		.map(tpi -> tpi.replicas())
+		.flatMap(nodes -> nodes.stream())
+		.count()).isEqualTo(4);
 			topicDescription = results.get("optPart");
 			assertThat(topicDescription.partitions()).hasSize(2);
 			assertThat(topicDescription.partitions().stream()
-					.map(tpi -> tpi.replicas())
-					.flatMap(nodes -> nodes.stream())
-					.count()).isEqualTo(2);
+		.map(tpi -> tpi.replicas())
+		.flatMap(nodes -> nodes.stream())
+		.count()).isEqualTo(2);
 			topicDescription = results.get("optRepl");
 			assertThat(topicDescription.partitions()).hasSize(3);
 			assertThat(topicDescription.partitions().stream()
-					.map(tpi -> tpi.replicas())
-					.flatMap(nodes -> nodes.stream())
-					.count()).isEqualTo(6);
+		.map(tpi -> tpi.replicas())
+		.flatMap(nodes -> nodes.stream())
+		.count()).isEqualTo(6);
 		}
 	}
 
@@ -233,7 +233,7 @@ public class KafkaAdminTests {
 		try (AdminClient adminClient = AdminClient.create(this.admin.getConfigurationProperties())) {
 			addTopics.get().invoke(this.admin, adminClient, Collections.singletonList(this.topic1));
 			modifyTopics.get().invoke(this.admin, adminClient, Collections.singletonMap(
-					this.topic1.name(), NewPartitions.increaseTo(this.topic1.numPartitions())));
+		this.topic1.name(), NewPartitions.increaseTo(this.topic1.numPartitions())));
 		}
 	}
 
@@ -245,13 +245,13 @@ public class KafkaAdminTests {
 		ABSwitchCluster bootstrapServersSupplier = new ABSwitchCluster("a,b,c", "d,e,f");
 		admin.setBootstrapServersSupplier(bootstrapServersSupplier);
 		assertThat(admin.getConfigurationProperties().get(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG))
-				.isEqualTo("a,b,c");
+	.isEqualTo("a,b,c");
 		bootstrapServersSupplier.secondary();
 		assertThat(admin.getConfigurationProperties().get(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG))
-				.isEqualTo("d,e,f");
+	.isEqualTo("d,e,f");
 		bootstrapServersSupplier.primary();
 		assertThat(admin.getConfigurationProperties().get(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG))
-				.isEqualTo("a,b,c");
+	.isEqualTo("a,b,c");
 	}
 
 	@Configuration
@@ -260,7 +260,7 @@ public class KafkaAdminTests {
 		@Bean
 		public EmbeddedKafkaBroker kafkaEmbedded() {
 			return new EmbeddedKafkaBroker(3)
-					.brokerProperty("default.replication.factor", 2);
+		.brokerProperty("default.replication.factor", 2);
 		}
 
 		@Bean
@@ -268,7 +268,7 @@ public class KafkaAdminTests {
 			Map<String, Object> configs = new HashMap<>();
 			KafkaAdmin admin = new KafkaAdmin(configs);
 			admin.setBootstrapServersSupplier(() ->
-					StringUtils.arrayToCommaDelimitedString(kafkaEmbedded().getBrokerAddresses()));
+		StringUtils.arrayToCommaDelimitedString(kafkaEmbedded().getBrokerAddresses()));
 			return admin;
 		}
 
@@ -276,66 +276,66 @@ public class KafkaAdminTests {
 		public AdminClient adminClient() {
 			Map<String, Object> configs = new HashMap<>();
 			configs.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG,
-					StringUtils.arrayToCommaDelimitedString(kafkaEmbedded().getBrokerAddresses()));
+		StringUtils.arrayToCommaDelimitedString(kafkaEmbedded().getBrokerAddresses()));
 			return AdminClient.create(configs);
 		}
 
 		@Bean
 		public NewTopic topic1() {
 			return TopicBuilder.name("foo")
-					.partitions(2)
-					.replicas(1)
-					.compact()
-					.build();
+		.partitions(2)
+		.replicas(1)
+		.compact()
+		.build();
 		}
 
 		@Bean
 		public NewTopic topic2() {
 			return TopicBuilder.name("bar")
-					.replicasAssignments(Collections.singletonMap(0, Collections.singletonList(0)))
-					.config(TopicConfig.COMPRESSION_TYPE_CONFIG, "zstd")
-					.build();
+		.replicasAssignments(Collections.singletonMap(0, Collections.singletonList(0)))
+		.config(TopicConfig.COMPRESSION_TYPE_CONFIG, "zstd")
+		.build();
 		}
 
 		@Bean
 		public NewTopic topic3() {
 			return TopicBuilder.name("baz")
-					.assignReplicas(0, Arrays.asList(0, 1))
-					.assignReplicas(1, Arrays.asList(1, 2))
-					.assignReplicas(2, Arrays.asList(2, 0))
-					.config(TopicConfig.COMPRESSION_TYPE_CONFIG, "zstd")
-					.build();
+		.assignReplicas(0, Arrays.asList(0, 1))
+		.assignReplicas(1, Arrays.asList(1, 2))
+		.assignReplicas(2, Arrays.asList(2, 0))
+		.config(TopicConfig.COMPRESSION_TYPE_CONFIG, "zstd")
+		.build();
 		}
 
 		@Bean
 		public NewTopic mismatchconfig() {
 			return TopicBuilder.name("mismatchconfig")
-					.partitions(2)
-					.replicas(1)
-					.config("retention.bytes", "1024")
-					.config("retention.ms", "1111")
-					.build();
+		.partitions(2)
+		.replicas(1)
+		.config("retention.bytes", "1024")
+		.config("retention.ms", "1111")
+		.build();
 		}
 
 		@Bean
 		public NewTopic noConfigAddLater() {
 			return TopicBuilder.name("noConfigAddLater")
-					.partitions(2)
-					.replicas(1)
-					.build();
+		.partitions(2)
+		.replicas(1)
+		.build();
 		}
 
 		@Bean
 		public NewTopics topics456() {
 			return new NewTopics(
-					TopicBuilder.name("optBoth")
-						.build(),
-					TopicBuilder.name("optPart")
-						.replicas(1)
-						.build(),
-					TopicBuilder.name("optRepl")
-						.partitions(3)
-						.build());
+		TopicBuilder.name("optBoth")
+	.build(),
+		TopicBuilder.name("optPart")
+	.replicas(1)
+	.build(),
+		TopicBuilder.name("optRepl")
+	.partitions(3)
+	.build());
 		}
 
 	}

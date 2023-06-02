@@ -139,7 +139,7 @@ class FallbackBatchErrorHandler extends ExceptionClassifier implements CommonErr
 
 	@Override
 	public void handleBatch(Exception thrownException, @Nullable ConsumerRecords<?, ?> records,
-			Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener) {
+Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener) {
 
 		if (records == null || records.count() == 0) {
 			this.logger.error(thrownException, "Called with no records; consumer exception");
@@ -148,8 +148,8 @@ class FallbackBatchErrorHandler extends ExceptionClassifier implements CommonErr
 		this.retrying.set(true);
 		try {
 			ErrorHandlingUtils.retryBatch(thrownException, records, consumer, container, invokeListener, this.backOff,
-					this.seeker, this.recoverer, this.logger, getLogLevel(), this.retryListeners, getClassifier(),
-					this.reclassifyOnExceptionChange);
+		this.seeker, this.recoverer, this.logger, getLogLevel(), this.retryListeners, getClassifier(),
+		this.reclassifyOnExceptionChange);
 		}
 		finally {
 			this.retrying.set(false);
@@ -158,7 +158,7 @@ class FallbackBatchErrorHandler extends ExceptionClassifier implements CommonErr
 
 	@Override
 	public void onPartitionsAssigned(Consumer<?, ?> consumer, Collection<TopicPartition> partitions,
-			Runnable publishPause) {
+Runnable publishPause) {
 
 		if (this.retrying.get()) {
 			consumer.pause(consumer.assignment());
@@ -173,14 +173,14 @@ class FallbackBatchErrorHandler extends ExceptionClassifier implements CommonErr
 
 		@Override
 		public void handleBatch(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-				MessageListenerContainer container, Runnable invokeListener) {
+	MessageListenerContainer container, Runnable invokeListener) {
 
 			data.partitions()
-					.stream()
-					.collect(
-							Collectors.toMap(tp -> tp,
-									tp -> data.records(tp).get(0).offset(), (u, v) -> (long) v, LinkedHashMap::new))
-					.forEach(consumer::seek);
+		.stream()
+		.collect(
+	Collectors.toMap(tp -> tp,
+tp -> data.records(tp).get(0).offset(), (u, v) -> (long) v, LinkedHashMap::new))
+		.forEach(consumer::seek);
 
 			throw new KafkaException("Seek to current after exception", getLogLevel(), thrownException);
 

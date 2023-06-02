@@ -36,7 +36,8 @@ class RetryTopicConstantsTests {
 
 	@Test
 	public void assertRetryTopicConstants() {
-		new RetryTopicConstants() { }; // for coverage
+		new RetryTopicConstants() {
+		}; // for coverage
 		assertThat(RetryTopicConstants.DEFAULT_DLT_SUFFIX).isEqualTo(DEFAULT_DLT_SUFFIX);
 		assertThat(RetryTopicConstants.DEFAULT_RETRY_SUFFIX).isEqualTo(DEFAULT_RETRY_SUFFIX);
 		assertThat(RetryTopicConstants.DEFAULT_MAX_ATTEMPTS).isEqualTo(DEFAULT_MAX_ATTEMPTS);

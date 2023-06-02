@@ -58,7 +58,7 @@ public class BatchMessageConverterTests {
 		MessageHeaders headers = testGuts(batchMessageConverter);
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> converted = (List<Map<String, Object>>) headers
-				.get(KafkaHeaders.BATCH_CONVERTED_HEADERS);
+	.get(KafkaHeaders.BATCH_CONVERTED_HEADERS);
 		assertThat(converted).hasSize(3);
 		Map<String, Object> map = converted.get(0);
 		assertThat(map).hasSize(1);
@@ -89,7 +89,7 @@ public class BatchMessageConverterTests {
 		MessageHeaders headers = testGuts(batchMessageConverter);
 		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> converted = (List<Map<String, Object>>) headers
-				.get(KafkaHeaders.BATCH_CONVERTED_HEADERS);
+	.get(KafkaHeaders.BATCH_CONVERTED_HEADERS);
 		assertThat(converted).hasSize(3);
 		Map<String, Object> map = converted.get(0);
 		assertThat(map).hasSize(1);
@@ -97,7 +97,7 @@ public class BatchMessageConverterTests {
 		@SuppressWarnings("unchecked")
 		List<ConsumerRecord<?, ?>> rawHeader = headers.get(KafkaHeaders.RAW_DATA, List.class);
 		assertThat(rawHeader).extracting(rec -> (String) rec.value())
-				.containsExactly("value1", "value2", "value3");
+	.containsExactly("value1", "value2", "value3");
 	}
 
 	private MessageHeaders testGuts(BatchMessageConverter batchMessageConverter) {
@@ -110,20 +110,20 @@ public class BatchMessageConverterTests {
 		Message<?> message = batchMessageConverter.toMessage(consumerRecords, ack, consumer, String.class);
 
 		assertThat(message.getPayload())
-				.isEqualTo(Arrays.asList("value1", "value2", "value3"));
+	.isEqualTo(Arrays.asList("value1", "value2", "value3"));
 
 		MessageHeaders headers = message.getHeaders();
 		assertThat(headers.get(KafkaHeaders.RECEIVED_TOPIC))
-				.isEqualTo(Arrays.asList("topic1", "topic1", "topic1"));
+	.isEqualTo(Arrays.asList("topic1", "topic1", "topic1"));
 		assertThat(headers.get(KafkaHeaders.RECEIVED_KEY))
-				.isEqualTo(Arrays.asList("key1", "key2", "key3"));
+	.isEqualTo(Arrays.asList("key1", "key2", "key3"));
 		assertThat(headers.get(KafkaHeaders.RECEIVED_PARTITION))
-				.isEqualTo(Arrays.asList(0, 0, 0));
+	.isEqualTo(Arrays.asList(0, 0, 0));
 		assertThat(headers.get(KafkaHeaders.OFFSET)).isEqualTo(Arrays.asList(1L, 2L, 3L));
 		assertThat(headers.get(KafkaHeaders.TIMESTAMP_TYPE))
-				.isEqualTo(Arrays.asList("CREATE_TIME", "CREATE_TIME", "CREATE_TIME"));
+	.isEqualTo(Arrays.asList("CREATE_TIME", "CREATE_TIME", "CREATE_TIME"));
 		assertThat(headers.get(KafkaHeaders.RECEIVED_TIMESTAMP))
-				.isEqualTo(Arrays.asList(1487694048607L, 1487694048608L, 1487694048609L));
+	.isEqualTo(Arrays.asList(1487694048607L, 1487694048608L, 1487694048609L));
 		assertThat(headers.get(KafkaHeaders.ACKNOWLEDGMENT)).isSameAs(ack);
 		assertThat(headers.get(KafkaHeaders.CONSUMER)).isSameAs(consumer);
 		assertThat(headers.get(KafkaHeaders.GROUP_ID)).isEqualTo("test.g");
@@ -133,14 +133,14 @@ public class BatchMessageConverterTests {
 
 	private List<ConsumerRecord<?, ?>> recordList() {
 		Header header = new RecordHeader("foo", "bar".getBytes());
-		Headers kHeaders = new RecordHeaders(new Header[] { header });
+		Headers kHeaders = new RecordHeaders(new Header[]{header});
 		List<ConsumerRecord<?, ?>> consumerRecords = new ArrayList<>();
 		consumerRecords.add(new ConsumerRecord<>("topic1", 0, 1, 1487694048607L,
-				TimestampType.CREATE_TIME, 2, 3, "key1", "value1", kHeaders, Optional.empty()));
+	TimestampType.CREATE_TIME, 2, 3, "key1", "value1", kHeaders, Optional.empty()));
 		consumerRecords.add(new ConsumerRecord<>("topic1", 0, 2, 1487694048608L,
-				TimestampType.CREATE_TIME, 2, 3, "key2", "value2", kHeaders, Optional.empty()));
+	TimestampType.CREATE_TIME, 2, 3, "key2", "value2", kHeaders, Optional.empty()));
 		consumerRecords.add(new ConsumerRecord<>("topic1", 0, 3, 1487694048609L,
-				TimestampType.CREATE_TIME, 2, 3, "key3", "value3", kHeaders, Optional.empty()));
+	TimestampType.CREATE_TIME, 2, 3, "key3", "value3", kHeaders, Optional.empty()));
 		return consumerRecords;
 	}
 
@@ -149,7 +149,7 @@ public class BatchMessageConverterTests {
 	public void missingHeaders() {
 		BatchMessageConverter converter = new BatchMessagingMessageConverter();
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "baz",
-				new RecordHeaders(), Optional.empty());
+	new RecordHeaders(), Optional.empty());
 		List<ConsumerRecord<?, ?>> records = Collections.singletonList(record);
 		Message<?> message = converter.toMessage(records, null, null, null);
 		assertThat(((List<String>) message.getPayload())).contains("baz");

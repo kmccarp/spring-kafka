@@ -198,7 +198,7 @@ public interface KafkaOperations2<K, V> {
 	 * @see Producer#sendOffsetsToTransaction(Map, ConsumerGroupMetadata)
 	 */
 	default void sendOffsetsToTransaction(Map<TopicPartition, OffsetAndMetadata> offsets,
-			ConsumerGroupMetadata groupMetadata) {
+ConsumerGroupMetadata groupMetadata) {
 
 		throw new UnsupportedOperationException();
 	}

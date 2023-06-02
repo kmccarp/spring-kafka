@@ -49,8 +49,8 @@ public class BatchListenerWithRecordAdapterTests {
 	@Test
 	void test(@Autowired KafkaListenerEndpointRegistry registry, @Autowired TestListener foo, @Autowired Config config) {
 		BatchMessagingMessageListenerAdapter<String, String> adapter =
-				(BatchMessagingMessageListenerAdapter<String, String>) registry
-					.getListenerContainer("batchRecordAdapter").getContainerProperties().getMessageListener();
+	(BatchMessagingMessageListenerAdapter<String, String>) registry
+.getListenerContainer("batchRecordAdapter").getContainerProperties().getMessageListener();
 		List<ConsumerRecord<String, String>> records = new ArrayList<>();
 		records.add(new ConsumerRecord<String, String>("foo", 0, 0, null, "foo"));
 		ConsumerRecord<String, String> barRecord = new ConsumerRecord<String, String>("foo", 0, 1, null, "bar");
@@ -64,12 +64,12 @@ public class BatchListenerWithRecordAdapterTests {
 	@SuppressWarnings("unchecked")
 	@Test
 	void testFullRecord(@Autowired KafkaListenerEndpointRegistry registry, @Autowired TestListener foo,
-			@Autowired Config config) {
+@Autowired Config config) {
 
 		config.failed = null;
 		BatchMessagingMessageListenerAdapter<String, String> adapter =
-				(BatchMessagingMessageListenerAdapter<String, String>) registry
-					.getListenerContainer("batchRecordAdapterFullRecord").getContainerProperties().getMessageListener();
+	(BatchMessagingMessageListenerAdapter<String, String>) registry
+.getListenerContainer("batchRecordAdapterFullRecord").getContainerProperties().getMessageListener();
 		List<ConsumerRecord<String, String>> records = new ArrayList<>();
 		records.add(new ConsumerRecord<String, String>("foo", 0, 0, null, "foo"));
 		ConsumerRecord<String, String> barRecord = new ConsumerRecord<String, String>("foo", 0, 1, null, "bar");
@@ -117,13 +117,13 @@ public class BatchListenerWithRecordAdapterTests {
 			return mock(ConsumerFactory.class);
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
 			factory.setConsumerFactory(consumerFactory());
 			factory.setBatchListener(true);
-			factory.setBatchToRecordAdapter(new DefaultBatchToRecordAdapter<>((record, ex) ->  {
+			factory.setBatchToRecordAdapter(new DefaultBatchToRecordAdapter<>((record, ex) -> {
 				this.failed = record;
 			}));
 			return factory;

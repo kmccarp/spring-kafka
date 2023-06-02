@@ -87,9 +87,9 @@ public class ParseStringDeserializer<T> implements Deserializer<T> {
 		if (NO_PARSER.equals(this.parser)) {
 			String parserMethod = (String) configs.get(isKey ? KEY_PARSER : VALUE_PARSER);
 			Assert.state(parserMethod != null,
-					"A parser must be provided either via a constructor or consumer properties");
+		"A parser must be provided either via a constructor or consumer properties");
 			this.parser = SerializationUtils.propertyToMethodInvokingFunction(parserMethod, String.class,
-					getClass().getClassLoader());
+		getClass().getClassLoader());
 		}
 	}
 

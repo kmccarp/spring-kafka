@@ -64,7 +64,7 @@ public class PartitionResolverTests {
 
 	@Test
 	void testNullPartition(@Autowired KafkaOperations<Integer, String> template,
-			@Autowired EmbeddedKafkaBroker broker, @Autowired Config config) throws InterruptedException {
+@Autowired EmbeddedKafkaBroker broker, @Autowired Config config) throws InterruptedException {
 
 		Map<String, Object> producerProps = KafkaTestUtils.producerProps(broker);
 		DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(producerProps);
@@ -91,8 +91,8 @@ public class PartitionResolverTests {
 		@Bean
 		RetryTopicConfiguration myRetryTopic(KafkaOperations<Integer, String> template) {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.create(template);
+		.newInstance()
+		.create(template);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -121,7 +121,7 @@ public class PartitionResolverTests {
 
 		@Bean
 		ConcurrentKafkaListenerContainerFactory<Integer, String> kafkaListenerContainerFactory(
-				ConsumerFactory<Integer, String> cf) {
+	ConsumerFactory<Integer, String> cf) {
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(cf);
 			return factory;

@@ -54,7 +54,7 @@ public class EndpointCustomizerFactory {
 	private final RetryTopicNamesProviderFactory retryTopicNamesProviderFactory;
 
 	public EndpointCustomizerFactory(DestinationTopic.Properties destinationProperties, EndpointHandlerMethod beanMethod,
-							BeanFactory beanFactory, RetryTopicNamesProviderFactory retryTopicNamesProviderFactory) {
+BeanFactory beanFactory, RetryTopicNamesProviderFactory retryTopicNamesProviderFactory) {
 
 		this.destinationProperties = destinationProperties;
 		this.beanMethod = beanMethod;
@@ -64,23 +64,23 @@ public class EndpointCustomizerFactory {
 
 	public final EndpointCustomizer createEndpointCustomizer() {
 		return addSuffixesAndMethod(this.destinationProperties, this.beanMethod.resolveBean(this.beanFactory),
-				this.beanMethod.getMethod());
+	this.beanMethod.getMethod());
 	}
 
 	protected EndpointCustomizer addSuffixesAndMethod(DestinationTopic.Properties properties, Object bean, Method method) {
 		RetryTopicNamesProviderFactory.RetryTopicNamesProvider namesProvider =
-				this.retryTopicNamesProviderFactory.createRetryTopicNamesProvider(properties);
+	this.retryTopicNamesProviderFactory.createRetryTopicNamesProvider(properties);
 		return endpoint -> {
 			Collection<EndpointCustomizer.TopicNamesHolder> topics = customizeAndRegisterTopics(namesProvider, endpoint);
 			endpoint.setId(namesProvider.getEndpointId(endpoint));
 			endpoint.setGroupId(namesProvider.getGroupId(endpoint));
 			if (endpoint.getTopics().isEmpty() && endpoint.getTopicPartitionsToAssign() != null) {
 				endpoint.setTopicPartitions(getTopicPartitions(properties, namesProvider,
-						endpoint.getTopicPartitionsToAssign()));
+			endpoint.getTopicPartitionsToAssign()));
 			}
 			else {
 				endpoint.setTopics(endpoint.getTopics().stream()
-						.map(namesProvider::getTopicName).toArray(String[]::new));
+			.map(namesProvider::getTopicName).toArray(String[]::new));
 			}
 			endpoint.setClientIdPrefix(namesProvider.getClientIdPrefix(endpoint));
 			endpoint.setGroup(namesProvider.getGroup(endpoint));
@@ -95,36 +95,36 @@ public class EndpointCustomizerFactory {
 	}
 
 	private static TopicPartitionOffset[] getTopicPartitions(DestinationTopic.Properties properties,
-													RetryTopicNamesProviderFactory.RetryTopicNamesProvider namesProvider,
-													TopicPartitionOffset[] topicPartitionOffsets) {
+RetryTopicNamesProviderFactory.RetryTopicNamesProvider namesProvider,
+TopicPartitionOffset[] topicPartitionOffsets) {
 		return Stream.of(topicPartitionOffsets)
-				.map(tpo -> properties.isMainEndpoint()
-						? getTPOForMainTopic(namesProvider, tpo)
-						: getTPOForRetryTopics(properties, namesProvider, tpo))
-				.toArray(TopicPartitionOffset[]::new);
+	.map(tpo -> properties.isMainEndpoint()
+? getTPOForMainTopic(namesProvider, tpo)
+: getTPOForRetryTopics(properties, namesProvider, tpo))
+	.toArray(TopicPartitionOffset[]::new);
 	}
 
 	private static TopicPartitionOffset getTPOForRetryTopics(DestinationTopic.Properties properties, RetryTopicNamesProviderFactory.RetryTopicNamesProvider namesProvider, TopicPartitionOffset tpo) {
 		return new TopicPartitionOffset(namesProvider.getTopicName(tpo.getTopic()),
-				tpo.getPartition() <= properties.numPartitions() ? tpo.getPartition() : DEFAULT_PARTITION_FOR_MANUAL_ASSIGNMENT,
-				(Long) null);
+	tpo.getPartition() <= properties.numPartitions() ? tpo.getPartition() : DEFAULT_PARTITION_FOR_MANUAL_ASSIGNMENT,
+	(Long) null);
 	}
 
 	private static TopicPartitionOffset getTPOForMainTopic(RetryTopicNamesProviderFactory.RetryTopicNamesProvider namesProvider, TopicPartitionOffset tpo) {
 		TopicPartitionOffset newTpo = new TopicPartitionOffset(namesProvider.getTopicName(tpo.getTopic()),
-				tpo.getPartition(), tpo.getOffset(), tpo.getPosition());
+	tpo.getPartition(), tpo.getOffset(), tpo.getPosition());
 		newTpo.setRelativeToCurrent(tpo.isRelativeToCurrent());
 		return newTpo;
 	}
 
 	protected Collection<EndpointCustomizer.TopicNamesHolder> customizeAndRegisterTopics(
-			RetryTopicNamesProviderFactory.RetryTopicNamesProvider namesProvider,
-			MethodKafkaListenerEndpoint<?, ?> endpoint) {
+RetryTopicNamesProviderFactory.RetryTopicNamesProvider namesProvider,
+MethodKafkaListenerEndpoint<?, ?> endpoint) {
 
 		return getTopics(endpoint)
-				.stream()
-				.map(topic -> new EndpointCustomizer.TopicNamesHolder(topic, namesProvider.getTopicName(topic)))
-				.collect(Collectors.toList());
+	.stream()
+	.map(topic -> new EndpointCustomizer.TopicNamesHolder(topic, namesProvider.getTopicName(topic)))
+	.collect(Collectors.toList());
 	}
 
 	private Collection<String> getTopics(MethodKafkaListenerEndpoint<?, ?> endpoint) {
@@ -133,16 +133,16 @@ public class EndpointCustomizerFactory {
 			TopicPartitionOffset[] topicPartitionsToAssign = endpoint.getTopicPartitionsToAssign();
 			if (topicPartitionsToAssign != null && topicPartitionsToAssign.length > 0) {
 				topics = Arrays.stream(topicPartitionsToAssign)
-						.map(TopicPartitionOffset::getTopic)
-						.distinct()
-						.collect(Collectors.toList());
+			.map(TopicPartitionOffset::getTopic)
+			.distinct()
+			.collect(Collectors.toList());
 			}
 		}
 
 		if (topics.isEmpty()) {
 			throw new IllegalStateException(
-					String.format("No topics were provided for RetryTopicConfiguration for method %s in class %s.",
-							endpoint.getMethod().getName(), endpoint.getBean().getClass().getSimpleName()));
+		String.format("No topics were provided for RetryTopicConfiguration for method %s in class %s.",
+	endpoint.getMethod().getName(), endpoint.getBean().getClass().getSimpleName()));
 		}
 		return topics;
 	}

@@ -51,7 +51,7 @@ public final class JacksonMimeTypeModule extends SimpleModule {
 
 		@Override
 		public void serialize(MimeType value, JsonGenerator generator, SerializerProvider serializers)
-				throws IOException {
+	throws IOException {
 
 			generator.writeString(value.toString());
 		}

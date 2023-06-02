@@ -77,145 +77,144 @@ class DefaultDestinationTopicResolverTests extends DestinationTopicTests {
 	@Test
 	void shouldResolveRetryDestination() {
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(), 1,
-						new RuntimeException(), this.originalTimestamp)).isEqualTo(firstRetryDestinationTopic);
+	.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(), 1,
+new RuntimeException(), this.originalTimestamp)).isEqualTo(firstRetryDestinationTopic);
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", firstRetryDestinationTopic.getDestinationName(), 1,
-						new RuntimeException(), this.originalTimestamp)).isEqualTo(secondRetryDestinationTopic);
+	.resolveDestinationTopic("id", firstRetryDestinationTopic.getDestinationName(), 1,
+new RuntimeException(), this.originalTimestamp)).isEqualTo(secondRetryDestinationTopic);
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", secondRetryDestinationTopic.getDestinationName(), 1,
-						new RuntimeException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic);
+	.resolveDestinationTopic("id", secondRetryDestinationTopic.getDestinationName(), 1,
+new RuntimeException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic);
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", dltDestinationTopic.getDestinationName(), 1,
-						new RuntimeException(), this.originalTimestamp)).isEqualTo(noOpsDestinationTopic);
+	.resolveDestinationTopic("id", dltDestinationTopic.getDestinationName(), 1,
+new RuntimeException(), this.originalTimestamp)).isEqualTo(noOpsDestinationTopic);
 
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", mainDestinationTopic2.getDestinationName(), 1,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(firstRetryDestinationTopic2);
+	.resolveDestinationTopic("id", mainDestinationTopic2.getDestinationName(), 1,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(firstRetryDestinationTopic2);
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", firstRetryDestinationTopic2.getDestinationName(), 1,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(secondRetryDestinationTopic2);
+	.resolveDestinationTopic("id", firstRetryDestinationTopic2.getDestinationName(), 1,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(secondRetryDestinationTopic2);
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", secondRetryDestinationTopic2.getDestinationName(), 1,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic2);
+	.resolveDestinationTopic("id", secondRetryDestinationTopic2.getDestinationName(), 1,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic2);
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", dltDestinationTopic2.getDestinationName(), 1,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic2);
+	.resolveDestinationTopic("id", dltDestinationTopic2.getDestinationName(), 1,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic2);
 
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", mainDestinationTopic4.getDestinationName(), 1,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(singleFixedRetryDestinationTopic4);
+	.resolveDestinationTopic("id", mainDestinationTopic4.getDestinationName(), 1,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(singleFixedRetryDestinationTopic4);
 
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", singleFixedRetryDestinationTopic4.getDestinationName(), maxAttempts - 1,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(singleFixedRetryDestinationTopic4);
+	.resolveDestinationTopic("id", singleFixedRetryDestinationTopic4.getDestinationName(), maxAttempts - 1,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(singleFixedRetryDestinationTopic4);
 
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", singleFixedRetryDestinationTopic4.getDestinationName(), maxAttempts,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic4);
+	.resolveDestinationTopic("id", singleFixedRetryDestinationTopic4.getDestinationName(), maxAttempts,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic4);
 
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", mainDestinationTopic5.getDestinationName(), 1,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(reusableRetryDestinationTopic5);
+	.resolveDestinationTopic("id", mainDestinationTopic5.getDestinationName(), 1,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(reusableRetryDestinationTopic5);
 
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", reusableRetryDestinationTopic5.getDestinationName(), maxAttempts - 1,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(reusableRetryDestinationTopic5);
+	.resolveDestinationTopic("id", reusableRetryDestinationTopic5.getDestinationName(), maxAttempts - 1,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(reusableRetryDestinationTopic5);
 
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", reusableRetryDestinationTopic5.getDestinationName(), maxAttempts,
-						new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic5);
+	.resolveDestinationTopic("id", reusableRetryDestinationTopic5.getDestinationName(), maxAttempts,
+new IllegalArgumentException(), this.originalTimestamp)).isEqualTo(dltDestinationTopic5);
 	}
 
 	@Test
 	void shouldResolveDltDestinationForNonRetryableException() {
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(),
-						1, new IllegalArgumentException(), originalTimestamp)).isEqualTo(dltDestinationTopic);
+	.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(),
+1, new IllegalArgumentException(), originalTimestamp)).isEqualTo(dltDestinationTopic);
 	}
 
 	@Test
 	void shouldResolveDltDestinationForFatalDefaultException() {
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(),
-						1, new ConversionException("Test exception", new RuntimeException()), originalTimestamp))
-				.isEqualTo(dltDestinationTopic);
+	.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(),
+1, new ConversionException("Test exception", new RuntimeException()), originalTimestamp))
+	.isEqualTo(dltDestinationTopic);
 	}
 
 	@Test
 	void shouldResolveNoOpsForFatalDefaultExceptionInDlt() {
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", dltDestinationTopic.getDestinationName(),
-						1, new ConversionException("Test exception", new RuntimeException()), originalTimestamp))
-				.isEqualTo(noOpsDestinationTopic);
+	.resolveDestinationTopic("id", dltDestinationTopic.getDestinationName(),
+1, new ConversionException("Test exception", new RuntimeException()), originalTimestamp))
+	.isEqualTo(noOpsDestinationTopic);
 	}
 
 	@Test
 	void shouldResolveRetryDestinationForWrappedListenerExecutionFailedException() {
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(),
-						1, new ListenerExecutionFailedException("Test exception!",
-								new RuntimeException()), originalTimestamp)).isEqualTo(firstRetryDestinationTopic);
+	.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(),
+1, new ListenerExecutionFailedException("Test exception!",new RuntimeException()), originalTimestamp)).isEqualTo(firstRetryDestinationTopic);
 	}
 
 	@Test
 	void shouldResolveRetryDestinationForWrappedTimestampedException() {
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(),
-						1, new TimestampedException(new RuntimeException(), Instant.now(this.clock)),
-						originalTimestamp))
-								.isEqualTo(firstRetryDestinationTopic);
+	.resolveDestinationTopic("id", mainDestinationTopic.getDestinationName(),
+1, new TimestampedException(new RuntimeException(), Instant.now(this.clock)),
+originalTimestamp))
+	.isEqualTo(firstRetryDestinationTopic);
 	}
 
 	@Test
 	void shouldResolveNoOpsDestinationForDoNotRetryDltPolicy() {
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", dltDestinationTopic.getDestinationName(),
-						1, new IllegalArgumentException(), originalTimestamp)).isEqualTo(noOpsDestinationTopic);
+	.resolveDestinationTopic("id", dltDestinationTopic.getDestinationName(),
+1, new IllegalArgumentException(), originalTimestamp)).isEqualTo(noOpsDestinationTopic);
 	}
 
 	@Test
 	void shouldResolveDltDestinationForAlwaysRetryDltPolicy() {
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", dltDestinationTopic2.getDestinationName(),
-						1, new IllegalArgumentException(), originalTimestamp)).isEqualTo(dltDestinationTopic2);
+	.resolveDestinationTopic("id", dltDestinationTopic2.getDestinationName(),
+1, new IllegalArgumentException(), originalTimestamp)).isEqualTo(dltDestinationTopic2);
 	}
 
 	@Test
 	void shouldResolveDltDestinationForExpiredTimeout() {
 		long timestampInThePastToForceTimeout = this.originalTimestamp - 10000;
 		assertThat(defaultDestinationTopicContainer
-				.resolveDestinationTopic("id", mainDestinationTopic2.getDestinationName(),
-						1, new IllegalArgumentException(), timestampInThePastToForceTimeout))
-								.isEqualTo(dltDestinationTopic2);
+	.resolveDestinationTopic("id", mainDestinationTopic2.getDestinationName(),
+1, new IllegalArgumentException(), timestampInThePastToForceTimeout))
+	.isEqualTo(dltDestinationTopic2);
 	}
 
 	@Test
 	void shouldGetDestinationTopic() {
 		assertThat(defaultDestinationTopicContainer
-				.getDestinationTopicByName("id", mainDestinationTopic.getDestinationName()))
-						.isEqualTo(mainDestinationTopic);
+	.getDestinationTopicByName("id", mainDestinationTopic.getDestinationName()))
+	.isEqualTo(mainDestinationTopic);
 	}
 
 	@Test
 	void shouldGetNextDestinationTopic() {
 		assertThat(defaultDestinationTopicContainer
-				.getNextDestinationTopicFor("id", mainDestinationTopic.getDestinationName()))
-				.isEqualTo(firstRetryDestinationTopic);
+	.getNextDestinationTopicFor("id", mainDestinationTopic.getDestinationName()))
+	.isEqualTo(firstRetryDestinationTopic);
 	}
 
 	@Test
 	void shouldGetDlt() {
 		assertThat(defaultDestinationTopicContainer
-				.getDltFor("id", mainDestinationTopic.getDestinationName()))
-				.isEqualTo(dltDestinationTopic);
+	.getDltFor("id", mainDestinationTopic.getDestinationName()))
+	.isEqualTo(dltDestinationTopic);
 	}
 
 	@Test
 	void shouldThrowIfNoDestinationFound() {
 		assertThatNullPointerException().isThrownBy(
-				() -> defaultDestinationTopicContainer.resolveDestinationTopic("id", "Non-existing-topic", 0,
-						new IllegalArgumentException(), originalTimestamp));
+	() -> defaultDestinationTopicContainer.resolveDestinationTopic("id", "Non-existing-topic", 0,
+new IllegalArgumentException(), originalTimestamp));
 	}
 
 	@Test
@@ -225,39 +224,39 @@ class DefaultDestinationTopicResolverTests extends DestinationTopicTests {
 		destinationResolver.addDestinationTopics("id", allFirstDestinationsTopics);
 
 		List<DestinationTopic> destinationTopics = Arrays
-				.asList(mainDestinationTopic5, reusableRetryDestinationTopic5, reusableRetryDestinationTopic5, dltDestinationTopic5);
+	.asList(mainDestinationTopic5, reusableRetryDestinationTopic5, reusableRetryDestinationTopic5, dltDestinationTopic5);
 
 		assertThatIllegalArgumentException().isThrownBy(
-				() -> destinationResolver.addDestinationTopics("id", destinationTopics))
-			.withMessageMatching(String.format(".*%s.*last retry topic.*", Type.REUSABLE_RETRY_TOPIC));
+	() -> destinationResolver.addDestinationTopics("id", destinationTopics))
+	.withMessageMatching(String.format(".*%s.*last retry topic.*", Type.REUSABLE_RETRY_TOPIC));
 	}
 
 	@Test
 	void shouldResolveNoOpsIfDltAndNotRetryable() {
 		assertThat(defaultDestinationTopicContainer
-						.resolveDestinationTopic("id", mainDestinationTopic3.getDestinationName(), 0,
-						new RuntimeException(), originalTimestamp)).isEqualTo(noOpsDestinationTopic3);
+	.resolveDestinationTopic("id", mainDestinationTopic3.getDestinationName(), 0,
+new RuntimeException(), originalTimestamp)).isEqualTo(noOpsDestinationTopic3);
 	}
 
 	@Test
 	void shouldThrowIfAddsDestinationsAfterClosed() {
 		defaultDestinationTopicContainer
-				.onApplicationEvent(new ContextRefreshedEvent(applicationContext));
+	.onApplicationEvent(new ContextRefreshedEvent(applicationContext));
 		assertThatIllegalStateException().isThrownBy(() ->
-				defaultDestinationTopicContainer.addDestinationTopics("id", Collections.emptyList()));
+	defaultDestinationTopicContainer.addDestinationTopics("id", Collections.emptyList()));
 	}
 
 	@Test
 	void shouldCloseContainerOnContextRefresh() {
 		defaultDestinationTopicContainer
-				.onApplicationEvent(new ContextRefreshedEvent(applicationContext));
+	.onApplicationEvent(new ContextRefreshedEvent(applicationContext));
 		assertThat(defaultDestinationTopicContainer.isContextRefreshed()).isTrue();
 	}
 
 	@Test
 	void shouldNotMarkContainerRefeshedOnOtherContextRefresh() {
 		defaultDestinationTopicContainer
-				.onApplicationEvent(new ContextRefreshedEvent(otherApplicationContext));
+	.onApplicationEvent(new ContextRefreshedEvent(otherApplicationContext));
 		assertThat(defaultDestinationTopicContainer.isContextRefreshed()).isFalse();
 	}
 

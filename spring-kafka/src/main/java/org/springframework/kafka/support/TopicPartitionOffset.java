@@ -208,7 +208,7 @@ public class TopicPartitionOffset {
 		}
 		TopicPartitionOffset that = (TopicPartitionOffset) o;
 		return Objects.equals(this.topicPartition, that.topicPartition)
-				&& Objects.equals(this.position, that.position);
+	&& Objects.equals(this.position, that.position);
 	}
 
 	@Override
@@ -219,11 +219,11 @@ public class TopicPartitionOffset {
 	@Override
 	public String toString() {
 		return "TopicPartitionOffset{" +
-				"topicPartition=" + this.topicPartition +
-				", offset=" + this.offset +
-				", relativeToCurrent=" + this.relativeToCurrent +
-				(this.position == null ? "" : (", position=" + this.position.name())) +
-				'}';
+	"topicPartition=" + this.topicPartition +
+	", offset=" + this.offset +
+	", relativeToCurrent=" + this.relativeToCurrent +
+	(this.position == null ? "" : (", position=" + this.position.name())) +
+	'}';
 	}
 
 }

@@ -57,15 +57,15 @@ public class TestOOMError {
 		given(cf.createConsumer(eq("grp"), eq("clientId"), eq("-0"), any())).willReturn(consumer);
 		final Map<TopicPartition, List<ConsumerRecord<Integer, String>>> records = new HashMap<>();
 		records.put(new TopicPartition("foo", 0), Arrays.asList(
-				new ConsumerRecord<>("foo", 0, 0L, 1, "foo"),
-				new ConsumerRecord<>("foo", 0, 1L, 1, "bar")));
+	new ConsumerRecord<>("foo", 0, 0L, 1, "foo"),
+	new ConsumerRecord<>("foo", 0, 1L, 1, "bar")));
 		ConsumerRecords<Integer, String> consumerRecords = new ConsumerRecords<>(records);
 		given(consumer.poll(any(Duration.class))).willAnswer(i -> {
 			Thread.sleep(50);
 			return consumerRecords;
 		});
-		TopicPartitionOffset[] topicPartition = new TopicPartitionOffset[] {
-				new TopicPartitionOffset("foo", 0) };
+		TopicPartitionOffset[] topicPartition = new TopicPartitionOffset[]{
+	new TopicPartitionOffset("foo", 0)};
 		ContainerProperties containerProps = new ContainerProperties(topicPartition);
 		containerProps.setGroupId("grp");
 		containerProps.setAckMode(AckMode.RECORD);
@@ -76,7 +76,7 @@ public class TestOOMError {
 		containerProps.setMessageListener(messageListener);
 		containerProps.setClientId("clientId");
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		CountDownLatch stopLatch = new CountDownLatch(1);
 		container.setApplicationEventPublisher(e -> {
 			if (e instanceof ContainerStoppedEvent) {
@@ -97,15 +97,15 @@ public class TestOOMError {
 		given(cf.createConsumer(eq("grp"), eq("clientId"), isNull(), any())).willReturn(consumer);
 		final Map<TopicPartition, List<ConsumerRecord<Integer, String>>> records = new HashMap<>();
 		records.put(new TopicPartition("foo", 0), Arrays.asList(
-				new ConsumerRecord<>("foo", 0, 0L, 1, "foo"),
-				new ConsumerRecord<>("foo", 0, 1L, 1, "bar")));
+	new ConsumerRecord<>("foo", 0, 0L, 1, "foo"),
+	new ConsumerRecord<>("foo", 0, 1L, 1, "bar")));
 		ConsumerRecords<Integer, String> consumerRecords = new ConsumerRecords<>(records);
 		given(consumer.poll(any(Duration.class))).willAnswer(i -> {
 			Thread.sleep(50);
 			return consumerRecords;
 		});
-		TopicPartitionOffset[] topicPartition = new TopicPartitionOffset[] {
-				new TopicPartitionOffset("foo", 0) };
+		TopicPartitionOffset[] topicPartition = new TopicPartitionOffset[]{
+	new TopicPartitionOffset("foo", 0)};
 		ContainerProperties containerProps = new ContainerProperties(topicPartition);
 		containerProps.setGroupId("grp");
 		containerProps.setAckMode(AckMode.RECORD);
@@ -117,7 +117,7 @@ public class TestOOMError {
 		containerProps.setClientId("clientId");
 		containerProps.setShutdownTimeout(100);
 		KafkaMessageListenerContainer<Integer, String> container =
-				new KafkaMessageListenerContainer<>(cf, containerProps);
+	new KafkaMessageListenerContainer<>(cf, containerProps);
 		CountDownLatch stopLatch = new CountDownLatch(1);
 		container.setApplicationEventPublisher(e -> {
 			if (e instanceof ContainerStoppedEvent) {

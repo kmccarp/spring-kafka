@@ -46,7 +46,7 @@ public class FilteringAdapterTests {
 	public void testBatchFilter() throws Exception {
 		BatchAcknowledgingMessageListener<String, String> listener = mock(BatchAcknowledgingMessageListener.class);
 		FilteringBatchMessageListenerAdapter<String, String> adapter =
-				new FilteringBatchMessageListenerAdapter<String, String>(listener, r -> false);
+	new FilteringBatchMessageListenerAdapter<String, String>(listener, r -> false);
 		List<ConsumerRecord<String, String>> consumerRecords = new ArrayList<>();
 		final CountDownLatch latch = new CountDownLatch(1);
 		willAnswer(i -> {
@@ -64,7 +64,7 @@ public class FilteringAdapterTests {
 	public void testBatchFilterAckDiscard() throws Exception {
 		BatchAcknowledgingMessageListener<String, String> listener = mock(BatchAcknowledgingMessageListener.class);
 		FilteringBatchMessageListenerAdapter<String, String> adapter =
-				new FilteringBatchMessageListenerAdapter<String, String>(listener, r -> false, true);
+	new FilteringBatchMessageListenerAdapter<String, String>(listener, r -> false, true);
 		List<ConsumerRecord<String, String>> consumerRecords = new ArrayList<>();
 		final CountDownLatch latch = new CountDownLatch(1);
 		adapter.onMessage(consumerRecords, () -> latch.countDown(), null);

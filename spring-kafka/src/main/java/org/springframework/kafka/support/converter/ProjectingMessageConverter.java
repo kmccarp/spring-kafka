@@ -145,8 +145,8 @@ public class ProjectingMessageConverter extends MessagingMessageConverter {
 		}
 
 		throw new ConversionException(String.format(
-				"Unsupported payload type '%s'. Expected 'String', 'Bytes', or 'byte[]'",
-				source.getClass()), null);
+	"Unsupported payload type '%s'. Expected 'String', 'Bytes', or 'byte[]'",
+	source.getClass()), null);
 	}
 
 }

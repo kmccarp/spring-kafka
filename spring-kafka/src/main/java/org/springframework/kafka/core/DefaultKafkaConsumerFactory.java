@@ -72,8 +72,7 @@ import org.springframework.util.StringUtils;
  * @author Artem Bilan
  * @author Chris Gilbert
  */
-public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
-		implements ConsumerFactory<K, V>, BeanNameAware {
+public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactoryimplements ConsumerFactory<K, V>, BeanNameAware {
 
 	private static final LogAccessor LOGGER = new LogAccessor(LogFactory.getLog(DefaultKafkaConsumerFactory.class));
 
@@ -108,8 +107,8 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 	 * @param valueDeserializer the value {@link Deserializer}.
 	 */
 	public DefaultKafkaConsumerFactory(Map<String, Object> configs,
-			@Nullable Deserializer<K> keyDeserializer,
-			@Nullable Deserializer<V> valueDeserializer) {
+@Nullable Deserializer<K> keyDeserializer,
+@Nullable Deserializer<V> valueDeserializer) {
 
 		this(configs, () -> keyDeserializer, () -> valueDeserializer);
 	}
@@ -125,8 +124,8 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 	 * @since 2.8.7
 	 */
 	public DefaultKafkaConsumerFactory(Map<String, Object> configs,
-			@Nullable Deserializer<K> keyDeserializer,
-			@Nullable Deserializer<V> valueDeserializer, boolean configureDeserializers) {
+@Nullable Deserializer<K> keyDeserializer,
+@Nullable Deserializer<V> valueDeserializer, boolean configureDeserializers) {
 
 		this(configs, () -> keyDeserializer, () -> valueDeserializer, configureDeserializers);
 	}
@@ -141,8 +140,8 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 	 * @since 2.3
 	 */
 	public DefaultKafkaConsumerFactory(Map<String, Object> configs,
-			@Nullable Supplier<Deserializer<K>> keyDeserializerSupplier,
-			@Nullable Supplier<Deserializer<V>> valueDeserializerSupplier) {
+@Nullable Supplier<Deserializer<K>> keyDeserializerSupplier,
+@Nullable Supplier<Deserializer<V>> valueDeserializerSupplier) {
 
 		this(configs, keyDeserializerSupplier, valueDeserializerSupplier, true);
 	}
@@ -159,8 +158,8 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 	 * @since 2.8.7
 	 */
 	public DefaultKafkaConsumerFactory(Map<String, Object> configs,
-			@Nullable Supplier<Deserializer<K>> keyDeserializerSupplier,
-			@Nullable Supplier<Deserializer<V>> valueDeserializerSupplier, boolean configureDeserializers) {
+@Nullable Supplier<Deserializer<K>> keyDeserializerSupplier,
+@Nullable Supplier<Deserializer<V>> valueDeserializerSupplier, boolean configureDeserializers) {
 
 		this.configs = new ConcurrentHashMap<>(configs);
 		this.configureDeserializers = configureDeserializers;
@@ -169,37 +168,37 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 	}
 
 	private Supplier<Deserializer<K>> keyDeserializerSupplier(
-			@Nullable Supplier<Deserializer<K>> keyDeserializerSupplier) {
+@Nullable Supplier<Deserializer<K>> keyDeserializerSupplier) {
 
 		if (!this.configureDeserializers) {
 			return keyDeserializerSupplier;
 		}
 		return keyDeserializerSupplier == null
-				? () -> null
-				: () -> {
-					Deserializer<K> deserializer = keyDeserializerSupplier.get();
-					if (deserializer != null) {
-						deserializer.configure(this.configs, true);
-					}
-					return deserializer;
-				};
+	? () -> null
+	: () -> {
+			Deserializer<K> deserializer = keyDeserializerSupplier.get();
+			if (deserializer != null) {
+				deserializer.configure(this.configs, true);
+			}
+			return deserializer;
+		};
 	}
 
 	private Supplier<Deserializer<V>> valueDeserializerSupplier(
-			@Nullable Supplier<Deserializer<V>> valueDeserializerSupplier) {
+@Nullable Supplier<Deserializer<V>> valueDeserializerSupplier) {
 
 		if (!this.configureDeserializers) {
 			return valueDeserializerSupplier;
 		}
 		return valueDeserializerSupplier == null
-				? () -> null
-				: () -> {
-					Deserializer<V> deserializer = valueDeserializerSupplier.get();
-					if (deserializer != null) {
-						deserializer.configure(this.configs, false);
-					}
-					return deserializer;
-				};
+	? () -> null
+	: () -> {
+			Deserializer<V> deserializer = valueDeserializerSupplier.get();
+			if (deserializer != null) {
+				deserializer.configure(this.configs, false);
+			}
+			return deserializer;
+		};
 	}
 
 	@Override
@@ -359,20 +358,20 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 
 	@Override
 	public Consumer<K, V> createConsumer(@Nullable String groupId, @Nullable String clientIdPrefix,
-			@Nullable String clientIdSuffix) {
+@Nullable String clientIdSuffix) {
 
 		return createKafkaConsumer(groupId, clientIdPrefix, clientIdSuffix, null);
 	}
 
 	@Override
 	public Consumer<K, V> createConsumer(@Nullable String groupId, @Nullable String clientIdPrefix,
-			@Nullable final String clientIdSuffixArg, @Nullable Properties properties) {
+@Nullable final String clientIdSuffixArg, @Nullable Properties properties) {
 
 		return createKafkaConsumer(groupId, clientIdPrefix, clientIdSuffixArg, properties);
 	}
 
 	protected Consumer<K, V> createKafkaConsumer(@Nullable String groupId, @Nullable String clientIdPrefixArg,
-			@Nullable String clientIdSuffixArg, @Nullable Properties properties) {
+@Nullable String clientIdSuffixArg, @Nullable Properties properties) {
 
 		boolean overrideClientIdPrefix = StringUtils.hasText(clientIdPrefixArg);
 		String clientIdPrefix = clientIdPrefixArg;
@@ -384,21 +383,21 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 			clientIdSuffix = "";
 		}
 		boolean shouldModifyClientId = (this.configs.containsKey(ConsumerConfig.CLIENT_ID_CONFIG)
-				&& StringUtils.hasText(clientIdSuffix)) || overrideClientIdPrefix;
+	&& StringUtils.hasText(clientIdSuffix)) || overrideClientIdPrefix;
 		if (groupId == null
-				&& (properties == null || properties.stringPropertyNames().size() == 0)
-				&& !shouldModifyClientId) {
+	&& (properties == null || properties.stringPropertyNames().size() == 0)
+	&& !shouldModifyClientId) {
 			return createKafkaConsumer(new HashMap<>(this.configs));
 		}
 		else {
 			return createConsumerWithAdjustedProperties(groupId, clientIdPrefix, properties, overrideClientIdPrefix,
-					clientIdSuffix, shouldModifyClientId);
+		clientIdSuffix, shouldModifyClientId);
 		}
 	}
 
 	private Consumer<K, V> createConsumerWithAdjustedProperties(@Nullable String groupId, String clientIdPrefix,
-			@Nullable Properties properties, boolean overrideClientIdPrefix, String clientIdSuffix,
-			boolean shouldModifyClientId) {
+@Nullable Properties properties, boolean overrideClientIdPrefix, String clientIdSuffix,
+boolean shouldModifyClientId) {
 
 		Map<String, Object> modifiedConfigs = new HashMap<>(this.configs);
 		if (groupId != null) {
@@ -406,22 +405,22 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 		}
 		if (shouldModifyClientId) {
 			modifiedConfigs.put(ConsumerConfig.CLIENT_ID_CONFIG,
-					(overrideClientIdPrefix ? clientIdPrefix
-							: modifiedConfigs.get(ConsumerConfig.CLIENT_ID_CONFIG)) + clientIdSuffix);
+		(overrideClientIdPrefix ? clientIdPrefix
+	: modifiedConfigs.get(ConsumerConfig.CLIENT_ID_CONFIG)) + clientIdSuffix);
 		}
 		if (properties != null) {
 			Set<String> stringPropertyNames = properties.stringPropertyNames();  // to get any nested default Properties
 			stringPropertyNames
-					.stream()
-					.filter(name -> !name.equals(ConsumerConfig.CLIENT_ID_CONFIG)
-							&& !name.equals(ConsumerConfig.GROUP_ID_CONFIG))
-					.forEach(name -> modifiedConfigs.put(name, properties.getProperty(name)));
+		.stream()
+		.filter(name -> !name.equals(ConsumerConfig.CLIENT_ID_CONFIG)
+	&& !name.equals(ConsumerConfig.GROUP_ID_CONFIG))
+		.forEach(name -> modifiedConfigs.put(name, properties.getProperty(name)));
 			properties.entrySet().stream()
-					.filter(entry -> !entry.getKey().equals(ConsumerConfig.CLIENT_ID_CONFIG)
-							&& !entry.getKey().equals(ConsumerConfig.GROUP_ID_CONFIG)
-							&& !stringPropertyNames.contains(entry.getKey())
-							&& entry.getKey() instanceof String)
-					.forEach(entry -> modifiedConfigs.put((String) entry.getKey(), entry.getValue()));
+		.filter(entry -> !entry.getKey().equals(ConsumerConfig.CLIENT_ID_CONFIG)
+	&& !entry.getKey().equals(ConsumerConfig.GROUP_ID_CONFIG)
+	&& !stringPropertyNames.contains(entry.getKey())
+	&& entry.getKey() instanceof String)
+		.forEach(entry -> modifiedConfigs.put((String) entry.getKey(), entry.getValue()));
 			checkInaccessible(properties, modifiedConfigs);
 		}
 		return createKafkaConsumer(modifiedConfigs);
@@ -440,8 +439,8 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 		}
 		if (inaccessible != null) {
 			LOGGER.error("Non-String-valued default properties are inaccessible; use String values or "
-					+ "make them explicit properties instead of defaults: "
-					+ inaccessible);
+		+ "make them explicit properties instead of defaults: "
+		+ inaccessible);
 		}
 	}
 
@@ -480,7 +479,7 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 	 */
 	protected Consumer<K, V> createRawConsumer(Map<String, Object> configProps) {
 		return new KafkaConsumer<>(configProps, this.keyDeserializerSupplier.get(),
-				this.valueDeserializerSupplier.get());
+	this.valueDeserializerSupplier.get());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -491,7 +490,7 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 			@Override
 			public Object invoke(MethodInvocation invocation) throws Throwable {
 				DefaultKafkaConsumerFactory.this.listeners.forEach(listener ->
-						listener.consumerRemoved(id, kafkaConsumer));
+			listener.consumerRemoved(id, kafkaConsumer));
 				return invocation.proceed();
 			}
 
@@ -506,7 +505,7 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 	public boolean isAutoCommit() {
 		Object auto = this.configs.get(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
 		return auto instanceof Boolean ? (Boolean) auto
-				: auto instanceof String ? Boolean.valueOf((String) auto) : true;
+	: auto instanceof String ? Boolean.valueOf((String) auto) : true;
 	}
 
 }

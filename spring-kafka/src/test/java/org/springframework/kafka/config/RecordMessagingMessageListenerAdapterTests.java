@@ -51,9 +51,9 @@ public class RecordMessagingMessageListenerAdapterTests {
 		endpoint.setMethod(method);
 		endpoint.setMessageHandlerMethodFactory(messageHandlerFactory());
 		RecordMessagingMessageListenerAdapter<Object, Object> adapter =
-				(RecordMessagingMessageListenerAdapter<Object, Object>) endpoint.createMessageListener(null, null);
+	(RecordMessagingMessageListenerAdapter<Object, Object>) endpoint.createMessageListener(null, null);
 		ConsumerRecord<Object, Object> record = new ConsumerRecord<>("topic", 0, 42L, 43L, TimestampType.CREATE_TIME,
-				44, 45, null, "foo", new RecordHeaders(), Optional.empty());
+	44, 45, null, "foo", new RecordHeaders(), Optional.empty());
 		adapter.onMessage(record, null, null);
 		assertThat(bean.string).isEqualTo("foo");
 		assertThat(bean.metadata.topic()).isEqualTo(record.topic());
@@ -81,14 +81,14 @@ public class RecordMessagingMessageListenerAdapterTests {
 		}
 		TestMultiClass bean = new TestMultiClass();
 		MultiMethodKafkaListenerEndpoint<Object, Object> endpoint = new MultiMethodKafkaListenerEndpoint<>(methods,
-				defMethod, bean);
+	defMethod, bean);
 		endpoint.setMessageHandlerMethodFactory(messageHandlerFactory());
 		RecordMessagingMessageListenerAdapter<Object, Object> adapter =
-				(RecordMessagingMessageListenerAdapter<Object, Object>) endpoint.createMessageListener(null, null);
+	(RecordMessagingMessageListenerAdapter<Object, Object>) endpoint.createMessageListener(null, null);
 		adapter.onMessage(new ConsumerRecord<>("topic", 0, 0L, null, 42), null, null);
 		assertThat(bean.value).isEqualTo(42);
 		ConsumerRecord<Object, Object> record = new ConsumerRecord<>("topic", 0, 42L, 43L, TimestampType.CREATE_TIME,
-				44, 45, null, "foo", new RecordHeaders(), Optional.empty());
+	44, 45, null, "foo", new RecordHeaders(), Optional.empty());
 		adapter.onMessage(record, null, null);
 		assertThat(bean.string).isEqualTo("foo");
 		assertThat(bean.metadata.topic()).isEqualTo(record.topic());

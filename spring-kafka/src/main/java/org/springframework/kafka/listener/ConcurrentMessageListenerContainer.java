@@ -81,7 +81,7 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 	 * @param containerProperties the container properties.
 	 */
 	public ConcurrentMessageListenerContainer(ConsumerFactory<? super K, ? super V> consumerFactory,
-			ContainerProperties containerProperties) {
+ContainerProperties containerProperties) {
 
 		super(consumerFactory, containerProperties);
 		Assert.notNull(consumerFactory, "A ConsumerFactory must be provided");
@@ -144,10 +144,10 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 	public Collection<TopicPartition> getAssignedPartitions() {
 		synchronized (this.lifecycleMonitor) {
 			return this.containers.stream()
-					.map(KafkaMessageListenerContainer::getAssignedPartitions)
-					.filter(Objects::nonNull)
-					.flatMap(Collection::stream)
-					.collect(Collectors.toList());
+		.map(KafkaMessageListenerContainer::getAssignedPartitions)
+		.filter(Objects::nonNull)
+		.flatMap(Collection::stream)
+		.collect(Collectors.toList());
 		}
 	}
 
@@ -215,15 +215,15 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 			TopicPartitionOffset[] topicPartitions = containerProperties.getTopicPartitions();
 			if (topicPartitions != null && this.concurrency > topicPartitions.length) {
 				this.logger.warn(() -> "When specific partitions are provided, the concurrency must be less than or "
-						+ "equal to the number of partitions; reduced from " + this.concurrency + " to "
-						+ topicPartitions.length);
+			+ "equal to the number of partitions; reduced from " + this.concurrency + " to "
+			+ topicPartitions.length);
 				this.concurrency = topicPartitions.length;
 			}
 			setRunning(true);
 
 			for (int i = 0; i < this.concurrency; i++) {
 				KafkaMessageListenerContainer<K, V> container =
-						constructContainer(containerProperties, topicPartitions, i);
+			constructContainer(containerProperties, topicPartitions, i);
 				configureChildContainer(i, container);
 				if (isPaused()) {
 					container.pause();
@@ -271,7 +271,7 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 	}
 
 	private KafkaMessageListenerContainer<K, V> constructContainer(ContainerProperties containerProperties,
-			@Nullable TopicPartitionOffset[] topicPartitions, int i) {
+@Nullable TopicPartitionOffset[] topicPartitions, int i) {
 
 		KafkaMessageListenerContainer<K, V> container;
 		if (topicPartitions == null) {
@@ -279,7 +279,7 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 		}
 		else {
 			container = new KafkaMessageListenerContainer<>(this, this.consumerFactory, // NOSONAR
-					containerProperties, partitionSubset(containerProperties, i));
+		containerProperties, partitionSubset(containerProperties, i));
 		}
 		return container;
 	}
@@ -292,7 +292,7 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 		else {
 			int numPartitions = topicPartitions.length; // NOSONAR
 			if (numPartitions == this.concurrency) {
-				return new TopicPartitionOffset[] { topicPartitions[index] };
+				return new TopicPartitionOffset[]{topicPartitions[index]};
 			}
 			else {
 				int perContainer = numPartitions / this.concurrency;
@@ -354,8 +354,8 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 			this.reason = reason;
 		}
 		if (Reason.AUTH.equals(this.reason)
-				&& getContainerProperties().isRestartAfterAuthExceptions()
-				&& this.concurrency == this.stoppedContainers.incrementAndGet()) {
+	&& getContainerProperties().isRestartAfterAuthExceptions()
+	&& this.concurrency == this.stoppedContainers.incrementAndGet()) {
 
 			this.reason = null;
 			this.stoppedContainers.set(0);
@@ -389,9 +389,9 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 	public void pausePartition(TopicPartition topicPartition) {
 		synchronized (this.lifecycleMonitor) {
 			this.containers
-					.stream()
-					.filter(container -> containsPartition(topicPartition, container))
-					.forEach(container -> container.pausePartition(topicPartition));
+		.stream()
+		.filter(container -> containsPartition(topicPartition, container))
+		.forEach(container -> container.pausePartition(topicPartition));
 		}
 	}
 
@@ -399,9 +399,9 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 	public void resumePartition(TopicPartition topicPartition) {
 		synchronized (this.lifecycleMonitor) {
 			this.containers
-					.stream()
-					.filter(container -> container.isPartitionPauseRequested(topicPartition))
-					.forEach(container -> container.resumePartition(topicPartition));
+		.stream()
+		.filter(container -> container.isPartitionPauseRequested(topicPartition))
+		.forEach(container -> container.resumePartition(topicPartition));
 		}
 	}
 
@@ -409,9 +409,9 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 	public boolean isPartitionPaused(TopicPartition topicPartition) {
 		synchronized (this.lifecycleMonitor) {
 			return this
-					.containers
-					.stream()
-					.anyMatch(container -> container.isPartitionPaused(topicPartition));
+		.containers
+		.stream()
+		.anyMatch(container -> container.isPartitionPaused(topicPartition));
 		}
 	}
 
@@ -419,9 +419,9 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 	public boolean isInExpectedState() {
 		synchronized (this.lifecycleMonitor) {
 			return (isRunning() || isStoppedNormally()) && this.containers
-					.stream()
-					.map(container -> container.isInExpectedState())
-					.allMatch(bool -> Boolean.TRUE.equals(bool));
+		.stream()
+		.map(container -> container.isInExpectedState())
+		.allMatch(bool -> Boolean.TRUE.equals(bool));
 		}
 	}
 
@@ -433,7 +433,7 @@ public class ConcurrentMessageListenerContainer<K, V> extends AbstractMessageLis
 	@Override
 	public String toString() {
 		return "ConcurrentMessageListenerContainer [concurrency=" + this.concurrency + ", beanName="
-				+ this.getBeanName() + ", running=" + this.isRunning() + "]";
+	+ this.getBeanName() + ", running=" + this.isRunning() + "]";
 	}
 
 }

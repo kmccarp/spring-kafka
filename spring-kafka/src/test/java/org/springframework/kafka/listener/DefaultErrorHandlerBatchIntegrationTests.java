@@ -53,11 +53,7 @@ import org.springframework.util.backoff.FixedBackOff;
  * @since 2.8
  *
  */
-@EmbeddedKafka(topics = {
-		DefaultErrorHandlerBatchIntegrationTests.topic1,
-		DefaultErrorHandlerBatchIntegrationTests.topic1DLT,
-		DefaultErrorHandlerBatchIntegrationTests.topic2,
-		DefaultErrorHandlerBatchIntegrationTests.topic2DLT })
+@EmbeddedKafka(topics = {DefaultErrorHandlerBatchIntegrationTests.topic1,DefaultErrorHandlerBatchIntegrationTests.topic1DLT,DefaultErrorHandlerBatchIntegrationTests.topic2,DefaultErrorHandlerBatchIntegrationTests.topic2DLT})
 public class DefaultErrorHandlerBatchIntegrationTests {
 
 	public static final String topic1 = "dehTopic1";
@@ -100,11 +96,11 @@ public class DefaultErrorHandlerBatchIntegrationTests {
 		});
 
 		KafkaMessageListenerContainer<Integer, String> container =
-				new KafkaMessageListenerContainer<>(cf, containerProps);
+	new KafkaMessageListenerContainer<>(cf, containerProps);
 		container.setBeanName("recoverBatch");
 		DeadLetterPublishingRecoverer recoverer =
-				new DeadLetterPublishingRecoverer(template,
-						(r, e) -> new TopicPartition(topic1DLT, r.partition()));
+	new DeadLetterPublishingRecoverer(template,
+(r, e) -> new TopicPartition(topic1DLT, r.partition()));
 		DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 1));
 		container.setCommonErrorHandler(errorHandler);
 		final CountDownLatch stopLatch = new CountDownLatch(1);
@@ -122,17 +118,17 @@ public class DefaultErrorHandlerBatchIntegrationTests {
 		template.send(topic1, 0, 0, "fiz");
 		AtomicReference<SendResult<Object, Object>> sendResult = new AtomicReference<>();
 		CompletableFuture<SendResult<Object, Object>> future = template.send(topic1, 0, 0, "buz")
-				.whenComplete((sr, thrown) -> sendResult.set(sr));
+	.whenComplete((sr, thrown) -> sendResult.set(sr));
 		future.get(10, TimeUnit.SECONDS);
 		assertThat(sendResult.get()).isNotNull();
 		assertThat(latch.await(60, TimeUnit.SECONDS)).isTrue();
 		assertThat(data).hasSize(13);
 		assertThat(data)
-				.extracting(rec -> rec.value())
-				.containsExactly(
-					"foo", "bar", "baz", "qux", "fiz", "buz",
-					"baz", "qux", "fiz", "buz",
-					"qux", "fiz", "buz");
+	.extracting(rec -> rec.value())
+	.containsExactly(
+"foo", "bar", "baz", "qux", "fiz", "buz",
+"baz", "qux", "fiz", "buz",
+"qux", "fiz", "buz");
 
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, "recoverBatch.dlt");
 		DefaultKafkaConsumerFactory<Integer, String> dltcf = new DefaultKafkaConsumerFactory<>(props);
@@ -171,22 +167,22 @@ public class DefaultErrorHandlerBatchIntegrationTests {
 		});
 
 		KafkaMessageListenerContainer<Integer, String> container =
-				new KafkaMessageListenerContainer<>(cf, containerProps);
+	new KafkaMessageListenerContainer<>(cf, containerProps);
 		container.setBeanName("recoverBatch");
 		final AtomicBoolean failRecovery = new AtomicBoolean(true);
 		DeadLetterPublishingRecoverer recoverer =
-				new DeadLetterPublishingRecoverer(template,
-						(r, e) -> new TopicPartition(topic2DLT, r.partition())) {
+	new DeadLetterPublishingRecoverer(template,
+(r, e) -> new TopicPartition(topic2DLT, r.partition())) {
 
-			@Override
-			public void accept(ConsumerRecord<?, ?> record, Consumer<?, ?> consumer, Exception exception) {
-				if (failRecovery.getAndSet(false)) {
-					throw new RuntimeException("Recovery failed");
-				}
-				super.accept(record, consumer, exception);
+		@Override
+		public void accept(ConsumerRecord<?, ?> record, Consumer<?, ?> consumer, Exception exception) {
+			if (failRecovery.getAndSet(false)) {
+				throw new RuntimeException("Recovery failed");
 			}
+			super.accept(record, consumer, exception);
+		}
 
-		};
+	};
 		DefaultErrorHandler errorHandler = new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 1));
 		errorHandler.setResetStateOnRecoveryFailure(false);
 		container.setCommonErrorHandler(errorHandler);
@@ -208,13 +204,13 @@ public class DefaultErrorHandlerBatchIntegrationTests {
 		assertThat(latch.await(60, TimeUnit.SECONDS)).isTrue();
 		assertThat(data).hasSize(17);
 		assertThat(data)
-				.extracting(rec -> rec.value())
-				.containsExactly(
-					"foo", "bar", "baz", "qux", "fiz", "buz",
-					"baz", "qux", "fiz", "buz",
-					// recovery failed first time so we get the whole batch again
-					"baz", "qux", "fiz", "buz",
-					"qux", "fiz", "buz");
+	.extracting(rec -> rec.value())
+	.containsExactly(
+"foo", "bar", "baz", "qux", "fiz", "buz",
+"baz", "qux", "fiz", "buz",
+// recovery failed first time so we get the whole batch again
+"baz", "qux", "fiz", "buz",
+"qux", "fiz", "buz");
 
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, "recoverBatch2.dlt");
 		DefaultKafkaConsumerFactory<Integer, String> dltcf = new DefaultKafkaConsumerFactory<>(props);

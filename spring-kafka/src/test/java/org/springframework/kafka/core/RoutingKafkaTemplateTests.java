@@ -40,7 +40,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
  */
 public class RoutingKafkaTemplateTests {
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({"unchecked"})
 	@Test
 	public void routing() {
 		Producer<Object, Object> p1 = mock(Producer.class);

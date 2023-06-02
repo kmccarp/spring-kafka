@@ -41,6 +41,6 @@ public interface RecoveryStrategy {
 	 * @throws InterruptedException if the thread is interrupted.
 	 */
 	boolean recovered(ConsumerRecord<?, ?> record, Exception ex, @Nullable MessageListenerContainer container,
-			@Nullable Consumer<?, ?> consumer) throws InterruptedException;
+@Nullable Consumer<?, ?> consumer) throws InterruptedException;
 
 }

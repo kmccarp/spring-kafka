@@ -84,7 +84,7 @@ public class CommonContainerStoppingErrorHandler extends KafkaExceptionLogLevelA
 
 	@Override
 	public void handleOtherException(Exception thrownException, Consumer<?, ?> consumer,
-			MessageListenerContainer container, boolean batchListener) {
+MessageListenerContainer container, boolean batchListener) {
 
 		stopContainer(container, thrownException);
 	}
@@ -92,14 +92,14 @@ public class CommonContainerStoppingErrorHandler extends KafkaExceptionLogLevelA
 
 	@Override
 	public void handleRemaining(Exception thrownException, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		stopContainer(container, thrownException);
 	}
 
 	@Override
 	public void handleBatch(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener) {
+MessageListenerContainer container, Runnable invokeListener) {
 
 		stopContainer(container, thrownException);
 	}

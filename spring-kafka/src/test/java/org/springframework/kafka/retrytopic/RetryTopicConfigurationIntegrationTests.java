@@ -65,14 +65,14 @@ class RetryTopicConfigurationIntegrationTests {
 
 	@Test
 	void includeTopic(@Autowired EmbeddedKafkaBroker broker, @Autowired ConsumerFactory<Integer, String> cf,
-			@Autowired KafkaTemplate<Integer, String> template, @Autowired Config config,
-			@Autowired RetryTopicComponentFactory componentFactory) throws InterruptedException {
+@Autowired KafkaTemplate<Integer, String> template, @Autowired Config config,
+@Autowired RetryTopicComponentFactory componentFactory) throws InterruptedException {
 
 		Consumer<Integer, String> consumer = cf.createConsumer("grp2", "");
 		Map<String, List<PartitionInfo>> topics = consumer.listTopics();
 		assertThat(topics.keySet()).contains("RetryTopicConfigurationIntegrationTests.1",
-				"RetryTopicConfigurationIntegrationTests.1-dlt", "RetryTopicConfigurationIntegrationTests.1-retry-100",
-				"RetryTopicConfigurationIntegrationTests.1-retry-110");
+	"RetryTopicConfigurationIntegrationTests.1-dlt", "RetryTopicConfigurationIntegrationTests.1-retry-100",
+	"RetryTopicConfigurationIntegrationTests.1-retry-110");
 		template.send(TOPIC1, "foo");
 		assertThat(config.latch.await(10, TimeUnit.SECONDS)).isTrue();
 		verify(componentFactory).destinationTopicResolver();
@@ -100,10 +100,10 @@ class RetryTopicConfigurationIntegrationTests {
 
 		@Bean
 		KafkaListenerContainerFactory<?> kafkaListenerContainerFactory(KafkaTemplate<Integer, String> template,
-				ConsumerFactory<Integer, String> consumerFactory) {
+	ConsumerFactory<Integer, String> consumerFactory) {
 
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory);
 			factory.setReplyTemplate(template);
 			return factory;
@@ -112,7 +112,7 @@ class RetryTopicConfigurationIntegrationTests {
 		@Bean
 		ConsumerFactory<Integer, String> consumerFactory(EmbeddedKafkaBroker embeddedKafka) {
 			return new DefaultKafkaConsumerFactory<>(
-					KafkaTestUtils.consumerProps("retryConfig", "false", embeddedKafka));
+		KafkaTestUtils.consumerProps("retryConfig", "false", embeddedKafka));
 		}
 
 		@Bean
@@ -133,10 +133,10 @@ class RetryTopicConfigurationIntegrationTests {
 		@Bean
 		RetryTopicConfiguration retryTopicConfiguration1(KafkaTemplate<Integer, String> template) {
 			return RetryTopicConfigurationBuilder.newInstance()
-					.includeTopic(TOPIC1)
-					.exponentialBackoff(100, 1.1, 110)
-					.dltHandlerMethod("retryTopicConfigurationIntegrationTests.Config", "dlt")
-					.create(template);
+		.includeTopic(TOPIC1)
+		.exponentialBackoff(100, 1.1, 110)
+		.dltHandlerMethod("retryTopicConfigurationIntegrationTests.Config", "dlt")
+		.create(template);
 		}
 
 		@Bean

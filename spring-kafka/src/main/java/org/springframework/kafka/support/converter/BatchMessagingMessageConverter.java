@@ -140,10 +140,10 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 
 	@Override // NOSONAR
 	public Message<?> toMessage(List<ConsumerRecord<?, ?>> records, @Nullable Acknowledgment acknowledgment,
-			Consumer<?, ?> consumer, Type type) {
+Consumer<?, ?> consumer, Type type) {
 
 		KafkaMessageHeaders kafkaMessageHeaders = new KafkaMessageHeaders(this.generateMessageId,
-				this.generateTimestamp);
+	this.generateTimestamp);
 
 		Map<String, Object> rawHeaders = kafkaMessageHeaders.getRawHeaders();
 		List<Object> payloads = new ArrayList<>();
@@ -159,7 +159,7 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 		List<ConversionException> conversionFailures = new ArrayList<>();
 		addToRawHeaders(rawHeaders, convertedHeaders, natives, raws, conversionFailures);
 		commonHeaders(acknowledgment, consumer, rawHeaders, keys, topics, partitions, offsets, timestampTypes,
-				timestamps);
+	timestamps);
 		boolean logged = false;
 		String info = null;
 		for (ConsumerRecord<?, ?> record : records) {
@@ -184,9 +184,9 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 			else {
 				if (!logged) {
 					this.logger.debug(() ->
-						"No header mapper is available; Jackson is required for the default mapper; "
-						+ "headers (if present) are not mapped but provided raw in "
-						+ KafkaHeaders.NATIVE_HEADERS);
+				"No header mapper is available; Jackson is required for the default mapper; "
+			+ "headers (if present) are not mapped but provided raw in "
+			+ KafkaHeaders.NATIVE_HEADERS);
 					logged = true;
 				}
 				natives.add(record.headers());
@@ -202,7 +202,7 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 	}
 
 	private void addToRawHeaders(Map<String, Object> rawHeaders, List<Map<String, Object>> convertedHeaders,
-			List<Headers> natives, List<ConsumerRecord<?, ?>> raws, List<ConversionException> conversionFailures) {
+List<Headers> natives, List<ConsumerRecord<?, ?>> raws, List<ConversionException> conversionFailures) {
 
 		if (this.headerMapper != null) {
 			rawHeaders.put(KafkaHeaders.BATCH_CONVERTED_HEADERS, convertedHeaders);
@@ -218,8 +218,8 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 
 	private Object obtainPayload(Type type, ConsumerRecord<?, ?> record, List<ConversionException> conversionFailures) {
 		return this.recordConverter == null || !containerType(type)
-				? extractAndConvertValue(record, type)
-				: convert(record, type, conversionFailures);
+	? extractAndConvertValue(record, type)
+	: convert(record, type, conversionFailures);
 	}
 
 	@Override
@@ -250,7 +250,7 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 	protected Object convert(ConsumerRecord<?, ?> record, Type type, List<ConversionException> conversionFailures) {
 		try {
 			Object payload = this.recordConverter
-				.toMessage(record, null, null, ((ParameterizedType) type).getActualTypeArguments()[0]).getPayload();
+		.toMessage(record, null, null, ((ParameterizedType) type).getActualTypeArguments()[0]).getPayload();
 			conversionFailures.add(null);
 			return payload;
 		}
@@ -271,7 +271,7 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 				return null;
 			}
 			throw new ConversionException("The batch converter can only report conversion failures to the listener "
-					+ "if the record.value() is byte[], Bytes, or String", ex);
+		+ "if the record.value() is byte[], Bytes, or String", ex);
 		}
 	}
 
@@ -283,7 +283,7 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 	 */
 	private boolean containerType(Type type) {
 		return type instanceof ParameterizedType
-				&& ((ParameterizedType) type).getActualTypeArguments().length == 1;
+	&& ((ParameterizedType) type).getActualTypeArguments().length == 1;
 	}
 
 }

@@ -100,25 +100,25 @@ public class DefaultErrorHandlerRecordTests {
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		assertThat(handler.handleOne(illegalState, record1, consumer, mock(MessageListenerContainer.class))).isFalse();
 		assertThat(handler.handleOne(new DeserializationException("intended", null, false, illegalState), record1,
-				consumer, mock(MessageListenerContainer.class))).isTrue();
+	consumer, mock(MessageListenerContainer.class))).isTrue();
 		assertThat(recovered.get()).isSameAs(record1);
 		recovered.set(null);
 		assertThat(handler.handleOne(new ConversionException("intended", null), record1,
-				consumer, mock(MessageListenerContainer.class))).isTrue();
+	consumer, mock(MessageListenerContainer.class))).isTrue();
 		assertThat(recovered.get()).isSameAs(record1);
 		handler.addNotRetryableExceptions(IllegalStateException.class);
 		recovered.set(null);
 		recovererShouldFail.set(true);
 		assertThat(handler.handleOne(illegalState, record1, consumer, mock(MessageListenerContainer.class))).isFalse();
 		assertThat(handler.handleOne(new DeserializationException("intended", null, false, illegalState), record1,
-				consumer, mock(MessageListenerContainer.class))).isTrue();
+	consumer, mock(MessageListenerContainer.class))).isTrue();
 		assertThat(recovered.get()).isSameAs(record1);
 		verify(consumer, never()).seek(any(), anyLong());
 		assertThat(failedDeliveryAttempt.get()).isEqualTo(1);
 		assertThat(recoveryFailureEx.get())
-				.isInstanceOf(RuntimeException.class)
-				.extracting(ex -> ex.getMessage())
-				.isEqualTo("test recoverer failure");
+	.isInstanceOf(RuntimeException.class)
+	.extracting(ex -> ex.getMessage())
+	.isEqualTo("test recoverer failure");
 		assertThat(isRecovered.get()).isTrue();
 	}
 
@@ -159,20 +159,20 @@ public class DefaultErrorHandlerRecordTests {
 		IllegalStateException illegalState = new IllegalStateException();
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() -> handler.handleRemaining(illegalState, records,
-					consumer, mock(MessageListenerContainer.class)))
-				.withCause(illegalState);
+	consumer, mock(MessageListenerContainer.class)))
+	.withCause(illegalState);
 		handler.handleRemaining(new DeserializationException("intended", null, false, illegalState), records,
-				consumer, mock(MessageListenerContainer.class));
+	consumer, mock(MessageListenerContainer.class));
 		assertThat(recovered.get()).isSameAs(record1);
 		recovered.set(null);
 		handler.handleRemaining(new ConversionException("intended", null), records,
-				consumer, mock(MessageListenerContainer.class));
+	consumer, mock(MessageListenerContainer.class));
 		assertThat(recovered.get()).isSameAs(record1);
 		handler.addNotRetryableExceptions(IllegalStateException.class);
 		recovered.set(null);
 		recovererShouldFail.set(true);
 		assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-			handler.handleRemaining(illegalState, records, consumer, mock(MessageListenerContainer.class)));
+	handler.handleRemaining(illegalState, records, consumer, mock(MessageListenerContainer.class)));
 		handler.handleRemaining(illegalState, records, consumer, mock(MessageListenerContainer.class));
 		assertThat(recovered.get()).isSameAs(record1);
 		InOrder inOrder = inOrder(consumer);
@@ -183,9 +183,9 @@ public class DefaultErrorHandlerRecordTests {
 		inOrder.verifyNoMoreInteractions();
 		assertThat(failedDeliveryAttempt.get()).isEqualTo(1);
 		assertThat(recoveryFailureEx.get())
-				.isInstanceOf(RuntimeException.class)
-				.extracting(ex -> ex.getMessage())
-				.isEqualTo("test recoverer failure");
+	.isInstanceOf(RuntimeException.class)
+	.extracting(ex -> ex.getMessage())
+	.isEqualTo("test recoverer failure");
 		assertThat(isRecovered.get()).isTrue();
 	}
 
@@ -194,7 +194,7 @@ public class DefaultErrorHandlerRecordTests {
 		DefaultErrorHandler handler = new DefaultErrorHandler();
 		SerializationException thrownException = new SerializationException();
 		assertThatIllegalStateException().isThrownBy(() -> handler.handleRemaining(thrownException, null, null, null))
-				.withCause(thrownException);
+	.withCause(thrownException);
 	}
 
 	@Test
@@ -202,8 +202,8 @@ public class DefaultErrorHandlerRecordTests {
 		DefaultErrorHandler handler = new DefaultErrorHandler();
 		ClassCastException thrownException = new ClassCastException();
 		assertThatIllegalStateException().isThrownBy(
-					() -> handler.handleRemaining(thrownException, Collections.emptyList(), null, null))
-				.withCause(thrownException);
+	() -> handler.handleRemaining(thrownException, Collections.emptyList(), null, null))
+	.withCause(thrownException);
 	}
 
 	@Test
@@ -218,7 +218,7 @@ public class DefaultErrorHandlerRecordTests {
 		given(container.isRunning()).willReturn(false);
 		long t1 = System.currentTimeMillis();
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() -> handler.handleRemaining(illegalState,
-						records, consumer, container));
+	records, consumer, container));
 		assertThat(System.currentTimeMillis() < t1 + 5_000);
 	}
 
@@ -234,7 +234,7 @@ public class DefaultErrorHandlerRecordTests {
 		given(container.isRunning()).willReturn(true);
 		long t1 = System.currentTimeMillis();
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() -> handler.handleRemaining(illegalState,
-						records, consumer, container));
+	records, consumer, container));
 		assertThat(System.currentTimeMillis() >= t1 + 200);
 	}
 
@@ -243,8 +243,9 @@ public class DefaultErrorHandlerRecordTests {
 		ThreadPoolTaskScheduler sched = new ThreadPoolTaskScheduler();
 		sched.initialize();
 		ListenerContainerPauseService pauser = new ListenerContainerPauseService(null, sched);
-		DefaultErrorHandler handler = new DefaultErrorHandler((rec, ex) -> { }, new FixedBackOff(200L, 1L),
-				new ContainerPausingBackOffHandler(pauser));
+		DefaultErrorHandler handler = new DefaultErrorHandler((rec, ex) -> {
+	}, new FixedBackOff(200L, 1L),
+	new ContainerPausingBackOffHandler(pauser));
 		MessageListenerContainer container = mock(MessageListenerContainer.class);
 		CountDownLatch latch = new CountDownLatch(1);
 		AtomicBoolean paused = new AtomicBoolean();

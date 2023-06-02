@@ -70,12 +70,12 @@ import org.springframework.util.ObjectUtils;
 public class DeadLetterPublishingRecoverer extends ExceptionClassifier implements ConsumerAwareRecordRecoverer {
 
 	private static final BiFunction<ConsumerRecord<?, ?>, Exception, Headers> DEFAULT_HEADERS_FUNCTION =
-			(rec, ex) -> null;
+(rec, ex) -> null;
 
 	protected final LogAccessor logger = new LogAccessor(LogFactory.getLog(getClass())); // NOSONAR
 
 	private static final BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition>
-		DEFAULT_DESTINATION_RESOLVER = (cr, e) -> new TopicPartition(cr.topic() + ".DLT", cr.partition());
+DEFAULT_DESTINATION_RESOLVER = (cr, e) -> new TopicPartition(cr.topic() + ".DLT", cr.partition());
 
 	private static final long FIVE = 5L;
 
@@ -135,7 +135,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	 * @param destinationResolver the resolving function.
 	 */
 	public DeadLetterPublishingRecoverer(KafkaOperations<? extends Object, ? extends Object> template,
-			BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> destinationResolver) {
+BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> destinationResolver) {
 		this(Collections.singletonMap(Object.class, template), destinationResolver);
 	}
 
@@ -171,20 +171,20 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	 */
 	@SuppressWarnings("unchecked")
 	public DeadLetterPublishingRecoverer(Map<Class<?>, KafkaOperations<? extends Object, ? extends Object>> templates,
-			BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> destinationResolver) {
+BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> destinationResolver) {
 
 		Assert.isTrue(!ObjectUtils.isEmpty(templates), "At least one template is required");
 		Assert.notNull(destinationResolver, "The destinationResolver cannot be null");
 		KafkaOperations<?, ?> firstTemplate = templates.values().iterator().next();
 		this.templateResolver = templates.size() == 1
-				? producerRecord -> firstTemplate
-				: producerRecord -> findTemplateForValue(producerRecord.value(), templates);
+	? producerRecord -> firstTemplate
+	: producerRecord -> findTemplateForValue(producerRecord.value(), templates);
 		this.transactional = firstTemplate.isTransactional();
 		Boolean tx = this.transactional;
 		Assert.isTrue(templates.values()
-			.stream()
-			.map(t -> t.isTransactional())
-			.allMatch(t -> t.equals(tx)), "All templates must have the same setting for transactional");
+	.stream()
+	.map(t -> t.isTransactional())
+	.allMatch(t -> t.equals(tx)), "All templates must have the same setting for transactional");
 		this.destinationResolver = destinationResolver;
 	}
 
@@ -202,8 +202,8 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	* @since 2.7
 	*/
 	public DeadLetterPublishingRecoverer(Function<ProducerRecord<?, ?>, KafkaOperations<?, ?>> templateResolver,
-										boolean transactional,
-										BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> destinationResolver) {
+boolean transactional,
+BiFunction<ConsumerRecord<?, ?>, Exception, TopicPartition> destinationResolver) {
 
 		Assert.notNull(templateResolver, "The templateResolver cannot be null");
 		Assert.notNull(destinationResolver, "The destinationResolver cannot be null");
@@ -237,7 +237,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 		Assert.notNull(headersFunction, "'headersFunction' cannot be null");
 		if (!this.headersFunction.equals(DEFAULT_HEADERS_FUNCTION)) {
 			this.logger.warn(() -> "Replacing custom headers function: " + this.headersFunction
-					+ ", consider using addHeadersFunction() if you need multiple functions");
+		+ ", consider using addHeadersFunction() if you need multiple functions");
 		}
 		this.headersFunction = headersFunction;
 	}
@@ -457,35 +457,35 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 		if (tp == null) {
 			maybeThrow(record, exception);
 			this.logger.debug(() -> "Recovery of " + KafkaUtils.format(record)
-					+ " skipped because destination resolver returned null");
+		+ " skipped because destination resolver returned null");
 			return;
 		}
 		if (this.skipSameTopicFatalExceptions
-				&& tp.topic().equals(record.topic())
-				&& !getClassifier().classify(exception)) {
+	&& tp.topic().equals(record.topic())
+	&& !getClassifier().classify(exception)) {
 			this.logger.error("Recovery of " + KafkaUtils.format(record)
-					+ " skipped because not retryable exception " + exception.toString()
-					+ " and the destination resolver routed back to the same topic");
+		+ " skipped because not retryable exception " + exception.toString()
+		+ " and the destination resolver routed back to the same topic");
 			return;
 		}
 		if (consumer != null && this.verifyPartition) {
 			tp = checkPartition(tp, consumer);
 		}
 		DeserializationException vDeserEx = ListenerUtils.getExceptionFromHeader(record,
-				SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER, this.logger);
+	SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER, this.logger);
 		DeserializationException kDeserEx = ListenerUtils.getExceptionFromHeader(record,
-				SerializationUtils.KEY_DESERIALIZER_EXCEPTION_HEADER, this.logger);
+	SerializationUtils.KEY_DESERIALIZER_EXCEPTION_HEADER, this.logger);
 		Headers headers = new RecordHeaders(record.headers().toArray());
 		addAndEnhanceHeaders(record, exception, vDeserEx, kDeserEx, headers);
 		ProducerRecord<Object, Object> outRecord = createProducerRecord(record, tp, headers,
-				kDeserEx == null ? null : kDeserEx.getData(), vDeserEx == null ? null : vDeserEx.getData());
+	kDeserEx == null ? null : kDeserEx.getData(), vDeserEx == null ? null : vDeserEx.getData());
 		KafkaOperations<Object, Object> kafkaTemplate =
-				(KafkaOperations<Object, Object>) this.templateResolver.apply(outRecord);
+	(KafkaOperations<Object, Object>) this.templateResolver.apply(outRecord);
 		sendOrThrow(outRecord, kafkaTemplate, record);
 	}
 
 	private void addAndEnhanceHeaders(ConsumerRecord<?, ?> record, Exception exception,
-			@Nullable DeserializationException vDeserEx, @Nullable DeserializationException kDeserEx, Headers headers) {
+@Nullable DeserializationException vDeserEx, @Nullable DeserializationException kDeserEx, Headers headers) {
 
 		if (kDeserEx != null) {
 			if (!this.retainExceptionHeader) {
@@ -506,7 +506,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	}
 
 	private void sendOrThrow(ProducerRecord<Object, Object> outRecord,
-			@Nullable KafkaOperations<Object, Object> kafkaTemplate, ConsumerRecord<?, ?> inRecord) {
+@Nullable KafkaOperations<Object, Object> kafkaTemplate, ConsumerRecord<?, ?> inRecord) {
 
 		if (kafkaTemplate != null) {
 			send(outRecord, kafkaTemplate, inRecord);
@@ -518,8 +518,8 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 
 	private void maybeThrow(ConsumerRecord<?, ?> record, Exception exception) {
 		String message = String.format("No destination returned for record %s and exception %s. " +
-				"failIfNoDestinationReturned: %s", KafkaUtils.format(record), exception,
-				this.throwIfNoDestinationReturned);
+	"failIfNoDestinationReturned: %s", KafkaUtils.format(record), exception,
+	this.throwIfNoDestinationReturned);
 		this.logger.warn(message);
 		if (this.throwIfNoDestinationReturned) {
 			throw new IllegalArgumentException(message);
@@ -534,7 +534,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	 * @since 2.7
 	 */
 	protected void send(ProducerRecord<Object, Object> outRecord, KafkaOperations<Object, Object> kafkaTemplate,
-			ConsumerRecord<?, ?> inRecord) {
+ConsumerRecord<?, ?> inRecord) {
 
 		if (this.transactional && !kafkaTemplate.inTransaction() && !kafkaTemplate.isAllowNonTransactional()) {
 			kafkaTemplate.executeInTransaction(t -> {
@@ -560,7 +560,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 			boolean anyMatch = partitions.stream().anyMatch(pi -> pi.partition() == tp.partition());
 			if (!anyMatch) {
 				this.logger.warn(() -> "Destination resolver returned non-existent partition " + tp
-						+ ", KafkaProducer will determine partition to use for this topic");
+			+ ", KafkaProducer will determine partition to use for this topic");
 				return new TopicPartition(tp.topic(), -1);
 			}
 			return tp;
@@ -573,7 +573,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 
 	@SuppressWarnings("unchecked")
 	private KafkaOperations<Object, Object> findTemplateForValue(@Nullable Object value,
-			Map<Class<?>, KafkaOperations<?, ?>> templates) {
+Map<Class<?>, KafkaOperations<?, ?>> templates) {
 
 		if (value == null) {
 			KafkaOperations<?, ?> operations = templates.get(Void.class);
@@ -585,17 +585,17 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 			}
 		}
 		Optional<Class<?>> key = templates.keySet()
-			.stream()
-			.filter((k) -> k.isAssignableFrom(value.getClass()))
-			.findFirst();
+	.stream()
+	.filter((k) -> k.isAssignableFrom(value.getClass()))
+	.findFirst();
 		if (key.isPresent()) {
 			return (KafkaOperations<Object, Object>) templates.get(key.get());
 		}
 		this.logger.warn(() -> "Failed to find a template for " + value.getClass() + " attempting to use the last entry");
 		return (KafkaOperations<Object, Object>) templates.values()
-				.stream()
-				.reduce((first,  second) -> second)
-				.get();
+	.stream()
+	.reduce((first, second) -> second)
+	.get();
 	}
 
 	/**
@@ -614,12 +614,12 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	 * @see KafkaHeaders
 	 */
 	protected ProducerRecord<Object, Object> createProducerRecord(ConsumerRecord<?, ?> record,
-			TopicPartition topicPartition, Headers headers, @Nullable byte[] key, @Nullable byte[] value) {
+TopicPartition topicPartition, Headers headers, @Nullable byte[] key, @Nullable byte[] value) {
 
 		return new ProducerRecord<>(topicPartition.topic(),
-				topicPartition.partition() < 0 ? null : topicPartition.partition(),
-				key != null ? key : record.key(),
-				value != null ? value : record.value(), headers);
+	topicPartition.partition() < 0 ? null : topicPartition.partition(),
+	key != null ? key : record.key(),
+	value != null ? value : record.value(), headers);
 	}
 
 	/**
@@ -630,7 +630,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	 * @since 2.2.5
 	 */
 	protected void publish(ProducerRecord<Object, Object> outRecord, KafkaOperations<Object, Object> kafkaTemplate,
-			ConsumerRecord<?, ?> inRecord) {
+ConsumerRecord<?, ?> inRecord) {
 
 		CompletableFuture<SendResult<Object, Object>> sendResult = null;
 		try {
@@ -638,7 +638,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 			sendResult.whenComplete((result, ex) -> {
 				if (ex == null) {
 					this.logger.debug(() -> "Successful dead-letter publication: "
-							+ KafkaUtils.format(inRecord) + " to " + result.getRecordMetadata());
+				+ KafkaUtils.format(inRecord) + " to " + result.getRecordMetadata());
 				}
 				else {
 					this.logger.error(ex, () -> pubFailMessage(outRecord, inRecord));
@@ -661,8 +661,8 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	 * @param inRecord the original consumer record.
 	 */
 	protected void verifySendResult(KafkaOperations<Object, Object> kafkaTemplate,
-			ProducerRecord<Object, Object> outRecord,
-			@Nullable CompletableFuture<SendResult<Object, Object>> sendResult, ConsumerRecord<?, ?> inRecord) {
+ProducerRecord<Object, Object> outRecord,
+@Nullable CompletableFuture<SendResult<Object, Object>> sendResult, ConsumerRecord<?, ?> inRecord) {
 
 		Duration sendTimeout = determineSendTimeout(kafkaTemplate);
 		if (sendResult == null) {
@@ -682,7 +682,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 
 	private String pubFailMessage(ProducerRecord<Object, Object> outRecord, ConsumerRecord<?, ?> inRecord) {
 		return "Dead-letter publication to "
-				+ outRecord.topic() + " failed for: " + KafkaUtils.format(inRecord);
+	+ outRecord.topic() + " failed for: " + KafkaUtils.format(inRecord);
 	}
 
 	/**
@@ -704,7 +704,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 			}
 			if (props != null) { // NOSONAR - will only occur in mock tests
 				return KafkaUtils.determineSendTimeout(props, this.timeoutBuffer,
-						this.waitForSendResultTimeout.toMillis());
+			this.waitForSendResultTimeout.toMillis());
 			}
 		}
 		return Duration.ofSeconds(THIRTY);
@@ -725,61 +725,61 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 
 	private void maybeAddOriginalHeaders(Headers kafkaHeaders, ConsumerRecord<?, ?> record, Exception ex) {
 		maybeAddHeader(kafkaHeaders, this.headerNames.original.topicHeader,
-				() -> record.topic().getBytes(StandardCharsets.UTF_8), HeaderNames.HeadersToAdd.TOPIC);
+	() -> record.topic().getBytes(StandardCharsets.UTF_8), HeaderNames.HeadersToAdd.TOPIC);
 		maybeAddHeader(kafkaHeaders, this.headerNames.original.partitionHeader,
-				() -> ByteBuffer.allocate(Integer.BYTES).putInt(record.partition()).array(),
-				HeaderNames.HeadersToAdd.PARTITION);
+	() -> ByteBuffer.allocate(Integer.BYTES).putInt(record.partition()).array(),
+	HeaderNames.HeadersToAdd.PARTITION);
 		maybeAddHeader(kafkaHeaders, this.headerNames.original.offsetHeader,
-				() -> ByteBuffer.allocate(Long.BYTES).putLong(record.offset()).array(),
-				HeaderNames.HeadersToAdd.OFFSET);
+	() -> ByteBuffer.allocate(Long.BYTES).putLong(record.offset()).array(),
+	HeaderNames.HeadersToAdd.OFFSET);
 		maybeAddHeader(kafkaHeaders, this.headerNames.original.timestampHeader,
-				() -> ByteBuffer.allocate(Long.BYTES).putLong(record.timestamp()).array(), HeaderNames.HeadersToAdd.TS);
+	() -> ByteBuffer.allocate(Long.BYTES).putLong(record.timestamp()).array(), HeaderNames.HeadersToAdd.TS);
 		maybeAddHeader(kafkaHeaders, this.headerNames.original.timestampTypeHeader,
-				() -> record.timestampType().toString().getBytes(StandardCharsets.UTF_8),
-				HeaderNames.HeadersToAdd.TS_TYPE);
+	() -> record.timestampType().toString().getBytes(StandardCharsets.UTF_8),
+	HeaderNames.HeadersToAdd.TS_TYPE);
 		if (ex instanceof ListenerExecutionFailedException) {
 			String consumerGroup = ((ListenerExecutionFailedException) ex).getGroupId();
 			if (consumerGroup != null) {
 				maybeAddHeader(kafkaHeaders, this.headerNames.original.consumerGroup,
-						() -> consumerGroup.getBytes(StandardCharsets.UTF_8), HeaderNames.HeadersToAdd.GROUP);
+			() -> consumerGroup.getBytes(StandardCharsets.UTF_8), HeaderNames.HeadersToAdd.GROUP);
 			}
 		}
 	}
 
 	private void maybeAddHeader(Headers kafkaHeaders, String header, Supplier<byte[]> valueSupplier,
-			HeaderNames.HeadersToAdd hta) {
+HeaderNames.HeadersToAdd hta) {
 
 		if (this.whichHeaders.contains(hta)
-				&& (this.appendOriginalHeaders || kafkaHeaders.lastHeader(header) == null)) {
+	&& (this.appendOriginalHeaders || kafkaHeaders.lastHeader(header) == null)) {
 			kafkaHeaders.add(header, valueSupplier.get());
 		}
 	}
 
 	private void addExceptionInfoHeaders(Headers kafkaHeaders, Exception exception, boolean isKey,
-			HeaderNames names) {
+HeaderNames names) {
 
 		appendOrReplace(kafkaHeaders,
-				isKey ? names.exceptionInfo.keyExceptionFqcn : names.exceptionInfo.exceptionFqcn,
-				() -> exception.getClass().getName().getBytes(StandardCharsets.UTF_8),
-				HeaderNames.HeadersToAdd.EXCEPTION);
+	isKey ? names.exceptionInfo.keyExceptionFqcn : names.exceptionInfo.exceptionFqcn,
+	() -> exception.getClass().getName().getBytes(StandardCharsets.UTF_8),
+	HeaderNames.HeadersToAdd.EXCEPTION);
 		Exception cause = ErrorHandlingUtils.findRootCause(exception);
 		if (cause != null) {
 			appendOrReplace(kafkaHeaders,
-					names.exceptionInfo.exceptionCauseFqcn,
-					() -> cause.getClass().getName().getBytes(StandardCharsets.UTF_8),
-					HeaderNames.HeadersToAdd.EX_CAUSE);
+		names.exceptionInfo.exceptionCauseFqcn,
+		() -> cause.getClass().getName().getBytes(StandardCharsets.UTF_8),
+		HeaderNames.HeadersToAdd.EX_CAUSE);
 		}
 		String message = buildMessage(exception, cause);
 		if (message != null) {
 			appendOrReplace(kafkaHeaders,
-					isKey ? names.exceptionInfo.keyExceptionMessage : names.exceptionInfo.exceptionMessage,
-					() -> message.getBytes(StandardCharsets.UTF_8),
-					HeaderNames.HeadersToAdd.EX_MSG);
+		isKey ? names.exceptionInfo.keyExceptionMessage : names.exceptionInfo.exceptionMessage,
+		() -> message.getBytes(StandardCharsets.UTF_8),
+		HeaderNames.HeadersToAdd.EX_MSG);
 		}
 		appendOrReplace(kafkaHeaders,
-				isKey ? names.exceptionInfo.keyExceptionStacktrace : names.exceptionInfo.exceptionStacktrace,
-				() -> getStackTraceAsString(exception).getBytes(StandardCharsets.UTF_8),
-				HeaderNames.HeadersToAdd.EX_STACKTRACE);
+	isKey ? names.exceptionInfo.keyExceptionStacktrace : names.exceptionInfo.exceptionStacktrace,
+	() -> getStackTraceAsString(exception).getBytes(StandardCharsets.UTF_8),
+	HeaderNames.HeadersToAdd.EX_STACKTRACE);
 	}
 
 	@Nullable
@@ -803,7 +803,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	}
 
 	private void appendOrReplace(Headers headers, String header, Supplier<byte[]> valueSupplier,
-			HeaderNames.HeadersToAdd hta) {
+HeaderNames.HeadersToAdd hta) {
 
 		if (this.whichHeaders.contains(hta)) {
 			if (this.stripPreviousExceptionHeaders) {
@@ -828,22 +828,22 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 	 */
 	protected HeaderNames getHeaderNames() {
 		return HeaderNames.Builder
-				.original()
-					.offsetHeader(KafkaHeaders.DLT_ORIGINAL_OFFSET)
-					.timestampHeader(KafkaHeaders.DLT_ORIGINAL_TIMESTAMP)
-					.timestampTypeHeader(KafkaHeaders.DLT_ORIGINAL_TIMESTAMP_TYPE)
-					.topicHeader(KafkaHeaders.DLT_ORIGINAL_TOPIC)
-					.partitionHeader(KafkaHeaders.DLT_ORIGINAL_PARTITION)
-					.consumerGroupHeader(KafkaHeaders.DLT_ORIGINAL_CONSUMER_GROUP)
-				.exception()
-					.keyExceptionFqcn(KafkaHeaders.DLT_KEY_EXCEPTION_FQCN)
-					.exceptionFqcn(KafkaHeaders.DLT_EXCEPTION_FQCN)
-					.exceptionCauseFqcn(KafkaHeaders.DLT_EXCEPTION_CAUSE_FQCN)
-					.keyExceptionMessage(KafkaHeaders.DLT_KEY_EXCEPTION_MESSAGE)
-					.exceptionMessage(KafkaHeaders.DLT_EXCEPTION_MESSAGE)
-					.keyExceptionStacktrace(KafkaHeaders.DLT_KEY_EXCEPTION_STACKTRACE)
-					.exceptionStacktrace(KafkaHeaders.DLT_EXCEPTION_STACKTRACE)
-				.build();
+	.original()
+	.offsetHeader(KafkaHeaders.DLT_ORIGINAL_OFFSET)
+	.timestampHeader(KafkaHeaders.DLT_ORIGINAL_TIMESTAMP)
+	.timestampTypeHeader(KafkaHeaders.DLT_ORIGINAL_TIMESTAMP_TYPE)
+	.topicHeader(KafkaHeaders.DLT_ORIGINAL_TOPIC)
+	.partitionHeader(KafkaHeaders.DLT_ORIGINAL_PARTITION)
+	.consumerGroupHeader(KafkaHeaders.DLT_ORIGINAL_CONSUMER_GROUP)
+	.exception()
+	.keyExceptionFqcn(KafkaHeaders.DLT_KEY_EXCEPTION_FQCN)
+	.exceptionFqcn(KafkaHeaders.DLT_EXCEPTION_FQCN)
+	.exceptionCauseFqcn(KafkaHeaders.DLT_EXCEPTION_CAUSE_FQCN)
+	.keyExceptionMessage(KafkaHeaders.DLT_KEY_EXCEPTION_MESSAGE)
+	.exceptionMessage(KafkaHeaders.DLT_EXCEPTION_MESSAGE)
+	.keyExceptionStacktrace(KafkaHeaders.DLT_KEY_EXCEPTION_STACKTRACE)
+	.exceptionStacktrace(KafkaHeaders.DLT_EXCEPTION_STACKTRACE)
+	.build();
 	}
 
 	/**
@@ -958,11 +958,11 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 			final String consumerGroup; // NOSONAR
 
 			Original(String offsetHeader,
-					String timestampHeader,
-					String timestampTypeHeader,
-					String topicHeader,
-					String partitionHeader,
-					String consumerGroup) {
+		String timestampHeader,
+		String timestampTypeHeader,
+		String topicHeader,
+		String partitionHeader,
+		String consumerGroup) {
 				this.offsetHeader = offsetHeader;
 				this.timestampHeader = timestampHeader;
 				this.timestampTypeHeader = timestampTypeHeader;
@@ -1043,12 +1043,12 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 			final String exceptionStacktrace; // NOSONAR
 
 			ExceptionInfo(String keyExceptionFqcn,
-					String exceptionFqcn,
-					String exceptionCauseFqcn,
-					String keyExceptionMessage,
-					String exceptionMessage,
-					String keyExceptionStacktrace,
-					String exceptionStacktrace) {
+		String exceptionFqcn,
+		String exceptionCauseFqcn,
+		String keyExceptionMessage,
+		String exceptionMessage,
+		String keyExceptionStacktrace,
+		String exceptionStacktrace) {
 				this.keyExceptionFqcn = keyExceptionFqcn;
 				this.exceptionFqcn = exceptionFqcn;
 				this.exceptionCauseFqcn = exceptionCauseFqcn;
@@ -1248,11 +1248,11 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 					Assert.notNull(this.partitionHeader, "partitionHeader cannot be null");
 					Assert.notNull(this.consumerGroupHeader, "consumerGroupHeader cannot be null");
 					return new DeadLetterPublishingRecoverer.HeaderNames.Original(this.offsetHeader,
-							this.timestampHeader,
-							this.timestampTypeHeader,
-							this.topicHeader,
-							this.partitionHeader,
-							this.consumerGroupHeader);
+				this.timestampHeader,
+				this.timestampTypeHeader,
+				this.topicHeader,
+				this.partitionHeader,
+				this.consumerGroupHeader);
 				}
 			}
 
@@ -1313,6 +1313,7 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 					this.exceptionCauseFqcn = exceptionCauseFqcn;
 					return this;
 				}
+
 				/**
 				 * Sets the name of the header that will be used to store the keyExceptionMessage
 				 * of the original record.
@@ -1375,13 +1376,13 @@ public class DeadLetterPublishingRecoverer extends ExceptionClassifier implement
 					Assert.notNull(this.keyExceptionStacktrace, "keyExceptionStacktrace header cannot be null");
 					Assert.notNull(this.exceptionStacktrace, "exceptionStacktrace header cannot be null");
 					return new DeadLetterPublishingRecoverer.HeaderNames(Builder.this.original.build(),
-							new HeaderNames.ExceptionInfo(this.keyExceptionFqcn,
-									this.exceptionFqcn,
-									this.exceptionCauseFqcn,
-									this.keyExceptionMessage,
-									this.exceptionMessage,
-									this.keyExceptionStacktrace,
-									this.exceptionStacktrace));
+				new HeaderNames.ExceptionInfo(this.keyExceptionFqcn,
+			this.exceptionFqcn,
+			this.exceptionCauseFqcn,
+			this.keyExceptionMessage,
+			this.exceptionMessage,
+			this.keyExceptionStacktrace,
+			this.exceptionStacktrace));
 				}
 			}
 		}

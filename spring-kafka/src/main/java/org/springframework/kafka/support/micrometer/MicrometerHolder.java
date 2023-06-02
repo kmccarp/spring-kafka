@@ -65,7 +65,7 @@ public final class MicrometerHolder {
 	 */
 	@Deprecated
 	public MicrometerHolder(@Nullable ApplicationContext context, String name,
-			String timerName, String timerDesc, Map<String, String> tags) {
+String timerName, String timerDesc, Map<String, String> tags) {
 
 		this(context, name, timerName, timerDesc, cr -> tags);
 	}
@@ -80,7 +80,7 @@ public final class MicrometerHolder {
 	 * @since 2.9.7
 	 */
 	public MicrometerHolder(@Nullable ApplicationContext context, String name,
-			String timerName, String timerDesc, Function<Object, Map<String, String>> tagsProvider) {
+String timerName, String timerDesc, Function<Object, Map<String, String>> tagsProvider) {
 
 		Assert.notNull(tagsProvider, "'tagsProvider' cannot be null");
 		if (context == null) {
@@ -101,7 +101,7 @@ public final class MicrometerHolder {
 		}
 		else {
 			throw new IllegalStateException("No micrometer registry present (or more than one and "
-					+ "there is not exactly one marked with @Primary)");
+		+ "there is not exactly one marked with @Primary)");
 		}
 	}
 
@@ -166,10 +166,10 @@ public final class MicrometerHolder {
 
 	private Timer buildTimer(String exception, @Nullable Object record) {
 		Builder builder = Timer.builder(this.timerName)
-			.description(this.timerDesc)
-			.tag("name", this.name)
-			.tag("result", exception.equals(NONE_EXCEPTION_METERS_KEY) ? "success" : "failure")
-			.tag("exception", exception);
+	.description(this.timerDesc)
+	.tag("name", this.name)
+	.tag("result", exception.equals(NONE_EXCEPTION_METERS_KEY) ? "success" : "failure")
+	.tag("exception", exception);
 		Map<String, String> extra = this.tagsProvider.apply(record);
 		if (extra != null && !extra.isEmpty()) {
 			extra.forEach(builder::tag);

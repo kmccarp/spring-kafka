@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  * @author Tomaz Fernandes
  * @since 28/12/20
  */
-public final class AllowDenyCollectionManager<T>  {
+public final class AllowDenyCollectionManager<T> {
 
 	private final Collection<T> allowList;
 
@@ -55,18 +55,18 @@ public final class AllowDenyCollectionManager<T>  {
 
 	public Predicate<T> getDefaultPredicate(Collection<T> allowList, Collection<T> denyList) {
 		return objectToCheck -> !denyList.contains(objectToCheck)
-				&& (allowList.isEmpty() || allowList.contains(objectToCheck));
+	&& (allowList.isEmpty() || allowList.contains(objectToCheck));
 	}
 
 	public boolean isAllowed(T objectToCheck) {
 		return this.predicates
-				.stream()
-				.allMatch(predicate -> predicate.test(objectToCheck));
+	.stream()
+	.allMatch(predicate -> predicate.test(objectToCheck));
 	}
 
 	public boolean areAllowed(T[] objects) {
 		return Arrays.stream(objects)
-				.allMatch(this::isAllowed);
+	.allMatch(this::isAllowed);
 	}
 
 	public static <T> AllowDenyCollectionManager<T> createManagerFor(Collection<T> allowList, Collection<T> denyList) {
@@ -79,6 +79,6 @@ public final class AllowDenyCollectionManager<T>  {
 
 	public boolean hasNoRestrictions() {
 		return this.allowList.isEmpty()
-				&& this.denyList.isEmpty();
+	&& this.denyList.isEmpty();
 	}
 }

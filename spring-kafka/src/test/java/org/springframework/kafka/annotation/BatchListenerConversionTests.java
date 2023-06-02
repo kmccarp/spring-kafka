@@ -80,7 +80,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  */
 @SpringJUnitConfig
 @DirtiesContext
-@EmbeddedKafka(partitions = 1, topics = { "blc1", "blc2", "blc3", "blc4", "blc5", "blc6", "blc6.DLT" })
+@EmbeddedKafka(partitions = 1, topics = {"blc1", "blc2", "blc3", "blc4", "blc5", "blc6", "blc6.DLT"})
 public class BatchListenerConversionTests {
 
 	private static final String DEFAULT_TEST_GROUP_ID = "blc";
@@ -106,7 +106,7 @@ public class BatchListenerConversionTests {
 
 	private void doTest(Listener listener, String topic) throws InterruptedException {
 		this.template.send(new GenericMessage<>(
-				new Foo("bar"), Collections.singletonMap(KafkaHeaders.TOPIC, topic)));
+	new Foo("bar"), Collections.singletonMap(KafkaHeaders.TOPIC, topic)));
 		assertThat(listener.latch1.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(listener.latch2.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(listener.received.size()).isGreaterThan(0);
@@ -120,7 +120,7 @@ public class BatchListenerConversionTests {
 	public void testBatchOfPojoMessages(@Autowired KafkaAdmin admin) throws Exception {
 		String topic = "blc3";
 		this.template.send(new GenericMessage<>(
-				new Foo("bar"), Collections.singletonMap(KafkaHeaders.TOPIC, topic)));
+	new Foo("bar"), Collections.singletonMap(KafkaHeaders.TOPIC, topic)));
 		Listener3 listener = this.config.listener3();
 		assertThat(listener.latch1.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(listener.received.size()).isGreaterThan(0);
@@ -134,7 +134,7 @@ public class BatchListenerConversionTests {
 		Listener4 listener = this.config.listener4();
 		String topic = "blc4";
 		this.template.send(new GenericMessage<>(
-				new Foo("bar"), Collections.singletonMap(KafkaHeaders.TOPIC, topic)));
+	new Foo("bar"), Collections.singletonMap(KafkaHeaders.TOPIC, topic)));
 		assertThat(listener.latch1.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(listener.received.size()).isGreaterThan(0);
 		assertThat(listener.received.get(0)).isInstanceOf(Foo.class);
@@ -167,10 +167,10 @@ public class BatchListenerConversionTests {
 
 		@Bean
 		public KafkaListenerContainerFactory<?> kafkaListenerContainerFactory(EmbeddedKafkaBroker embeddedKafka,
-				KafkaTemplate<Integer, Object> template) {
+	KafkaTemplate<Integer, Object> template) {
 
 			ConcurrentKafkaListenerContainerFactory<Integer, Foo> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory(embeddedKafka));
 			factory.setBatchListener(true);
 			factory.setBatchMessageConverter(new BatchMessagingMessageConverter(converter()));
@@ -189,7 +189,7 @@ public class BatchListenerConversionTests {
 		@Bean
 		public Map<String, Object> consumerConfigs(EmbeddedKafkaBroker embeddedKafka) {
 			Map<String, Object> consumerProps =
-					KafkaTestUtils.consumerProps(DEFAULT_TEST_GROUP_ID, "false", embeddedKafka);
+		KafkaTestUtils.consumerProps(DEFAULT_TEST_GROUP_ID, "false", embeddedKafka);
 			consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, BytesDeserializer.class);
 			consumerProps.put(ConsumerConfig.FETCH_MIN_BYTES_CONFIG, 1000);
 			consumerProps.put(ConsumerConfig.FETCH_MAX_WAIT_MS_CONFIG, 500);
@@ -211,10 +211,10 @@ public class BatchListenerConversionTests {
 		@Bean
 		public ProducerFactory<Integer, Object> producerFactory(EmbeddedKafkaBroker embeddedKafka) {
 			return new DefaultKafkaProducerFactory<>(producerConfigs(embeddedKafka),
-					null, new DelegatingByTypeSerializer(Map.of(
-							byte[].class, new ByteArraySerializer(),
-							Bytes.class, new BytesSerializer(),
-							String.class, new StringSerializer())));
+		null, new DelegatingByTypeSerializer(Map.of(
+	byte[].class, new ByteArraySerializer(),
+	Bytes.class, new BytesSerializer(),
+	String.class, new StringSerializer())));
 		}
 
 		@Bean
@@ -276,11 +276,11 @@ public class BatchListenerConversionTests {
 		}
 
 		@KafkaListener(id = "#{__listener.topic}.id", topics = "#{__listener.topic}",
-				groupId = "#{__listener.topic}.group",
-				containerFactory = "#{__listener.containerFactory}")
+	groupId = "#{__listener.topic}.group",
+	containerFactory = "#{__listener.containerFactory}")
 		// @SendTo("foo") test WARN log for void return
 		public void listen1(List<Foo> foos, @Header(KafkaHeaders.RECEIVED_TOPIC) List<String> topics,
-				@Header(KafkaHeaders.RECEIVED_PARTITION) List<Integer> partitions) {
+	@Header(KafkaHeaders.RECEIVED_PARTITION) List<Integer> partitions) {
 			if (this.received == null) {
 				this.received = foos;
 			}
@@ -331,10 +331,10 @@ public class BatchListenerConversionTests {
 				this.received = foos;
 			}
 			return foos.stream().map(f -> MessageBuilder.withPayload(new Foo(f.getBar().toUpperCase()))
-					.setHeader(KafkaHeaders.TOPIC, "blc5")
-					.setHeader(KafkaHeaders.KEY, 42)
-					.build())
-					.collect(Collectors.toList());
+		.setHeader(KafkaHeaders.TOPIC, "blc5")
+		.setHeader(KafkaHeaders.KEY, 42)
+		.build())
+		.collect(Collectors.toList());
 		}
 
 		@KafkaListener(topics = "blc5", groupId = "blc5")
@@ -357,7 +357,7 @@ public class BatchListenerConversionTests {
 
 		@KafkaListener(topics = "blc6", groupId = "blc6")
 		public void listen5(List<Foo> foos,
-				@Header(KafkaHeaders.CONVERSION_FAILURES) List<ConversionException> conversionFailures) {
+	@Header(KafkaHeaders.CONVERSION_FAILURES) List<ConversionException> conversionFailures) {
 
 			this.received.addAll(foos);
 			this.latch1.countDown();
@@ -369,8 +369,8 @@ public class BatchListenerConversionTests {
 		}
 
 		@KafkaListener(topics = "blc6.DLT", groupId = "blc6.DLT",
-				properties = ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG +
-					":org.apache.kafka.common.serialization.StringDeserializer")
+	properties = ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG +
+":org.apache.kafka.common.serialization.StringDeserializer")
 		public void listen5Dlt(String in) {
 
 			this.dlt = in;

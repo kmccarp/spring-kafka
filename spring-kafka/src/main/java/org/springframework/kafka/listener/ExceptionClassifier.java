@@ -58,16 +58,16 @@ public abstract class ExceptionClassifier extends KafkaExceptionLogLevelAware {
 	 */
 	public static List<Class<? extends Throwable>> defaultFatalExceptionsList() {
 		return Arrays.asList(DeserializationException.class,
-							MessageConversionException.class,
-							ConversionException.class,
-							MethodArgumentResolutionException.class,
-							NoSuchMethodException.class,
-							ClassCastException.class);
+	MessageConversionException.class,
+	ConversionException.class,
+	MethodArgumentResolutionException.class,
+	NoSuchMethodException.class,
+	ClassCastException.class);
 	}
 
 	private static ExtendedBinaryExceptionClassifier configureDefaultClassifier(boolean defaultClassification) {
 		return new ExtendedBinaryExceptionClassifier(defaultFatalExceptionsList().stream()
-				.collect(Collectors.toMap(ex -> ex, ex -> false)), defaultClassification);
+	.collect(Collectors.toMap(ex -> ex, ex -> false)), defaultClassification);
 	}
 
 	/**
@@ -184,7 +184,7 @@ public abstract class ExceptionClassifier extends KafkaExceptionLogLevelAware {
 		Assert.noNullElements(exceptionTypes, "'exceptionTypes' cannot contain nulls");
 		for (Class<? extends Exception> exceptionType : exceptionTypes) {
 			Assert.isTrue(Exception.class.isAssignableFrom(exceptionType),
-					() -> "exceptionType " + exceptionType + " must be an Exception");
+		() -> "exceptionType " + exceptionType + " must be an Exception");
 			this.classifier.getClassified().put(exceptionType, classified);
 		}
 	}

@@ -39,7 +39,7 @@ public class ConsumerPartitionResumedEvent extends KafkaEvent {
 	 * @since 2.7
 	 */
 	public ConsumerPartitionResumedEvent(Object source, Object container,
-										TopicPartition partition) {
+TopicPartition partition) {
 		super(source, container);
 		this.partition = partition;
 	}

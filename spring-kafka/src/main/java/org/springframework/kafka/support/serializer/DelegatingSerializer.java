@@ -118,7 +118,7 @@ public class DelegatingSerializer implements Serializer<Object> {
 				}
 				else {
 					throw new IllegalStateException(configKey
-							+ " map entries must be Serializers or class names, not " + value.getClass());
+				+ " map entries must be Serializers or class names, not " + value.getClass());
 				}
 			});
 		}
@@ -127,7 +127,7 @@ public class DelegatingSerializer implements Serializer<Object> {
 		}
 		else {
 			throw new IllegalStateException(
-					configKey + " must be a map or String, not " + value.getClass());
+		configKey + " must be a map or String, not " + value.getClass());
 		}
 	}
 
@@ -136,7 +136,7 @@ public class DelegatingSerializer implements Serializer<Object> {
 	}
 
 	protected static Map<String, Serializer<?>> createDelegates(String mappings, Map<String, ?> configs,
-			boolean isKey) {
+boolean isKey) {
 
 		Map<String, Serializer<?>> delegateMap = new HashMap<>();
 		String[] array = StringUtils.commaDelimitedListToStringArray(mappings);
@@ -149,7 +149,7 @@ public class DelegatingSerializer implements Serializer<Object> {
 	}
 
 	protected static void createInstanceAndConfigure(Map<String, ?> configs, boolean isKey,
-			Map<String, Serializer<?>> delegateMap, String selector, String className) {
+Map<String, Serializer<?>> delegateMap, String selector, String className) {
 
 		try {
 			Class<?> clazz = ClassUtils.forName(className.trim(), ClassUtils.getDefaultClassLoader());
@@ -161,7 +161,7 @@ public class DelegatingSerializer implements Serializer<Object> {
 	}
 
 	protected static void instantiateAndConfigure(Map<String, ?> configs, boolean isKey,
-			Map<String, Serializer<?>> delegateMap, String selector, Class<?> clazz) {
+Map<String, Serializer<?>> delegateMap, String selector, Class<?> clazz) {
 
 		try {
 			Serializer<?> delegate = (Serializer<?>) clazz.getDeclaredConstructor().newInstance();
@@ -203,8 +203,8 @@ public class DelegatingSerializer implements Serializer<Object> {
 			value = trySerdes(data);
 			if (value == null) {
 				throw new IllegalStateException("No '" + selectorKey
-						+ "' header present and type (" + data.getClass().getName()
-						+ ") is not supported by Serdes");
+			+ "' header present and type (" + data.getClass().getName()
+			+ ") is not supported by Serdes");
 			}
 			try {
 				headers.add(new RecordHeader(selectorKey, value));
@@ -218,7 +218,7 @@ public class DelegatingSerializer implements Serializer<Object> {
 		Serializer<Object> serializer = (Serializer<Object>) this.delegates.get(selector);
 		if (serializer == null) {
 			throw new IllegalStateException(
-					"No serializer found for '" + selectorKey + "' header with value '" + selector + "'");
+		"No serializer found for '" + selectorKey + "' header with value '" + selector + "'");
 		}
 		return serializer.serialize(topic, headers, data);
 	}

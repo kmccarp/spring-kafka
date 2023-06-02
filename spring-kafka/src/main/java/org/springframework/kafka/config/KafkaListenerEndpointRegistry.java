@@ -70,8 +70,7 @@ import org.springframework.util.StringUtils;
  * @see MessageListenerContainer
  * @see KafkaListenerContainerFactory
  */
-public class KafkaListenerEndpointRegistry implements ListenerContainerRegistry, DisposableBean, SmartLifecycle,
-		ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
+public class KafkaListenerEndpointRegistry implements ListenerContainerRegistry, DisposableBean, SmartLifecycle,ApplicationContextAware, ApplicationListener<ContextRefreshedEvent> {
 
 	protected final LogAccessor logger = new LogAccessor(LogFactory.getLog(getClass())); //NOSONAR
 
@@ -177,7 +176,7 @@ public class KafkaListenerEndpointRegistry implements ListenerContainerRegistry,
 	private void refreshContextContainers() {
 		this.unregisteredContainers.clear();
 		this.applicationContext.getBeansOfType(MessageListenerContainer.class, true, false).values()
-				.forEach(container -> this.unregisteredContainers.put(container.getListenerId(), container));
+	.forEach(container -> this.unregisteredContainers.put(container.getListenerId(), container));
 	}
 
 	/**
@@ -206,7 +205,7 @@ public class KafkaListenerEndpointRegistry implements ListenerContainerRegistry,
 	 */
 	@SuppressWarnings("unchecked")
 	public void registerListenerContainer(KafkaListenerEndpoint endpoint, KafkaListenerContainerFactory<?> factory,
-			boolean startImmediately) {
+boolean startImmediately) {
 
 		Assert.notNull(endpoint, "Endpoint must not be null");
 		Assert.notNull(factory, "Factory must not be null");
@@ -215,7 +214,7 @@ public class KafkaListenerEndpointRegistry implements ListenerContainerRegistry,
 		Assert.hasText(id, "Endpoint id must not be empty");
 		synchronized (this.listenerContainers) {
 			Assert.state(!this.listenerContainers.containsKey(id),
-					"Another endpoint is already registered with id '" + id + "'");
+		"Another endpoint is already registered with id '" + id + "'");
 			MessageListenerContainer container = createListenerContainer(endpoint, factory);
 			this.listenerContainers.put(id, container);
 			ConfigurableApplicationContext appContext = this.applicationContext;
@@ -265,7 +264,7 @@ public class KafkaListenerEndpointRegistry implements ListenerContainerRegistry,
 	 * @return the {@link MessageListenerContainer}.
 	 */
 	protected MessageListenerContainer createListenerContainer(KafkaListenerEndpoint endpoint,
-			KafkaListenerContainerFactory<?> factory) {
+KafkaListenerContainerFactory<?> factory) {
 
 		if (endpoint instanceof MethodKafkaListenerEndpoint) {
 			MethodKafkaListenerEndpoint<?, ?> mkle = (MethodKafkaListenerEndpoint<?, ?>) endpoint;
@@ -290,10 +289,10 @@ public class KafkaListenerEndpointRegistry implements ListenerContainerRegistry,
 
 		int containerPhase = listenerContainer.getPhase();
 		if (listenerContainer.isAutoStartup() &&
-				containerPhase != AbstractMessageListenerContainer.DEFAULT_PHASE) {  // a custom phase value
+	containerPhase != AbstractMessageListenerContainer.DEFAULT_PHASE) {  // a custom phase value
 			if (this.phase != AbstractMessageListenerContainer.DEFAULT_PHASE && this.phase != containerPhase) {
 				throw new IllegalStateException("Encountered phase mismatch between container "
-						+ "factory definitions: " + this.phase + " vs " + containerPhase);
+			+ "factory definitions: " + this.phase + " vs " + containerPhase);
 			}
 			this.phase = listenerContainer.getPhase();
 		}
@@ -344,7 +343,7 @@ public class KafkaListenerEndpointRegistry implements ListenerContainerRegistry,
 		Collection<MessageListenerContainer> listenerContainersToStop = getListenerContainers();
 		if (listenerContainersToStop.size() > 0) {
 			AggregatingCallback aggregatingCallback = new AggregatingCallback(listenerContainersToStop.size(),
-					callback);
+		callback);
 			for (MessageListenerContainer listenerContainer : listenerContainersToStop) {
 				if (listenerContainer.isRunning()) {
 					listenerContainer.stop(aggregatingCallback);

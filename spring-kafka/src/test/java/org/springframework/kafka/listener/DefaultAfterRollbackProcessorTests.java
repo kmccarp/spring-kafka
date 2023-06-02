@@ -79,7 +79,7 @@ public class DefaultAfterRollbackProcessorTests {
 		given(container.getContainerProperties()).willReturn(new ContainerProperties("foo"));
 		processor.process(records, consumer, container, illegalState, true, EOSMode.V2);
 		processor.process(records, consumer, container,
-				new DeserializationException("intended", null, false, illegalState), true, EOSMode.V2);
+	new DeserializationException("intended", null, false, illegalState), true, EOSMode.V2);
 		verify(template).sendOffsetsToTransaction(anyMap(), any(ConsumerGroupMetadata.class));
 		assertThat(recovered.get()).isSameAs(record1);
 		processor.addNotRetryableExceptions(IllegalStateException.class);
@@ -114,7 +114,7 @@ public class DefaultAfterRollbackProcessorTests {
 		}).given(backOff).start();
 		ConsumerRecordRecoverer recoverer = mock(ConsumerRecordRecoverer.class);
 		DefaultAfterRollbackProcessor<String, String> processor = new DefaultAfterRollbackProcessor<>(recoverer,
-				backOff, template, false);
+	backOff, template, false);
 		ConsumerRecord<String, String> record1 = new ConsumerRecord<>("foo", 0, 0L, "foo", "bar");
 		ConsumerRecord<String, String> record2 = new ConsumerRecord<>("foo", 1, 1L, "foo", "bar");
 		List<ConsumerRecord<String, String>> records = Arrays.asList(record1, record2);
@@ -135,7 +135,7 @@ public class DefaultAfterRollbackProcessorTests {
 
 	void testEarlyExitBackOff() {
 		DefaultAfterRollbackProcessor<String, String> processor = new DefaultAfterRollbackProcessor<>(
-				new FixedBackOff(1, 10_000));
+	new FixedBackOff(1, 10_000));
 		@SuppressWarnings("unchecked")
 		Consumer<String, String> consumer = mock(Consumer.class);
 		ConsumerRecord<String, String> record1 = new ConsumerRecord<>("foo", 0, 0L, "foo", "bar");
@@ -152,7 +152,7 @@ public class DefaultAfterRollbackProcessorTests {
 	@Test
 	void testNoEarlyExitBackOff() {
 		DefaultAfterRollbackProcessor<String, String> processor = new DefaultAfterRollbackProcessor<>(
-				new FixedBackOff(1, 200));
+	new FixedBackOff(1, 200));
 		@SuppressWarnings("unchecked")
 		Consumer<String, String> consumer = mock(Consumer.class);
 		ConsumerRecord<String, String> record1 = new ConsumerRecord<>("foo", 0, 0L, "foo", "bar");

@@ -91,7 +91,7 @@ public abstract class DelegatingByTopicSerialization<T extends Closeable> implem
 		Assert.notNull(defaultDelegate, "'defaultDelegate' cannot be null");
 		this.delegates.putAll(delegates);
 		delegates.keySet().forEach(pattern -> Assert.isTrue(this.patterns.add(pattern.pattern()),
-				"Duplicate pattern: " + pattern.pattern()));
+	"Duplicate pattern: " + pattern.pattern()));
 		this.defaultDelegate = defaultDelegate;
 	}
 
@@ -133,7 +133,7 @@ public abstract class DelegatingByTopicSerialization<T extends Closeable> implem
 		}
 		else {
 			throw new IllegalStateException(
-					configKey + " must be a map or String, not " + value.getClass());
+		configKey + " must be a map or String, not " + value.getClass());
 		}
 	}
 
@@ -171,7 +171,7 @@ public abstract class DelegatingByTopicSerialization<T extends Closeable> implem
 		}
 		else {
 			throw new IllegalStateException(configKey
-					+ " map entries must be Serializers or class names, not " + delegate.getClass());
+		+ " map entries must be Serializers or class names, not " + delegate.getClass());
 		}
 	}
 
@@ -189,7 +189,7 @@ public abstract class DelegatingByTopicSerialization<T extends Closeable> implem
 		}
 		else {
 			throw new IllegalStateException(configKey
-					+ " map entries must be Serializers or class names, not " + delegate.getClass());
+		+ " map entries must be Serializers or class names, not " + delegate.getClass());
 		}
 	}
 
@@ -224,7 +224,7 @@ public abstract class DelegatingByTopicSerialization<T extends Closeable> implem
 
 	@Nullable
 	private T createInstanceAndConfigure(Map<String, ?> configs, boolean isKey,
-			Map<Pattern, T> delegates2, @Nullable Pattern pattern, String className) {
+Map<Pattern, T> delegates2, @Nullable Pattern pattern, String className) {
 
 		try {
 			Class<?> clazz = ClassUtils.forName(className.trim(), ClassUtils.getDefaultClassLoader());
@@ -253,7 +253,7 @@ public abstract class DelegatingByTopicSerialization<T extends Closeable> implem
 	}
 
 	protected T instantiateAndConfigure(Map<String, ?> configs, boolean isKey, Map<Pattern, T> delegates2,
-			@Nullable Pattern pattern, Class<?> clazz) {
+@Nullable Pattern pattern, Class<?> clazz) {
 
 		if (pattern != null && !this.patterns.add(pattern.pattern())) {
 			LOGGER.debug(() -> "Delegate already configured for " + pattern.pattern());
@@ -301,7 +301,7 @@ public abstract class DelegatingByTopicSerialization<T extends Closeable> implem
 		}
 		if (delegate == null) {
 			throw new IllegalStateException(
-					"No (de)serializer found for topic '" + topic + "'");
+		"No (de)serializer found for topic '" + topic + "'");
 		}
 		return delegate;
 	}

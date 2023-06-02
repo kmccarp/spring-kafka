@@ -80,7 +80,7 @@ public interface ConsumerFactory<K, V> {
 	 * @since 2.1.1
 	 */
 	Consumer<K, V> createConsumer(@Nullable String groupId, @Nullable String clientIdPrefix,
-			@Nullable String clientIdSuffix);
+@Nullable String clientIdSuffix);
 
 	/**
 	 * Create a consumer with an explicit group id; in addition, the
@@ -95,7 +95,7 @@ public interface ConsumerFactory<K, V> {
 	 * @since 2.2.4
 	 */
 	default Consumer<K, V> createConsumer(@Nullable String groupId, @Nullable String clientIdPrefix,
-			@Nullable String clientIdSuffix, @Nullable Properties properties) {
+@Nullable String clientIdSuffix, @Nullable Properties properties) {
 
 		return createConsumer(groupId, clientIdPrefix, clientIdSuffix);
 	}

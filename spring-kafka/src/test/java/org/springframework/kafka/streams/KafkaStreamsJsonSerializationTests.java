@@ -66,11 +66,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @SpringJUnitConfig
 @DirtiesContext
-@EmbeddedKafka(partitions = 1,
-		topics = {
+@EmbeddedKafka(partitions = 1,topics = {
 				KafkaStreamsJsonSerializationTests.OBJECT_INPUT_TOPIC,
-				KafkaStreamsJsonSerializationTests.OBJECT_OUTPUT_TOPIC
-		})
+				KafkaStreamsJsonSerializationTests.OBJECT_OUTPUT_TOPIC})
 public class KafkaStreamsJsonSerializationTests {
 
 	public static final String OBJECT_INPUT_TOPIC = "object-input-topic";
@@ -78,7 +76,7 @@ public class KafkaStreamsJsonSerializationTests {
 	public static final String OBJECT_OUTPUT_TOPIC = "object-output-topic";
 
 	public static final JsonSerde<JsonObjectKey> jsonObjectKeySerde =
-			new JsonSerde<>(JsonObjectKey.class).forKeys();
+new JsonSerde<>(JsonObjectKey.class).forKeys();
 
 	public static final JsonSerde<JsonObjectValue> jsonObjectValueSerde = new JsonSerde<>(JsonObjectValue.class);
 
@@ -107,7 +105,7 @@ public class KafkaStreamsJsonSerializationTests {
 		template.send(OBJECT_INPUT_TOPIC, new JsonObjectKey(25), new JsonObjectValue("twenty-five"));
 
 		ConsumerRecords<JsonObjectKey, JsonObjectValue> outputTopicRecords =
-				KafkaTestUtils.getRecords(this.objectOutputTopicConsumer);
+	KafkaTestUtils.getRecords(this.objectOutputTopicConsumer);
 
 		assertThat(outputTopicRecords.count()).isEqualTo(1);
 		ConsumerRecord<JsonObjectKey, JsonObjectValue> output = outputTopicRecords.iterator().next();
@@ -119,11 +117,11 @@ public class KafkaStreamsJsonSerializationTests {
 
 	private <K, V> Consumer<K, V> consumer(String topic, Serde<K> keySerde, Serde<V> valueSerde) {
 		Map<String, Object> consumerProps =
-				KafkaTestUtils.consumerProps(UUID.randomUUID().toString(), "false", this.embeddedKafka);
+	KafkaTestUtils.consumerProps(UUID.randomUUID().toString(), "false", this.embeddedKafka);
 		consumerProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10000);
 
 		DefaultKafkaConsumerFactory<K, V> kafkaConsumerFactory =
-				new DefaultKafkaConsumerFactory<>(consumerProps, keySerde.deserializer(), valueSerde.deserializer());
+	new DefaultKafkaConsumerFactory<>(consumerProps, keySerde.deserializer(), valueSerde.deserializer());
 		Consumer<K, V> consumer = kafkaConsumerFactory.createConsumer();
 		this.embeddedKafka.consumeFromAnEmbeddedTopic(consumer, topic);
 		return consumer;
@@ -145,8 +143,8 @@ public class KafkaStreamsJsonSerializationTests {
 		@Override
 		public String toString() {
 			return "JsonObjectKey{" +
-					"key=" + key +
-					'}';
+		"key=" + key +
+		'}';
 		}
 
 	}
@@ -171,8 +169,8 @@ public class KafkaStreamsJsonSerializationTests {
 		@Override
 		public String toString() {
 			return "JsonObjectValue{" +
-					"value='" + value + '\'' +
-					'}';
+		"value='" + value + '\'' +
+		'}';
 		}
 
 	}
@@ -213,7 +211,7 @@ public class KafkaStreamsJsonSerializationTests {
 		@Bean
 		public KStream<JsonObjectKey, JsonObjectValue> jsonObjectSerializationStream(StreamsBuilder streamsBuilder) {
 			KStream<JsonObjectKey, JsonObjectValue> testStream = streamsBuilder
-					.stream(OBJECT_INPUT_TOPIC, Consumed.with(jsonObjectKeySerde, jsonObjectValueSerde));
+		.stream(OBJECT_INPUT_TOPIC, Consumed.with(jsonObjectKeySerde, jsonObjectValueSerde));
 
 			testStream.print(Printed.toSysOut());
 			testStream.to(OBJECT_OUTPUT_TOPIC, Produced.with(jsonObjectKeySerde, jsonObjectValueSerde));

@@ -47,13 +47,13 @@ public final class KafkaUtils {
 	private static Function<ProducerRecord<?, ?>, String> prFormatter = ProducerRecord::toString;
 
 	private static Function<ConsumerRecord<?, ?>, String> crFormatter =
-			rec -> rec.topic() + "-" + rec.partition() + "@" + rec.offset();
+rec -> rec.topic() + "-" + rec.partition() + "@" + rec.offset();
 
 	/**
 	 * True if micrometer is on the class path.
 	 */
 	public static final boolean MICROMETER_PRESENT = ClassUtils.isPresent(
-			"io.micrometer.core.instrument.MeterRegistry", KafkaUtils.class.getClassLoader());
+"io.micrometer.core.instrument.MeterRegistry", KafkaUtils.class.getClassLoader());
 
 	private static final ThreadLocal<String> GROUP_IDS = new ThreadLocal<>();
 
@@ -80,7 +80,7 @@ public final class KafkaUtils {
 					return true;
 				}
 				return collectionType instanceof ParameterizedType
-						&& ((ParameterizedType) collectionType).getRawType().equals(Message.class);
+			&& ((ParameterizedType) collectionType).getRawType().equals(Message.class);
 			}
 		}
 		return false;
@@ -140,9 +140,9 @@ public final class KafkaUtils {
 			}
 		}
 		return Duration.ofMillis(Math.max(
-				((Integer) ProducerConfig.configDef().defaultValues()
-						.get(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG)).longValue() + buffer,
-				min));
+	((Integer) ProducerConfig.configDef().defaultValues()
+.get(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG)).longValue() + buffer,
+	min));
 	}
 
 	/**

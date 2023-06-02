@@ -40,8 +40,7 @@ import org.springframework.kafka.event.ListenerContainerIdleEvent;
  * @since 2.7.3
  *
  */
-public class ContainerGroupSequencer implements ApplicationContextAware,
-		ApplicationListener<ListenerContainerIdleEvent>, SmartLifecycle {
+public class ContainerGroupSequencer implements ApplicationContextAware,ApplicationListener<ListenerContainerIdleEvent>, SmartLifecycle {
 
 	private static final LogAccessor LOGGER = new LogAccessor(LogFactory.getLog(ContainerGroupSequencer.class));
 
@@ -78,7 +77,7 @@ public class ContainerGroupSequencer implements ApplicationContextAware,
 	 * @param containerGroups The list of container groups, in order.
 	 */
 	public ContainerGroupSequencer(ListenerContainerRegistry registry, long defaultIdleEventInterval,
-			String... containerGroups) {
+String... containerGroups) {
 
 		this.registry = registry;
 		this.defaultIdleEventInterval = defaultIdleEventInterval;

@@ -130,10 +130,10 @@ public class ErrorHandlingDeserializerTests {
 		Headers headers = new RecordHeaders();
 		ehd.deserialize("foo", headers, new byte[1]);
 		DeserializationException dex = ListenerUtils.byteArrayToDeserializationException(null,
-				headers.lastHeader(SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER).value());
+	headers.lastHeader(SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER).value());
 		assertThat(dex.getCause().getMessage())
-				.contains("Could not serialize")
-				.contains("original exception message");
+	.contains("Could not serialize")
+	.contains("original exception message");
 	}
 
 	@Configuration
@@ -180,13 +180,13 @@ public class ErrorHandlingDeserializerTests {
 		@SuppressWarnings("deprecation")
 		private ConcurrentKafkaListenerContainerFactory<String, String> factory(ConsumerFactory<String, String> cf) {
 			ConcurrentKafkaListenerContainerFactory<String, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(cf);
 			factory.setCommonErrorHandler(new CommonErrorHandler() {
 
 				@Override
 				public void handleRecord(Exception t, ConsumerRecord<?, ?> r,
-						Consumer<?, ?> consumer, MessageListenerContainer container) {
+			Consumer<?, ?> consumer, MessageListenerContainer container) {
 
 					if (r.value() == null && t.getCause() instanceof DeserializationException) {
 						valueErrorCount.incrementAndGet();
@@ -216,8 +216,8 @@ public class ErrorHandlingDeserializerTests {
 		public ConsumerFactory<String, String> cfWithExplicitDeserializers() {
 			Map<String, Object> props = KafkaTestUtils.consumerProps(TOPIC + ".g2", "false", embeddedKafka());
 			return new DefaultKafkaConsumerFactory<>(props,
-					new ErrorHandlingDeserializer<String>(new FailSometimesDeserializer()).keyDeserializer(true),
-					new ErrorHandlingDeserializer<String>(new FailSometimesDeserializer()));
+		new ErrorHandlingDeserializer<String>(new FailSometimesDeserializer()).keyDeserializer(true),
+		new ErrorHandlingDeserializer<String>(new FailSometimesDeserializer()));
 		}
 
 		@Bean
@@ -235,7 +235,7 @@ public class ErrorHandlingDeserializerTests {
 		@Override
 		public String toString() {
 			return "Config [goodCount=" + this.goodCount.get() + ", keyErrorCount=" + this.keyErrorCount.get()
-					+ ", valueErrorCount=" + this.valueErrorCount.get() + "]";
+		+ ", valueErrorCount=" + this.valueErrorCount.get() + "]";
 		}
 
 	}

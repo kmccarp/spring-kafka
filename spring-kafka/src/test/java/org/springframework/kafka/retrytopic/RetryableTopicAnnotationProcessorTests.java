@@ -83,16 +83,16 @@ class RetryableTopicAnnotationProcessorTests {
 
 	// Retry with DLT
 	private final Method listenWithRetryAndDlt = ReflectionUtils
-			.findMethod(RetryableTopicAnnotationFactoryWithDlt.class, listenerMethodName);
+.findMethod(RetryableTopicAnnotationFactoryWithDlt.class, listenerMethodName);
 
 	private final RetryableTopic annotationWithDlt = AnnotationUtils.findAnnotation(listenWithRetryAndDlt,
-			RetryableTopic.class);
+RetryableTopic.class);
 
 	private final Object beanWithDlt = createBean();
 
 	// Retry without DLT
 	private final Method listenWithRetry = ReflectionUtils.findMethod(RetryableTopicAnnotationFactory.class,
-			listenerMethodName);
+listenerMethodName);
 
 	private final RetryableTopic annotation = AnnotationUtils.findAnnotation(listenWithRetry, RetryableTopic.class);
 
@@ -112,12 +112,12 @@ class RetryableTopicAnnotationProcessorTests {
 
 		// setup
 		given(beanFactory.getBean(RetryTopicBeanNames.DEFAULT_KAFKA_TEMPLATE_BEAN_NAME, KafkaOperations.class))
-				.willReturn(kafkaOperationsFromDefaultName);
+	.willReturn(kafkaOperationsFromDefaultName);
 		RetryableTopicAnnotationProcessor processor = new RetryableTopicAnnotationProcessor(beanFactory);
 
 		// given
 		RetryTopicConfiguration configuration = processor
-				.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt);
+	.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt);
 
 		// then
 		EndpointHandlerMethod dltHandlerMethod = configuration.getDltHandlerMethod();
@@ -125,7 +125,7 @@ class RetryableTopicAnnotationProcessorTests {
 		assertThat(method.getName()).isEqualTo("handleDlt");
 
 		assertThat(new DestinationTopic("",
-				configuration.getDestinationTopicProperties().get(0)).isAlwaysRetryOnDltFailure()).isFalse();
+	configuration.getDestinationTopicProperties().get(0)).isAlwaysRetryOnDltFailure()).isFalse();
 	}
 
 	@Test
@@ -143,10 +143,10 @@ class RetryableTopicAnnotationProcessorTests {
 		dltHandlerMethod.resolveBean(this.beanFactory);
 		Method method = dltHandlerMethod.getMethod();
 		assertThat(method.getName())
-				.isEqualTo(RetryTopicConfigurer.LoggingDltListenerHandlerMethod.DEFAULT_DLT_METHOD_NAME);
+	.isEqualTo(RetryTopicConfigurer.LoggingDltListenerHandlerMethod.DEFAULT_DLT_METHOD_NAME);
 
 		assertThat(new DestinationTopic("",
-				configuration.getDestinationTopicProperties().get(0)).isAlwaysRetryOnDltFailure()).isTrue();
+	configuration.getDestinationTopicProperties().get(0)).isAlwaysRetryOnDltFailure()).isTrue();
 	}
 
 	@Test
@@ -158,7 +158,7 @@ class RetryableTopicAnnotationProcessorTests {
 
 		// given - then
 		assertThatExceptionOfType(BeanInitializationException.class)
-				.isThrownBy(() -> processor.processAnnotation(topics, listenWithRetry, annotation, bean));
+	.isThrownBy(() -> processor.processAnnotation(topics, listenWithRetry, annotation, bean));
 	}
 
 	@Test
@@ -166,19 +166,19 @@ class RetryableTopicAnnotationProcessorTests {
 
 		// setup
 		given(this.beanFactory.getBean(RetryTopicBeanNames.DEFAULT_KAFKA_TEMPLATE_BEAN_NAME, KafkaOperations.class))
-				.willThrow(NoSuchBeanDefinitionException.class);
+	.willThrow(NoSuchBeanDefinitionException.class);
 
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+		@SuppressWarnings({"unchecked", "rawtypes"})
 		ObjectProvider<KafkaOperations> templateProvider = mock(ObjectProvider.class);
 		given(templateProvider.getIfUnique()).willReturn(null);
 		given(this.beanFactory.getBeanProvider(KafkaOperations.class))
-				.willReturn(templateProvider);
+	.willReturn(templateProvider);
 
 		RetryableTopicAnnotationProcessor processor = new RetryableTopicAnnotationProcessor(beanFactory);
 
 		// given - then
 		assertThatIllegalStateException().isThrownBy(() ->
-				processor.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt));
+	processor.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt));
 	}
 
 	@Test
@@ -186,17 +186,17 @@ class RetryableTopicAnnotationProcessorTests {
 
 		// setup
 		given(this.beanFactory.getBean(RetryTopicBeanNames.DEFAULT_KAFKA_TEMPLATE_BEAN_NAME, KafkaOperations.class))
-				.willThrow(NoSuchBeanDefinitionException.class);
-		@SuppressWarnings({ "unchecked", "rawtypes" })
+	.willThrow(NoSuchBeanDefinitionException.class);
+		@SuppressWarnings({"unchecked", "rawtypes"})
 		ObjectProvider<KafkaOperations> templateProvider = mock(ObjectProvider.class);
 		given(templateProvider.getIfUnique()).willReturn(kafkaOperationsFromDefaultName);
 		given(this.beanFactory.getBeanProvider(KafkaOperations.class))
-				.willReturn(templateProvider);
+	.willReturn(templateProvider);
 		RetryableTopicAnnotationProcessor processor = new RetryableTopicAnnotationProcessor(beanFactory);
 
 		// given - then
 		RetryTopicConfiguration configuration = processor.processAnnotation(topics, listenWithRetry, annotationWithDlt,
-				bean);
+	bean);
 		DestinationTopic.Properties properties = configuration.getDestinationTopicProperties().get(0);
 		DestinationTopic destinationTopic = new DestinationTopic("", properties);
 		assertThat(destinationTopic.getKafkaOperations()).isEqualTo(kafkaOperationsFromDefaultName);
@@ -207,12 +207,12 @@ class RetryableTopicAnnotationProcessorTests {
 
 		// setup
 		given(this.beanFactory.getBean(kafkaTemplateName, KafkaOperations.class))
-				.willReturn(kafkaOperationsFromTemplateName);
+	.willReturn(kafkaOperationsFromTemplateName);
 		RetryableTopicAnnotationProcessor processor = new RetryableTopicAnnotationProcessor(beanFactory);
 
 		// given - then
 		RetryTopicConfiguration configuration = processor
-				.processAnnotation(topics, listenWithRetry, annotation, bean);
+	.processAnnotation(topics, listenWithRetry, annotation, bean);
 		DestinationTopic.Properties properties = configuration.getDestinationTopicProperties().get(0);
 		DestinationTopic destinationTopic = new DestinationTopic("", properties);
 		assertThat(destinationTopic.getKafkaOperations()).isEqualTo(kafkaOperationsFromTemplateName);
@@ -223,12 +223,12 @@ class RetryableTopicAnnotationProcessorTests {
 
 		// setup
 		given(this.beanFactory.getBean(RetryTopicBeanNames.DEFAULT_KAFKA_TEMPLATE_BEAN_NAME, KafkaOperations.class))
-				.willReturn(kafkaOperationsFromDefaultName);
+	.willReturn(kafkaOperationsFromDefaultName);
 		RetryableTopicAnnotationProcessor processor = new RetryableTopicAnnotationProcessor(beanFactory);
 
 		// given
 		RetryTopicConfiguration configuration = processor
-				.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt);
+	.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt);
 
 		// then
 		DestinationTopic.Properties properties = configuration.getDestinationTopicProperties().get(0);
@@ -241,12 +241,12 @@ class RetryableTopicAnnotationProcessorTests {
 
 		// setup
 		given(this.beanFactory.getBean(RetryTopicBeanNames.DEFAULT_KAFKA_TEMPLATE_BEAN_NAME, KafkaOperations.class))
-				.willReturn(kafkaOperationsFromDefaultName);
+	.willReturn(kafkaOperationsFromDefaultName);
 		RetryableTopicAnnotationProcessor processor = new RetryableTopicAnnotationProcessor(beanFactory);
 
 		// given
 		RetryTopicConfiguration configuration = processor
-				.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt);
+	.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt);
 
 		// then
 		List<DestinationTopic.Properties> destinationTopicProperties = configuration.getDestinationTopicProperties();
@@ -268,12 +268,12 @@ class RetryableTopicAnnotationProcessorTests {
 
 		// setup
 		given(this.beanFactory.getBean(RetryTopicBeanNames.DEFAULT_KAFKA_TEMPLATE_BEAN_NAME, KafkaOperations.class))
-				.willReturn(kafkaOperationsFromDefaultName);
+	.willReturn(kafkaOperationsFromDefaultName);
 		RetryableTopicAnnotationProcessor processor = new RetryableTopicAnnotationProcessor(beanFactory);
 
 		// given
 		RetryTopicConfiguration configuration = processor
-				.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt);
+	.processAnnotation(topics, listenWithRetryAndDlt, annotationWithDlt, beanWithDlt);
 
 		// then
 		List<DestinationTopic.Properties> destinationTopicProperties = configuration.getDestinationTopicProperties();
@@ -293,12 +293,12 @@ class RetryableTopicAnnotationProcessorTests {
 
 		// setup
 		given(this.beanFactory.getBean(kafkaTemplateName, KafkaOperations.class))
-				.willReturn(kafkaOperationsFromTemplateName);
+	.willReturn(kafkaOperationsFromTemplateName);
 		RetryableTopicAnnotationProcessor processor = new RetryableTopicAnnotationProcessor(beanFactory);
 
 		// given
 		RetryTopicConfiguration configuration = processor
-				.processAnnotation(topics, listenWithRetry, annotation, bean);
+	.processAnnotation(topics, listenWithRetry, annotation, bean);
 
 		// then
 		List<DestinationTopic.Properties> destinationTopicProperties = configuration.getDestinationTopicProperties();
@@ -326,7 +326,7 @@ class RetryableTopicAnnotationProcessorTests {
 
 		@KafkaListener
 		@RetryableTopic(attempts = "3", backoff = @Backoff(multiplier = 2, value = 1000),
-			dltStrategy = DltStrategy.FAIL_ON_ERROR, excludeNames = "java.lang.IllegalStateException")
+	dltStrategy = DltStrategy.FAIL_ON_ERROR, excludeNames = "java.lang.IllegalStateException")
 		void listenWithRetry() {
 			// NoOps
 		}

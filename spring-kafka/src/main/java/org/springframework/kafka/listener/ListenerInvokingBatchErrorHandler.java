@@ -35,13 +35,13 @@ public interface ListenerInvokingBatchErrorHandler extends ContainerAwareBatchEr
 
 	@Override
 	default void handle(Exception thrownException, @Nullable ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		throw new UnsupportedOperationException("Container should never call this");
 	}
 
 	@Override
 	void handle(Exception thrownException, @Nullable ConsumerRecords<?, ?> records,
-			Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener);
+Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener);
 
 }

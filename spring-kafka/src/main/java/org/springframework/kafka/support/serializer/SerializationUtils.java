@@ -72,11 +72,11 @@ public final class SerializationUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <P, T> BiFunction<P, Headers, T> propertyToMethodInvokingFunction(String methodProperty,
-			Class<P> payloadType, ClassLoader classLoader) {
+Class<P> payloadType, ClassLoader classLoader) {
 
 		int lastDotPosn = methodProperty.lastIndexOf('.');
 		Assert.state(lastDotPosn > 1,
-				"the method property needs to be a class name followed by the method name, separated by '.'");
+	"the method property needs to be a class name followed by the method name, separated by '.'");
 		BiFunction<P, Headers, T> function;
 		Class<?> clazz;
 		try {
@@ -96,11 +96,11 @@ public final class SerializationUtils {
 			}
 			catch (@SuppressWarnings("unused") NoSuchMethodException e1) {
 				IllegalStateException ise =
-						new IllegalStateException("the parser method must take '("
-								+ payloadType.getSimpleName()
-								+ ", Headers)' or '("
-								+ payloadType.getSimpleName()
-								+ ")'", e1);
+			new IllegalStateException("the parser method must take '("
+		+ payloadType.getSimpleName()
+		+ ", Headers)' or '("
+		+ payloadType.getSimpleName()
+		+ ")'", e1);
 				ise.addSuppressed(e);
 				throw ise; // NOSONAR, lost stack trace
 			}
@@ -148,7 +148,7 @@ public final class SerializationUtils {
 	public static void deserializationException(Headers headers, byte[] data, Exception ex, boolean isForKeyArg) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		DeserializationException exception =
-				new DeserializationException("failed to deserialize", data, isForKeyArg, ex);
+	new DeserializationException("failed to deserialize", data, isForKeyArg, ex);
 		try (ObjectOutputStream oos = new ObjectOutputStream(stream)) {
 			oos.writeObject(exception);
 		}
@@ -156,9 +156,9 @@ public final class SerializationUtils {
 			stream = new ByteArrayOutputStream();
 			try (ObjectOutputStream oos = new ObjectOutputStream(stream)) {
 				exception = new DeserializationException("failed to deserialize",
-						data, isForKeyArg, new RuntimeException("Could not serialize type "
-						+ ex.getClass().getName() + " with message " + ioex.getMessage()
-						+ ". Original exception message: " + ex.getMessage()));
+			data, isForKeyArg, new RuntimeException("Could not serialize type "
+		+ ex.getClass().getName() + " with message " + ioex.getMessage()
+		+ ". Original exception message: " + ex.getMessage()));
 				oos.writeObject(exception);
 			}
 			catch (IOException ex2) {
@@ -166,10 +166,8 @@ public final class SerializationUtils {
 			}
 		}
 		headers.add(
-				new RecordHeader(isForKeyArg
-						? KEY_DESERIALIZER_EXCEPTION_HEADER
-						: VALUE_DESERIALIZER_EXCEPTION_HEADER,
-						stream.toByteArray()));
+	new RecordHeader(isForKeyArg? KEY_DESERIALIZER_EXCEPTION_HEADER: VALUE_DESERIALIZER_EXCEPTION_HEADER,
+stream.toByteArray()));
 	}
 
 }

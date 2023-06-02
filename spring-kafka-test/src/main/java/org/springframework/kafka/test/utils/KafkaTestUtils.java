@@ -77,7 +77,7 @@ public final class KafkaTestUtils {
 	 * @return the properties.
 	 */
 	public static Map<String, Object> consumerProps(String group, String autoCommit,
-			EmbeddedKafkaBroker embeddedKafka) {
+EmbeddedKafkaBroker embeddedKafka) {
 
 		return consumerProps(embeddedKafka.getBrokersAsString(), group, autoCommit);
 	}
@@ -200,9 +200,9 @@ public final class KafkaTestUtils {
 	 * @since 2.9.3
 	 */
 	@Nullable
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static ConsumerRecord<?, ?> getOneRecord(String brokerAddresses, String group, String topic, int partition,
-			boolean seekToLast, boolean commit, Duration timeout) {
+boolean seekToLast, boolean commit, Duration timeout) {
 
 		Map<String, Object> consumerConfig = consumerProps(brokerAddresses, group, "false");
 		consumerConfig.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 1);
@@ -235,12 +235,12 @@ public final class KafkaTestUtils {
 	 * @since 2.3
 	 */
 	public static OffsetAndMetadata getCurrentOffset(String brokerAddresses, String group, String topic, int partition)
-			throws Exception { // NOSONAR
+throws Exception { // NOSONAR
 
 		try (AdminClient client = AdminClient
-				.create(Collections.singletonMap(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, brokerAddresses))) {
+	.create(Collections.singletonMap(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, brokerAddresses))) {
 			return client.listConsumerGroupOffsets(group).partitionsToOffsetAndMetadata().get() // NOSONAR false positive
-					.get(new TopicPartition(topic, partition));
+		.get(new TopicPartition(topic, partition));
 		}
 	}
 
@@ -255,10 +255,10 @@ public final class KafkaTestUtils {
 	 * @since 3.0
 	 */
 	public static OffsetAndMetadata getCurrentOffset(AdminClient adminClient, String group, String topic, int partition)
-			throws Exception { // NOSONAR
+throws Exception { // NOSONAR
 
 		return adminClient.listConsumerGroupOffsets(group).partitionsToOffsetAndMetadata().get() // NOSONAR false positive
-				.get(new TopicPartition(topic, partition));
+	.get(new TopicPartition(topic, partition));
 	}
 
 	/**
@@ -271,23 +271,23 @@ public final class KafkaTestUtils {
 	 * @see Consumer#endOffsets(Collection, Duration)
 	 */
 	public static Map<TopicPartition, Long> getEndOffsets(Consumer<?, ?> consumer, String topic,
-			Integer... partitions) {
+Integer... partitions) {
 
 		Collection<TopicPartition> tps;
 		if (partitions == null || partitions.length == 0) {
 			Map<String, List<PartitionInfo>> parts = consumer.listTopics(Duration.ofSeconds(TEN));
 			tps = parts.entrySet()
-					.stream()
-					.filter(entry -> entry.getKey().equals(topic))
-					.flatMap(entry -> entry.getValue().stream())
-					.map(pi -> new TopicPartition(topic, pi.partition()))
-					.collect(Collectors.toList());
+		.stream()
+		.filter(entry -> entry.getKey().equals(topic))
+		.flatMap(entry -> entry.getValue().stream())
+		.map(pi -> new TopicPartition(topic, pi.partition()))
+		.collect(Collectors.toList());
 		}
 		else {
 			Assert.noNullElements(partitions, "'partitions' cannot have null elements");
 			tps = Arrays.stream(partitions)
-					.map(part -> new TopicPartition(topic, part))
-					.collect(Collectors.toList());
+		.map(part -> new TopicPartition(topic, part))
+		.collect(Collectors.toList());
 		}
 		return consumer.endOffsets(tps, Duration.ofSeconds(TEN));
 	}
@@ -338,10 +338,10 @@ public final class KafkaTestUtils {
 			long t1 = System.currentTimeMillis();
 			ConsumerRecords<K, V> received = consumer.poll(Duration.ofMillis(remaining));
 			logger.debug(() -> "Received: " + received.count() + ", "
-					+ received.partitions().stream()
-					.flatMap(p -> received.records(p).stream())
-					// map to same format as send metadata toString()
-					.map(r -> r.topic() + "-" + r.partition() + "@" + r.offset()).toList());
+		+ received.partitions().stream()
+		.flatMap(p -> received.records(p).stream())
+		// map to same format as send metadata toString()
+		.map(r -> r.topic() + "-" + r.partition() + "@" + r.offset()).toList());
 			if (received == null) {
 				throw new IllegalStateException("null received from consumer.poll()");
 			}

@@ -62,15 +62,15 @@ public final class ListenerUtils {
 		Assert.notNull(listener, "Listener cannot be null");
 		ListenerType listenerType;
 		if (listener instanceof AcknowledgingConsumerAwareMessageListener
-				|| listener instanceof BatchAcknowledgingConsumerAwareMessageListener) {
+	|| listener instanceof BatchAcknowledgingConsumerAwareMessageListener) {
 			listenerType = ListenerType.ACKNOWLEDGING_CONSUMER_AWARE;
 		}
 		else if (listener instanceof ConsumerAwareMessageListener
-				|| listener instanceof BatchConsumerAwareMessageListener) {
+	|| listener instanceof BatchConsumerAwareMessageListener) {
 			listenerType = ListenerType.CONSUMER_AWARE;
 		}
 		else if (listener instanceof AcknowledgingMessageListener
-				|| listener instanceof BatchAcknowledgingMessageListener) {
+	|| listener instanceof BatchAcknowledgingMessageListener) {
 			listenerType = ListenerType.ACKNOWLEDGING;
 		}
 		else if (listener instanceof GenericMessageListener) {
@@ -93,7 +93,7 @@ public final class ListenerUtils {
 	 */
 	@Nullable
 	public static DeserializationException getExceptionFromHeader(final ConsumerRecord<?, ?> record,
-			String headerName, LogAccessor logger) {
+String headerName, LogAccessor logger) {
 
 		Header header = record.headers().lastHeader(headerName);
 		if (header != null) {
@@ -129,7 +129,7 @@ public final class ListenerUtils {
 					if (this.first) {
 						this.first = false;
 						Assert.state(desc.getName().equals(DeserializationException.class.getName()),
-								"Header does not contain a DeserializationException");
+					"Header does not contain a DeserializationException");
 					}
 					return super.resolveClass(desc);
 				}
@@ -157,7 +157,7 @@ public final class ListenerUtils {
 	 * @since 2.7
 	 */
 	public static void unrecoverableBackOff(BackOff backOff, ThreadLocal<BackOffExecution> executions,
-			ThreadLocal<Long> lastIntervals, MessageListenerContainer container) throws InterruptedException {
+ThreadLocal<Long> lastIntervals, MessageListenerContainer container) throws InterruptedException {
 
 		BackOffExecution backOffExecution = executions.get();
 		if (backOffExecution == null) {
@@ -204,9 +204,9 @@ public final class ListenerUtils {
 	 * @since 2.8.6
 	 */
 	public static OffsetAndMetadata createOffsetAndMetadata(MessageListenerContainer container,
-															long offset) {
+long offset) {
 		final OffsetAndMetadataProvider metadataProvider = container.getContainerProperties()
-				.getOffsetAndMetadataProvider();
+	.getOffsetAndMetadataProvider();
 		if (metadataProvider != null) {
 			return metadataProvider.provide(new DefaultListenerMetadata(container), offset);
 		}

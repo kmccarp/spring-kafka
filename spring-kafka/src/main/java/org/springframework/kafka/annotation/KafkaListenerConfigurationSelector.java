@@ -33,7 +33,7 @@ public class KafkaListenerConfigurationSelector implements DeferredImportSelecto
 
 	@Override
 	public String[] selectImports(AnnotationMetadata importingClassMetadata) {
-		return new String[] { KafkaBootstrapConfiguration.class.getName() };
+		return new String[]{KafkaBootstrapConfiguration.class.getName()};
 	}
 
 }

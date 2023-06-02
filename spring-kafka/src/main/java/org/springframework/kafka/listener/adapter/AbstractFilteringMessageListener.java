@@ -31,8 +31,7 @@ import org.springframework.util.Assert;
  * @author Gary Russell
  *
  */
-public abstract class AbstractFilteringMessageListener<K, V, T>
-		extends AbstractDelegatingMessageListenerAdapter<T> {
+public abstract class AbstractFilteringMessageListener<K, V, T>extends AbstractDelegatingMessageListenerAdapter<T> {
 
 	private final RecordFilterStrategy<K, V> recordFilterStrategy;
 

@@ -66,7 +66,7 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 	 * @param fallbackHandler the fall back handler.
 	 */
 	public FailedBatchProcessor(@Nullable BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer, BackOff backOff,
-								CommonErrorHandler fallbackHandler) {
+CommonErrorHandler fallbackHandler) {
 
 		this(recoverer, backOff, null, fallbackHandler);
 	}
@@ -80,7 +80,7 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 	 * @since 2.9
 	 */
 	public FailedBatchProcessor(@Nullable BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer, BackOff backOff,
-								@Nullable BackOffHandler backOffHandler, CommonErrorHandler fallbackHandler) {
+@Nullable BackOffHandler backOffHandler, CommonErrorHandler fallbackHandler) {
 
 		super(recoverer, backOff, backOffHandler);
 		this.fallbackBatchHandler = fallbackHandler;
@@ -152,13 +152,13 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 	}
 
 	protected void doHandle(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener) {
+MessageListenerContainer container, Runnable invokeListener) {
 
 		handle(thrownException, data, consumer, container, invokeListener);
 	}
 
 	protected <K, V> ConsumerRecords<K, V> handle(Exception thrownException, ConsumerRecords<?, ?> data,
-			Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener) {
+Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener) {
 
 		BatchListenerFailedException batchListenerFailedException = getBatchListenerFailedException(thrownException);
 		if (batchListenerFailedException == null) {
@@ -173,11 +173,11 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 				this.logger.warn(batchListenerFailedException, () -> {
 					if (record != null) {
 						return String.format("Record not found in batch: %s-%d@%d; re-seeking batch",
-								record.topic(), record.partition(), record.offset());
+					record.topic(), record.partition(), record.offset());
 					}
 					else {
 						return String.format("Record not found in batch, index %d out of bounds (0, %d); "
-								+ "re-seeking batch", index, data.count() - 1);
+					+ "re-seeking batch", index, data.count() - 1);
 
 					}
 				});
@@ -191,7 +191,7 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 	}
 
 	private void fallback(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener) {
+MessageListenerContainer container, Runnable invokeListener) {
 
 		this.fallbackBatchHandler.handleBatch(thrownException, data, consumer, container, invokeListener);
 	}
@@ -205,7 +205,7 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 		while (iterator.hasNext()) {
 			ConsumerRecord<?, ?> candidate = (ConsumerRecord<?, ?>) iterator.next();
 			if (candidate.topic().equals(record.topic()) && candidate.partition() == record.partition()
-					&& candidate.offset() == record.offset()) {
+		&& candidate.offset() == record.offset()) {
 				break;
 			}
 			i++;
@@ -215,7 +215,7 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 
 	@SuppressWarnings("unchecked")
 	private <K, V> ConsumerRecords<K, V> seekOrRecover(Exception thrownException, @Nullable ConsumerRecords<?, ?> data,
-			Consumer<?, ?> consumer, MessageListenerContainer container, int indexArg) {
+Consumer<?, ?> consumer, MessageListenerContainer container, int indexArg) {
 
 		if (data == null) {
 			return ConsumerRecords.empty();
@@ -235,18 +235,18 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 		}
 		Map<TopicPartition, OffsetAndMetadata> offsets = new HashMap<>();
 		toCommit.forEach(rec -> offsets.compute(new TopicPartition(rec.topic(), rec.partition()),
-				(key, val) -> ListenerUtils.createOffsetAndMetadata(container, rec.offset() + 1)));
+	(key, val) -> ListenerUtils.createOffsetAndMetadata(container, rec.offset() + 1)));
 		if (offsets.size() > 0) {
 			commit(consumer, container, offsets);
 		}
 		if (isSeekAfterError()) {
 			if (remaining.size() > 0) {
 				SeekUtils.seekOrRecover(thrownException, remaining, consumer, container, false,
-					getFailureTracker()::recovered, this.logger, getLogLevel());
+			getFailureTracker()::recovered, this.logger, getLogLevel());
 				ConsumerRecord<?, ?> recovered = remaining.get(0);
 				commit(consumer, container,
-						Collections.singletonMap(new TopicPartition(recovered.topic(), recovered.partition()),
-								ListenerUtils.createOffsetAndMetadata(container, recovered.offset() + 1)));
+			Collections.singletonMap(new TopicPartition(recovered.topic(), recovered.partition()),
+		ListenerUtils.createOffsetAndMetadata(container, recovered.offset() + 1)));
 				if (remaining.size() > 1) {
 					throw new KafkaException("Seek to current after exception", getLogLevel(), thrownException);
 				}
@@ -260,7 +260,7 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 			else {
 				try {
 					if (getFailureTracker().recovered(remaining.get(0), thrownException, container,
-							consumer)) {
+				consumer)) {
 						remaining.remove(0);
 					}
 				}
@@ -268,7 +268,7 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 				}
 				Map<TopicPartition, List<ConsumerRecord<K, V>>> remains = new HashMap<>();
 				remaining.forEach(rec -> remains.computeIfAbsent(new TopicPartition(rec.topic(), rec.partition()),
-						tp -> new ArrayList<ConsumerRecord<K, V>>()).add((ConsumerRecord<K, V>) rec));
+			tp -> new ArrayList<ConsumerRecord<K, V>>()).add((ConsumerRecord<K, V>) rec));
 				return new ConsumerRecords<>(remains);
 			}
 		}

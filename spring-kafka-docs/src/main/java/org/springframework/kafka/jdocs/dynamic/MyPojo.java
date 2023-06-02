@@ -28,27 +28,27 @@ import org.springframework.kafka.annotation.KafkaListener;
 
 public class MyPojo {
 
-    private final String id;
+	private final String id;
 
-    private final String topic;
+	private final String topic;
 
-    public MyPojo(String id, String topic) {
-        this.id = id;
-        this.topic = topic;
-    }
+	public MyPojo(String id, String topic) {
+		this.id = id;
+		this.topic = topic;
+	}
 
-    public String getId() {
-        return this.id;
-    }
+	public String getId() {
+		return this.id;
+	}
 
-    public String getTopic() {
-        return this.topic;
-    }
+	public String getTopic() {
+		return this.topic;
+	}
 
-    @KafkaListener(id = "#{__listener.id}", topics = "#{__listener.topic}")
-    public void listen(String in) {
-        System.out.println(in);
-    }
+	@KafkaListener(id = "#{__listener.id}", topics = "#{__listener.topic}")
+	public void listen(String in) {
+		System.out.println(in);
+	}
 
 }
 // end::pojo[]

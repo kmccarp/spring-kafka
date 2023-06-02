@@ -46,7 +46,7 @@ public class ToFromStringSerde<T> implements Serde<T> {
 	 * @param fromStringDeserializer the {@link ParseStringDeserializer}.
 	 */
 	public ToFromStringSerde(ToStringSerializer<T> toStringSerializer,
-			ParseStringDeserializer<T> fromStringDeserializer) {
+ParseStringDeserializer<T> fromStringDeserializer) {
 
 		Assert.notNull(toStringSerializer, "'toStringSerializer' must not be null.");
 		Assert.notNull(fromStringDeserializer, "'fromStringDeserializer' must not be null.");

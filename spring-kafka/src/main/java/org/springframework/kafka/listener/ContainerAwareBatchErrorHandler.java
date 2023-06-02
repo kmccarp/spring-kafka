@@ -40,7 +40,7 @@ public interface ContainerAwareBatchErrorHandler extends ConsumerAwareBatchError
 
 	@Override
 	void handle(Exception thrownException, @Nullable ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container);
+MessageListenerContainer container);
 
 	/**
 	 * Handle the exception.
@@ -54,7 +54,7 @@ public interface ContainerAwareBatchErrorHandler extends ConsumerAwareBatchError
 	@Override
 	@SuppressWarnings("unused")
 	default void handle(Exception thrownException, @Nullable ConsumerRecords<?, ?> data,
-			Consumer<?, ?> consumer, MessageListenerContainer container, @Nullable Runnable invokeListener) {
+Consumer<?, ?> consumer, MessageListenerContainer container, @Nullable Runnable invokeListener) {
 
 		handle(thrownException, data, consumer, container);
 	}

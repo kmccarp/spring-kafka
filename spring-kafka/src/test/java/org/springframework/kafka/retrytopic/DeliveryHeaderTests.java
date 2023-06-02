@@ -62,12 +62,12 @@ public class DeliveryHeaderTests {
 
 	@Test
 	void deliveryAttempts(@Autowired Config config, @Autowired KafkaTemplate<Integer, String> template)
-			throws InterruptedException {
+throws InterruptedException {
 
 		template.send("dh1", "test");
 		assertThat(config.latch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(config.attempts.toString())
-				.isEqualTo("[[1, 1], [2, 1], [3, 1], [1, 2], [2, 2], [3, 2], [1, 3], [2, 3], [3, 3]]");
+	.isEqualTo("[[1, 1], [2, 1], [3, 1], [1, 2], [2, 2], [3, 2], [1, 3], [2, 3], [3, 3]]");
 	}
 
 	@Configuration
@@ -84,7 +84,7 @@ public class DeliveryHeaderTests {
 		@Override
 		protected void configureBlockingRetries(BlockingRetriesConfigurer blockingRetries) {
 			blockingRetries.retryOn(RuntimeException.class)
-					.backOff(new FixedBackOff(0, 2));
+		.backOff(new FixedBackOff(0, 2));
 		}
 
 		@Override
@@ -95,7 +95,7 @@ public class DeliveryHeaderTests {
 		@RetryableTopic(backoff = @Backoff(maxDelay = 0))
 		@KafkaListener(id = "dh1", topics = "dh1")
 		void listen(String in, @Header(KafkaHeaders.DELIVERY_ATTEMPT) int delivery,
-				@Header(name = RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS, required = false) Integer retryAttempts) {
+	@Header(name = RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS, required = false) Integer retryAttempts) {
 
 			this.attempts.add(List.of(delivery, retryAttempts == null ? 1 : retryAttempts));
 			this.latch.countDown();
@@ -114,10 +114,10 @@ public class DeliveryHeaderTests {
 
 		@Bean
 		ConcurrentKafkaListenerContainerFactory<Integer, String> kafkaListenerContainerFactory(
-				ConsumerFactory<Integer, String> cf) {
+	ConsumerFactory<Integer, String> cf) {
 
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(cf);
 			factory.getContainerProperties().setDeliveryAttemptHeader(true);
 			return factory;
@@ -126,7 +126,7 @@ public class DeliveryHeaderTests {
 		@Bean
 		ConsumerFactory<Integer, String> cf() {
 			return new DefaultKafkaConsumerFactory<>(
-					KafkaTestUtils.consumerProps("dh1", "false", this.broker));
+		KafkaTestUtils.consumerProps("dh1", "false", this.broker));
 		}
 
 		@Bean

@@ -83,8 +83,8 @@ public class RetryableTopicAnnotationProcessor {
 	 */
 	public RetryableTopicAnnotationProcessor(BeanFactory beanFactory) {
 		this(beanFactory, new StandardBeanExpressionResolver(), beanFactory instanceof ConfigurableBeanFactory
-				? new BeanExpressionContext((ConfigurableBeanFactory) beanFactory, null)
-				: null); // NOSONAR
+	? new BeanExpressionContext((ConfigurableBeanFactory) beanFactory, null)
+	: null); // NOSONAR
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class RetryableTopicAnnotationProcessor {
 	 * @param expressionContext the bean expression context.
 	 */
 	public RetryableTopicAnnotationProcessor(BeanFactory beanFactory, BeanExpressionResolver resolver,
-			BeanExpressionContext expressionContext) {
+BeanExpressionContext expressionContext) {
 
 		this.beanFactory = beanFactory;
 		this.resolver = resolver;
@@ -103,7 +103,7 @@ public class RetryableTopicAnnotationProcessor {
 
 	@SuppressWarnings("deprecation")
 	public RetryTopicConfiguration processAnnotation(String[] topics, Method method, RetryableTopic annotation,
-			Object bean) {
+Object bean) {
 
 		Long resolvedTimeout = resolveExpressionAsLong(annotation.timeout(), "timeout", false);
 		long timeout = RetryTopicConstants.NOT_SET;
@@ -111,9 +111,9 @@ public class RetryableTopicAnnotationProcessor {
 			timeout = resolvedTimeout;
 		}
 		List<Class<? extends Throwable>> includes = resolveClasses(annotation.include(), annotation.includeNames(),
-				"include");
+	"include");
 		List<Class<? extends Throwable>> excludes = resolveClasses(annotation.exclude(), annotation.excludeNames(),
-				"exclude");
+	"exclude");
 		boolean traverse = false;
 		if (StringUtils.hasText(annotation.traversingCauses())) {
 			Boolean traverseResolved = resolveExpressionAsBoolean(annotation.traversingCauses(), "traversingCauses");
@@ -129,27 +129,27 @@ public class RetryableTopicAnnotationProcessor {
 			autoStartDlt = resolveExpressionAsBoolean(annotation.autoStartDltHandler(), "autoStartDltContainer");
 		}
 		return RetryTopicConfigurationBuilder.newInstance()
-				.maxAttempts(resolveExpressionAsInteger(annotation.attempts(), "attempts", true))
-				.concurrency(resolveExpressionAsInteger(annotation.concurrency(), "concurrency", false))
-				.customBackoff(createBackoffFromAnnotation(annotation.backoff(), this.beanFactory))
-				.retryTopicSuffix(resolveExpressionAsString(annotation.retryTopicSuffix(), "retryTopicSuffix"))
-				.dltSuffix(resolveExpressionAsString(annotation.dltTopicSuffix(), "dltTopicSuffix"))
-				.dltHandlerMethod(getDltProcessor(method, bean))
-				.includeTopics(Arrays.asList(topics))
-				.listenerFactory(resolveExpressionAsString(annotation.listenerContainerFactory(), "listenerContainerFactory"))
-				.autoCreateTopics(resolveExpressionAsBoolean(annotation.autoCreateTopics(), "autoCreateTopics"),
-						resolveExpressionAsInteger(annotation.numPartitions(), "numPartitions", true),
-						resolveExpressionAsShort(annotation.replicationFactor(), "replicationFactor", true))
-				.retryOn(includes)
-				.notRetryOn(excludes)
-				.traversingCauses(traverse)
-				.useSingleTopicForFixedDelays(annotation.fixedDelayTopicStrategy())
-				.dltProcessingFailureStrategy(annotation.dltStrategy())
-				.autoStartDltHandler(autoStartDlt)
-				.setTopicSuffixingStrategy(annotation.topicSuffixingStrategy())
-				.sameIntervalTopicReuseStrategy(annotation.sameIntervalTopicReuseStrategy())
-				.timeoutAfter(timeout)
-				.create(getKafkaTemplate(resolveExpressionAsString(annotation.kafkaTemplate(), "kafkaTemplate"), topics));
+	.maxAttempts(resolveExpressionAsInteger(annotation.attempts(), "attempts", true))
+	.concurrency(resolveExpressionAsInteger(annotation.concurrency(), "concurrency", false))
+	.customBackoff(createBackoffFromAnnotation(annotation.backoff(), this.beanFactory))
+	.retryTopicSuffix(resolveExpressionAsString(annotation.retryTopicSuffix(), "retryTopicSuffix"))
+	.dltSuffix(resolveExpressionAsString(annotation.dltTopicSuffix(), "dltTopicSuffix"))
+	.dltHandlerMethod(getDltProcessor(method, bean))
+	.includeTopics(Arrays.asList(topics))
+	.listenerFactory(resolveExpressionAsString(annotation.listenerContainerFactory(), "listenerContainerFactory"))
+	.autoCreateTopics(resolveExpressionAsBoolean(annotation.autoCreateTopics(), "autoCreateTopics"),
+resolveExpressionAsInteger(annotation.numPartitions(), "numPartitions", true),
+resolveExpressionAsShort(annotation.replicationFactor(), "replicationFactor", true))
+	.retryOn(includes)
+	.notRetryOn(excludes)
+	.traversingCauses(traverse)
+	.useSingleTopicForFixedDelays(annotation.fixedDelayTopicStrategy())
+	.dltProcessingFailureStrategy(annotation.dltStrategy())
+	.autoStartDltHandler(autoStartDlt)
+	.setTopicSuffixingStrategy(annotation.topicSuffixingStrategy())
+	.sameIntervalTopicReuseStrategy(annotation.sameIntervalTopicReuseStrategy())
+	.timeoutAfter(timeout)
+	.create(getKafkaTemplate(resolveExpressionAsString(annotation.kafkaTemplate(), "kafkaTemplate"), topics));
 	}
 
 	private SleepingBackOffPolicy<?> createBackoffFromAnnotation(Backoff backoff, BeanFactory beanFactory) { // NOSONAR
@@ -195,10 +195,10 @@ public class RetryableTopicAnnotationProcessor {
 	private EndpointHandlerMethod getDltProcessor(Method listenerMethod, Object bean) {
 		Class<?> declaringClass = listenerMethod.getDeclaringClass();
 		return Arrays.stream(ReflectionUtils.getDeclaredMethods(declaringClass))
-				.filter(method -> AnnotationUtils.findAnnotation(method, DltHandler.class) != null)
-				.map(method -> RetryTopicConfigurer.createHandlerMethodWith(bean, method))
-				.findFirst()
-				.orElse(RetryTopicConfigurer.DEFAULT_DLT_HANDLER);
+	.filter(method -> AnnotationUtils.findAnnotation(method, DltHandler.class) != null)
+	.map(method -> RetryTopicConfigurer.createHandlerMethodWith(bean, method))
+	.findFirst()
+	.orElse(RetryTopicConfigurer.DEFAULT_DLT_HANDLER);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -210,19 +210,19 @@ public class RetryableTopicAnnotationProcessor {
 			}
 			catch (NoSuchBeanDefinitionException ex) {
 				throw new BeanInitializationException("Could not register Kafka listener endpoint for topics "
-						+ Arrays.asList(topics) + ", no " + KafkaOperations.class.getSimpleName()
-						+ " with id '" + kafkaTemplateName + "' was found in the application context", ex);
+			+ Arrays.asList(topics) + ", no " + KafkaOperations.class.getSimpleName()
+			+ " with id '" + kafkaTemplateName + "' was found in the application context", ex);
 			}
 		}
 		try {
 			return this.beanFactory.getBean(RetryTopicBeanNames.DEFAULT_KAFKA_TEMPLATE_BEAN_NAME,
-					KafkaOperations.class);
+		KafkaOperations.class);
 		}
 		catch (NoSuchBeanDefinitionException ex2) {
 			KafkaOperations<?, ?> kafkaOps = this.beanFactory.getBeanProvider(KafkaOperations.class).getIfUnique();
 			Assert.state(kafkaOps != null, () -> "A single KafkaTemplate bean could not be found in the context; "
-					+ " a single instance must exist, or one specifically named "
-					+ RetryTopicBeanNames.DEFAULT_KAFKA_TEMPLATE_BEAN_NAME);
+		+ " a single instance must exist, or one specifically named "
+		+ RetryTopicBeanNames.DEFAULT_KAFKA_TEMPLATE_BEAN_NAME);
 			return kafkaOps;
 		}
 	}
@@ -234,7 +234,7 @@ public class RetryableTopicAnnotationProcessor {
 		}
 		else if (resolved != null) {
 			throw new IllegalStateException(THE_OSQ + attribute + "] must resolve to a String. "
-					+ RESOLVED_TO_OSQ + resolved.getClass() + CSQ_FOR_OSQ + value + CSQ);
+		+ RESOLVED_TO_OSQ + resolved.getClass() + CSQ_FOR_OSQ + value + CSQ);
 		}
 		return null;
 	}
@@ -255,9 +255,9 @@ public class RetryableTopicAnnotationProcessor {
 		}
 		else if (resolved != null || required) {
 			throw new IllegalStateException(
-					THE_OSQ + attribute + "] must resolve to an Number or a String that can be parsed as an Integer. "
-							+ RESOLVED_TO_OSQ + (resolved == null ? NULL : resolved.getClass())
-									+ CSQ_FOR_OSQ + value + CSQ);
+		THE_OSQ + attribute + "] must resolve to an Number or a String that can be parsed as an Integer. "
+	+ RESOLVED_TO_OSQ + (resolved == null ? NULL : resolved.getClass())
+	+ CSQ_FOR_OSQ + value + CSQ);
 		}
 		return result;
 	}
@@ -278,9 +278,9 @@ public class RetryableTopicAnnotationProcessor {
 		}
 		else if (resolved != null || required) {
 			throw new IllegalStateException(
-					THE_OSQ + attribute + "] must resolve to an Number or a String that can be parsed as a Short. "
-							+ RESOLVED_TO_OSQ + (resolved == null ? NULL : resolved.getClass())
-									+ CSQ_FOR_OSQ + value + CSQ);
+		THE_OSQ + attribute + "] must resolve to an Number or a String that can be parsed as a Short. "
+	+ RESOLVED_TO_OSQ + (resolved == null ? NULL : resolved.getClass())
+	+ CSQ_FOR_OSQ + value + CSQ);
 		}
 		return result;
 	}
@@ -301,9 +301,9 @@ public class RetryableTopicAnnotationProcessor {
 		}
 		else if (resolved != null || required) {
 			throw new IllegalStateException(
-					THE_OSQ + attribute + "] must resolve to an Number or a String that can be parsed as a Long. "
-							+ RESOLVED_TO_OSQ + (resolved == null ? NULL : resolved.getClass())
-									+ CSQ_FOR_OSQ + value + CSQ);
+		THE_OSQ + attribute + "] must resolve to an Number or a String that can be parsed as a Long. "
+	+ RESOLVED_TO_OSQ + (resolved == null ? NULL : resolved.getClass())
+	+ CSQ_FOR_OSQ + value + CSQ);
 		}
 		return result;
 	}
@@ -324,9 +324,9 @@ public class RetryableTopicAnnotationProcessor {
 		}
 		else if (resolved != null || required) {
 			throw new IllegalStateException(
-					THE_OSQ + attribute + "] must resolve to an Number or a String that can be parsed as a Double. "
-							+ RESOLVED_TO_OSQ + (resolved == null ? NULL : resolved.getClass())
-									+ CSQ_FOR_OSQ + value + CSQ);
+		THE_OSQ + attribute + "] must resolve to an Number or a String that can be parsed as a Double. "
+	+ RESOLVED_TO_OSQ + (resolved == null ? NULL : resolved.getClass())
+	+ CSQ_FOR_OSQ + value + CSQ);
 		}
 		return result;
 	}
@@ -342,15 +342,15 @@ public class RetryableTopicAnnotationProcessor {
 		}
 		else if (resolved != null) {
 			throw new IllegalStateException(
-					THE_OSQ + attribute + "] must resolve to a Boolean or a String that can be parsed as a Boolean. "
-							+ RESOLVED_TO_OSQ + resolved.getClass() + CSQ_FOR_OSQ + value + CSQ);
+		THE_OSQ + attribute + "] must resolve to a Boolean or a String that can be parsed as a Boolean. "
+	+ RESOLVED_TO_OSQ + resolved.getClass() + CSQ_FOR_OSQ + value + CSQ);
 		}
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
 	private List<Class<? extends Throwable>> resolveClasses(Class<? extends Throwable>[] fromAnnot, String[] names,
-			String type) {
+String type) {
 
 		List<Class<? extends Throwable>> classes = new ArrayList<>(Arrays.asList(fromAnnot));
 		try {

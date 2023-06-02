@@ -67,19 +67,19 @@ class EndpointCustomizerFactoryTests {
 		given(endpoint.getTopics()).willReturn(Arrays.asList(topics));
 		given(properties.suffix()).willReturn("");
 		RetryTopicNamesProviderFactory.RetryTopicNamesProvider provider =
-				new SuffixingRetryTopicNamesProviderFactory().createRetryTopicNamesProvider(properties);
+	new SuffixingRetryTopicNamesProviderFactory().createRetryTopicNamesProvider(properties);
 		given(retryTopicNamesProviderFactory.createRetryTopicNamesProvider(properties)).willReturn(provider);
 
 		EndpointCustomizer endpointCustomizer = new EndpointCustomizerFactory(properties, beanMethod,
-				beanFactory, retryTopicNamesProviderFactory).createEndpointCustomizer();
+	beanFactory, retryTopicNamesProviderFactory).createEndpointCustomizer();
 
 		List<EndpointCustomizer.TopicNamesHolder> holders =
-				(List<EndpointCustomizer.TopicNamesHolder>) endpointCustomizer.customizeEndpointAndCollectTopics(endpoint);
+	(List<EndpointCustomizer.TopicNamesHolder>) endpointCustomizer.customizeEndpointAndCollectTopics(endpoint);
 
 		assertThat(holders).hasSize(2).element(0)
-				.matches(assertMainTopic(0));
+	.matches(assertMainTopic(0));
 		assertThat(holders).element(1)
-				.matches(assertMainTopic(1));
+	.matches(assertMainTopic(1));
 
 	}
 
@@ -90,44 +90,44 @@ class EndpointCustomizerFactoryTests {
 		given(properties.isMainEndpoint()).willReturn(true);
 		given(properties.suffix()).willReturn("");
 		RetryTopicNamesProviderFactory.RetryTopicNamesProvider provider =
-				new SuffixingRetryTopicNamesProviderFactory().createRetryTopicNamesProvider(properties);
+	new SuffixingRetryTopicNamesProviderFactory().createRetryTopicNamesProvider(properties);
 		given(retryTopicNamesProviderFactory.createRetryTopicNamesProvider(properties)).willReturn(provider);
 
 		String testString = "testString";
 		MethodKafkaListenerEndpoint<Object, Object> endpointTPO = new MethodKafkaListenerEndpoint<>();
 		endpointTPO.setTopicPartitions(new TopicPartitionOffset(topics[0], 0, 0L),
-				new TopicPartitionOffset(topics[1], 1, 1L));
+	new TopicPartitionOffset(topics[1], 1, 1L));
 		endpointTPO.setMethod(this.method);
 		endpointTPO.setId(testString);
 		endpointTPO.setClientIdPrefix(testString);
 		endpointTPO.setGroup(testString);
 
 		EndpointCustomizer endpointCustomizer = new EndpointCustomizerFactory(properties, beanMethod,
-				beanFactory, retryTopicNamesProviderFactory).createEndpointCustomizer();
+	beanFactory, retryTopicNamesProviderFactory).createEndpointCustomizer();
 
 		List<EndpointCustomizer.TopicNamesHolder> holders =
-				(List<EndpointCustomizer.TopicNamesHolder>) endpointCustomizer.customizeEndpointAndCollectTopics(endpointTPO);
+	(List<EndpointCustomizer.TopicNamesHolder>) endpointCustomizer.customizeEndpointAndCollectTopics(endpointTPO);
 
 		assertThat(holders).hasSize(2).element(0)
-				.matches(assertMainTopic(0));
+	.matches(assertMainTopic(0));
 		assertThat(holders).element(1)
-				.matches(assertMainTopic(1));
+	.matches(assertMainTopic(1));
 
 		assertThat(endpointTPO.getTopics())
-				.isEmpty();
+	.isEmpty();
 
 		TopicPartitionOffset[] topicPartitionsToAssign = endpointTPO.getTopicPartitionsToAssign();
 		assertThat(topicPartitionsToAssign).hasSize(2);
 		assertThat(equalsTopicPartitionOffset(topicPartitionsToAssign[0],
-				new TopicPartitionOffset(topics[0], 0, 0L))).isTrue();
+	new TopicPartitionOffset(topics[0], 0, 0L))).isTrue();
 		assertThat(equalsTopicPartitionOffset(topicPartitionsToAssign[1],
-				new TopicPartitionOffset(topics[1], 1, 1L))).isTrue();
+	new TopicPartitionOffset(topics[1], 1, 1L))).isTrue();
 
 	}
 
 	private Predicate<EndpointCustomizer.TopicNamesHolder> assertMainTopic(int index) {
 		return holder -> holder.getCustomizedTopic().equals(topics[index])
-				&& holder.getMainTopic().equals(topics[index]);
+	&& holder.getMainTopic().equals(topics[index]);
 	}
 
 	@Test
@@ -143,7 +143,7 @@ class EndpointCustomizerFactoryTests {
 
 		MethodKafkaListenerEndpoint<Object, Object> endpointTPO = new MethodKafkaListenerEndpoint<>();
 		endpointTPO.setTopicPartitions(new TopicPartitionOffset(topics[0], 0, 0L),
-				new TopicPartitionOffset(topics[1], 1, 1L));
+	new TopicPartitionOffset(topics[1], 1, 1L));
 		endpointTPO.setMethod(this.method);
 		endpointTPO.setId(testString);
 		endpointTPO.setClientIdPrefix(testString);
@@ -156,68 +156,68 @@ class EndpointCustomizerFactoryTests {
 		given(properties.numPartitions()).willReturn(2);
 
 		RetryTopicNamesProviderFactory.RetryTopicNamesProvider provider =
-				new SuffixingRetryTopicNamesProviderFactory().createRetryTopicNamesProvider(properties);
+	new SuffixingRetryTopicNamesProviderFactory().createRetryTopicNamesProvider(properties);
 		given(retryTopicNamesProviderFactory.createRetryTopicNamesProvider(properties)).willReturn(provider);
 
 		EndpointCustomizer endpointCustomizer = new EndpointCustomizerFactory(properties, beanMethod,
-				beanFactory, retryTopicNamesProviderFactory).createEndpointCustomizer();
+	beanFactory, retryTopicNamesProviderFactory).createEndpointCustomizer();
 
 		List<EndpointCustomizer.TopicNamesHolder> holders =
-				(List<EndpointCustomizer.TopicNamesHolder>) endpointCustomizer.customizeEndpointAndCollectTopics(endpoint);
+	(List<EndpointCustomizer.TopicNamesHolder>) endpointCustomizer.customizeEndpointAndCollectTopics(endpoint);
 
 		String topic1WithSuffix = topics[0] + suffix;
 		String topic2WithSuffix = topics[1] + suffix;
 		assertThat(holders).hasSize(2).element(0)
-				.matches(holder -> holder.getMainTopic().equals(topics[0])
-						&& holder.getCustomizedTopic().equals(topic1WithSuffix));
+	.matches(holder -> holder.getMainTopic().equals(topics[0])
+&& holder.getCustomizedTopic().equals(topic1WithSuffix));
 		assertThat(holders).hasSize(2).element(1)
-				.matches(holder -> holder.getMainTopic().equals(topics[1])
-						&& holder.getCustomizedTopic().equals(topic2WithSuffix));
+	.matches(holder -> holder.getMainTopic().equals(topics[1])
+&& holder.getCustomizedTopic().equals(topic2WithSuffix));
 
 		String testStringSuffix = testString + suffix;
 
 		assertThat(endpoint.getTopics())
-				.contains(topic1WithSuffix, topic2WithSuffix);
+	.contains(topic1WithSuffix, topic2WithSuffix);
 		assertThat(endpoint.getId())
-				.isEqualTo(testStringSuffix);
+	.isEqualTo(testStringSuffix);
 		assertThat(endpoint.getClientIdPrefix())
-				.isEqualTo(testStringSuffix);
+	.isEqualTo(testStringSuffix);
 		assertThat(endpoint.getGroup())
-				.isEqualTo(testStringSuffix);
+	.isEqualTo(testStringSuffix);
 		assertThat(endpoint.getTopicPartitionsToAssign()).isEmpty();
 
 		List<EndpointCustomizer.TopicNamesHolder> holdersTPO =
-				(List<EndpointCustomizer.TopicNamesHolder>) endpointCustomizer.customizeEndpointAndCollectTopics(endpointTPO);
+	(List<EndpointCustomizer.TopicNamesHolder>) endpointCustomizer.customizeEndpointAndCollectTopics(endpointTPO);
 
 		assertThat(holdersTPO).hasSize(2).element(0)
-				.matches(holder -> holder.getMainTopic().equals(topics[0])
-						&& holder.getCustomizedTopic().equals(topic1WithSuffix));
+	.matches(holder -> holder.getMainTopic().equals(topics[0])
+&& holder.getCustomizedTopic().equals(topic1WithSuffix));
 		assertThat(holdersTPO).hasSize(2).element(1)
-				.matches(holder -> holder.getMainTopic().equals(topics[1])
-						&& holder.getCustomizedTopic().equals(topic2WithSuffix));
+	.matches(holder -> holder.getMainTopic().equals(topics[1])
+&& holder.getCustomizedTopic().equals(topic2WithSuffix));
 
 		assertThat(endpointTPO.getTopics())
-				.isEmpty();
+	.isEmpty();
 
 		TopicPartitionOffset[] topicPartitionsToAssign = endpointTPO.getTopicPartitionsToAssign();
 		assertThat(topicPartitionsToAssign).hasSize(2);
 		assertThat(equalsTopicPartitionOffset(topicPartitionsToAssign[0],
-				new TopicPartitionOffset(topic1WithSuffix, 0, (Long) null))).isTrue();
+	new TopicPartitionOffset(topic1WithSuffix, 0, (Long) null))).isTrue();
 		assertThat(equalsTopicPartitionOffset(topicPartitionsToAssign[1],
-				new TopicPartitionOffset(topic2WithSuffix, 1, (Long) null))).isTrue();
+	new TopicPartitionOffset(topic2WithSuffix, 1, (Long) null))).isTrue();
 
 		assertThat(endpointTPO.getId())
-				.isEqualTo(testStringSuffix);
+	.isEqualTo(testStringSuffix);
 		assertThat(endpointTPO.getClientIdPrefix())
-				.isEqualTo(testStringSuffix);
+	.isEqualTo(testStringSuffix);
 		assertThat(endpointTPO.getGroup())
-				.isEqualTo(testStringSuffix);
+	.isEqualTo(testStringSuffix);
 	}
 
 	private boolean equalsTopicPartitionOffset(TopicPartitionOffset tpo1, TopicPartitionOffset tpo2) {
 		return tpo1.getTopicPartition().equals(tpo2.getTopicPartition()) &&
-				((tpo1.getOffset() == null && tpo2.getOffset() == null) ||
-						(tpo1.getOffset() != null && tpo1.getOffset().equals(tpo2.getOffset())));
+	((tpo1.getOffset() == null && tpo2.getOffset() == null) ||
+(tpo1.getOffset() != null && tpo1.getOffset().equals(tpo2.getOffset())));
 
 	}
 }

@@ -65,14 +65,14 @@ public class FallbackBatchErrorHandlerTests {
 	void recover() {
 		this.invoked = 0;
 		List<ConsumerRecord<?, ?>> recovered = new ArrayList<>();
-		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 3L), (cr, ex) ->  {
+		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 3L), (cr, ex) -> {
 			recovered.add(cr);
 		});
 		Map<TopicPartition, List<ConsumerRecord<Object, Object>>> map = new HashMap<>();
 		map.put(new TopicPartition("foo", 0),
-				Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
 		map.put(new TopicPartition("foo", 1),
-				Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
 		ConsumerRecords<?, ?> records = new ConsumerRecords<>(map);
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		MessageListenerContainer container = mock(MessageListenerContainer.class);
@@ -94,14 +94,14 @@ public class FallbackBatchErrorHandlerTests {
 	void successOnRetry() {
 		this.invoked = 0;
 		List<ConsumerRecord<?, ?>> recovered = new ArrayList<>();
-		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 3L), (cr, ex) ->  {
+		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 3L), (cr, ex) -> {
 			recovered.add(cr);
 		});
 		Map<TopicPartition, List<ConsumerRecord<Object, Object>>> map = new HashMap<>();
 		map.put(new TopicPartition("foo", 0),
-				Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
 		map.put(new TopicPartition("foo", 1),
-				Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
 		ConsumerRecords<?, ?> records = new ConsumerRecords<>(map);
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		MessageListenerContainer container = mock(MessageListenerContainer.class);
@@ -120,24 +120,24 @@ public class FallbackBatchErrorHandlerTests {
 	void recoveryFails() {
 		this.invoked = 0;
 		List<ConsumerRecord<?, ?>> recovered = new ArrayList<>();
-		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 3L), (cr, ex) ->  {
+		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 3L), (cr, ex) -> {
 			recovered.add(cr);
 			throw new RuntimeException("can't recover");
 		});
 		Map<TopicPartition, List<ConsumerRecord<Object, Object>>> map = new HashMap<>();
 		map.put(new TopicPartition("foo", 0),
-				Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
 		map.put(new TopicPartition("foo", 1),
-				Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
 		ConsumerRecords<?, ?> records = new ConsumerRecords<>(map);
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		MessageListenerContainer container = mock(MessageListenerContainer.class);
 		given(container.isRunning()).willReturn(true);
 		assertThatExceptionOfType(RuntimeException.class).isThrownBy(() ->
-		eh.handleBatch(new RuntimeException(), records, consumer, container, () -> {
-			this.invoked++;
-			throw new RuntimeException();
-		}));
+	eh.handleBatch(new RuntimeException(), records, consumer, container, () -> {
+		this.invoked++;
+		throw new RuntimeException();
+	}));
 		assertThat(this.invoked).isEqualTo(3);
 		assertThat(recovered).hasSize(1);
 		verify(consumer).pause(any());
@@ -152,25 +152,25 @@ public class FallbackBatchErrorHandlerTests {
 	void exitOnContainerStop() {
 		this.invoked = 0;
 		List<ConsumerRecord<?, ?>> recovered = new ArrayList<>();
-		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0, 99999), (cr, ex) ->  {
+		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0, 99999), (cr, ex) -> {
 			recovered.add(cr);
 		});
 		Map<TopicPartition, List<ConsumerRecord<Object, Object>>> map = new HashMap<>();
 		map.put(new TopicPartition("foo", 0),
-				Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
 		map.put(new TopicPartition("foo", 1),
-				Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
 		ConsumerRecords<?, ?> records = new ConsumerRecords<>(map);
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		MessageListenerContainer container = mock(MessageListenerContainer.class);
 		AtomicBoolean stopped = new AtomicBoolean(true);
 		willAnswer(inv -> stopped.get()).given(container).isRunning();
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() ->
-			eh.handleBatch(new RuntimeException(), records, consumer, container, () -> {
-				this.invoked++;
-				stopped.set(false);
-				throw new RuntimeException();
-			})
+	eh.handleBatch(new RuntimeException(), records, consumer, container, () -> {
+		this.invoked++;
+		stopped.set(false);
+		throw new RuntimeException();
+	})
 		).withMessage("Container stopped during retries");
 		assertThat(this.invoked).isEqualTo(1);
 	}
@@ -179,21 +179,21 @@ public class FallbackBatchErrorHandlerTests {
 	void rePauseOnRebalance() {
 		this.invoked = 0;
 		List<ConsumerRecord<?, ?>> recovered = new ArrayList<>();
-		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 1L), (cr, ex) ->  {
+		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 1L), (cr, ex) -> {
 			recovered.add(cr);
 		});
 		Map<TopicPartition, List<ConsumerRecord<Object, Object>>> map = new HashMap<>();
 		map.put(new TopicPartition("foo", 0),
-				Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
 		map.put(new TopicPartition("foo", 1),
-				Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 1, 0L, "foo", "bar")));
 		ConsumerRecords<?, ?> records = new ConsumerRecords<>(map);
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		given(consumer.assignment()).willReturn(map.keySet());
 		AtomicBoolean pubPauseCalled = new AtomicBoolean();
 		willAnswer(inv -> {
 			eh.onPartitionsAssigned(consumer, List.of(new TopicPartition("foo", 0), new TopicPartition("foo", 1)),
-					() -> pubPauseCalled.set(true));
+		() -> pubPauseCalled.set(true));
 			return records;
 		}).given(consumer).poll(any());
 		KafkaMessageListenerContainer<?, ?> container = mock(KafkaMessageListenerContainer.class);
@@ -221,7 +221,8 @@ public class FallbackBatchErrorHandlerTests {
 
 	@Test
 	void resetRetryingFlagOnExceptionFromRetryBatch() {
-		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 1L), (consumerRecord, e) -> { });
+		FallbackBatchErrorHandler eh = new FallbackBatchErrorHandler(new FixedBackOff(0L, 1L), (consumerRecord, e) -> {
+		});
 
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		// KafkaException could be thrown from SeekToCurrentBatchErrorHandler, but it is hard to mock
@@ -233,58 +234,59 @@ public class FallbackBatchErrorHandlerTests {
 
 		Map<TopicPartition, List<ConsumerRecord<Object, Object>>> map = new HashMap<>();
 		map.put(new TopicPartition("foo", 0),
-				Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
+	Collections.singletonList(new ConsumerRecord<>("foo", 0, 0L, "foo", "bar")));
 		ConsumerRecords<?, ?> records = new ConsumerRecords<>(map);
 
-		assertThatThrownBy(() -> eh.handleBatch(new RuntimeException(), records, consumer, container, () -> { }))
-				.isSameAs(exception);
+		assertThatThrownBy(() -> eh.handleBatch(new RuntimeException(), records, consumer, container, () -> {
+		}))
+	.isSameAs(exception);
 
 		assertThat(getRetryingFieldValue(eh))
-				.withFailMessage("retrying field was not reset to false")
-				.isFalse();
+	.withFailMessage("retrying field was not reset to false")
+	.isFalse();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void reclassifyOnExceptionChange() {
 		AtomicReference<Exception> thrown = new AtomicReference<>();
-		DefaultErrorHandler eh = new DefaultErrorHandler((cr, ex) ->  {
+		DefaultErrorHandler eh = new DefaultErrorHandler((cr, ex) -> {
 			thrown.set(ex);
 		}, new FixedBackOff(0L, Long.MAX_VALUE));
 		eh.addNotRetryableExceptions(IllegalArgumentException.class);
 		ConsumerRecords records = new ConsumerRecords(
-				Map.of(new TopicPartition("foo", 0), List.of(new ConsumerRecord("foo", 0, 0L, null, "bar"))));
+	Map.of(new TopicPartition("foo", 0), List.of(new ConsumerRecord("foo", 0, 0L, null, "bar"))));
 		MessageListenerContainer container = mock(MessageListenerContainer.class);
 		given(container.isRunning()).willReturn(true);
 		eh.handleBatch(new IllegalStateException(), records, mock(Consumer.class), container,
-				() -> {
-					throw new ListenerExecutionFailedException("", new IllegalArgumentException());
-				});
+	() -> {
+		throw new ListenerExecutionFailedException("", new IllegalArgumentException());
+	});
 		assertThat(thrown.get()).isInstanceOf(ListenerExecutionFailedException.class)
-				.extracting("cause")
-				.isInstanceOf(IllegalArgumentException.class);
+	.extracting("cause")
+	.isInstanceOf(IllegalArgumentException.class);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void reclassifyUseSameBackOffOnExceptionChange() {
 		AtomicReference<Exception> thrown = new AtomicReference<>();
-		DefaultErrorHandler eh = new DefaultErrorHandler((cr, ex) ->  {
+		DefaultErrorHandler eh = new DefaultErrorHandler((cr, ex) -> {
 			thrown.set(ex);
 		}, new FixedBackOff(0L, 3));
 		ConsumerRecords records = new ConsumerRecords(
-				Map.of(new TopicPartition("foo", 0), List.of(new ConsumerRecord("foo", 0, 0L, null, "bar"))));
+	Map.of(new TopicPartition("foo", 0), List.of(new ConsumerRecord("foo", 0, 0L, null, "bar"))));
 		MessageListenerContainer container = mock(MessageListenerContainer.class);
 		given(container.isRunning()).willReturn(true);
 		AtomicInteger retries = new AtomicInteger();
 		eh.handleBatch(new IllegalStateException(), records, mock(Consumer.class), container,
-				() -> {
-					retries.incrementAndGet();
-					throw new ListenerExecutionFailedException("", new IllegalArgumentException());
-				});
+	() -> {
+		retries.incrementAndGet();
+		throw new ListenerExecutionFailedException("", new IllegalArgumentException());
+	});
 		assertThat(thrown.get()).isInstanceOf(ListenerExecutionFailedException.class)
-				.extracting("cause")
-				.isInstanceOf(IllegalArgumentException.class);
+	.extracting("cause")
+	.isInstanceOf(IllegalArgumentException.class);
 		assertThat(retries.get()).isEqualTo(3);
 	}
 

@@ -32,7 +32,7 @@ public interface KafkaConsumerBackoffManager {
 	void backOffIfNecessary(Context context);
 
 	default Context createContext(long dueTimestamp, String listenerId, TopicPartition topicPartition,
-								Consumer<?, ?> messageConsumer) {
+Consumer<?, ?> messageConsumer) {
 		return new Context(dueTimestamp, topicPartition, listenerId, messageConsumer);
 	}
 
@@ -64,7 +64,7 @@ public interface KafkaConsumerBackoffManager {
 		private final Consumer<?, ?> consumerForTimingAdjustment;
 
 		Context(long dueTimestamp, TopicPartition topicPartition, String listenerId,
-				Consumer<?, ?> consumerForTimingAdjustment) {
+	Consumer<?, ?> consumerForTimingAdjustment) {
 
 			this.dueTimestamp = dueTimestamp;
 			this.listenerId = listenerId;

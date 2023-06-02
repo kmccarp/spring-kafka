@@ -43,7 +43,7 @@ public class ContainerFactoryTests {
 	@Test
 	void testConfigContainer() {
 		ConcurrentKafkaListenerContainerFactory<String, String> factory =
-				new ConcurrentKafkaListenerContainerFactory<>();
+	new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setAutoStartup(false);
 		factory.setConcurrency(22);
 		@SuppressWarnings("unchecked")
@@ -61,14 +61,14 @@ public class ContainerFactoryTests {
 		assertThat(customized).isTrue();
 		ConcurrentMessageListenerContainer<String, String> container2 = factory.createContainer("foo");
 		assertThat(container.getContainerProperties().getKafkaConsumerProperties())
-				.isNotSameAs(container2.getContainerProperties().getKafkaConsumerProperties());
+	.isNotSameAs(container2.getContainerProperties().getKafkaConsumerProperties());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	void clientIdAndGroupIdTransferred() {
 		ConcurrentKafkaListenerContainerFactory<String, String> factory =
-				new ConcurrentKafkaListenerContainerFactory<>();
+	new ConcurrentKafkaListenerContainerFactory<>();
 		factory.getContainerProperties().setClientId("myClientId");
 		factory.getContainerProperties().setGroupId("myGroup");
 		factory.setConsumerFactory(mock(ConsumerFactory.class));
@@ -76,10 +76,10 @@ public class ContainerFactoryTests {
 
 			@Override
 			protected MessagingMessageListenerAdapter<String, String> createMessageListener(
-					MessageListenerContainer container, MessageConverter messageConverter) {
+		MessageListenerContainer container, MessageConverter messageConverter) {
 
 				RecordMessagingMessageListenerAdapter<String, String> adapter =
-						new RecordMessagingMessageListenerAdapter<String, String>(null, null);
+			new RecordMessagingMessageListenerAdapter<String, String>(null, null);
 				return adapter;
 			}
 
@@ -88,7 +88,7 @@ public class ContainerFactoryTests {
 		endpoint.setClientIdPrefix("");
 		endpoint.setGroupId("");
 		ConcurrentMessageListenerContainer<String, String> container = factory.createListenerContainer(
-				endpoint);
+	endpoint);
 		assertThat(container.getContainerProperties().getClientId()).isEqualTo("myClientId");
 		assertThat(container.getContainerProperties().getGroupId()).isEqualTo("myGroup");
 	}

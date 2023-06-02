@@ -105,22 +105,22 @@ class KafkaBackoffAwareMessageListenerAdapterTests {
 		given(headers.lastHeader(RetryTopicHeaders.DEFAULT_HEADER_BACKOFF_TIMESTAMP)).willReturn(null);
 
 		KafkaBackoffAwareMessageListenerAdapter<Object, Object> backoffAwareMessageListenerAdapter =
-				new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
+	new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
 
 		backoffAwareMessageListenerAdapter.onMessage(data, ack, consumer);
 
 		then(delegate)
-				.should(times(1))
-				.onMessage(data, ack, consumer);
+	.should(times(1))
+	.onMessage(data, ack, consumer);
 	}
 
 	private void setupCallBackOffManager() {
 		given(data.headers()).willReturn(headers);
 		given(headers.lastHeader(RetryTopicHeaders.DEFAULT_HEADER_BACKOFF_TIMESTAMP))
-				.willReturn(header);
+	.willReturn(header);
 
 		given(header.value())
-				.willReturn(originalTimestampBytes);
+	.willReturn(originalTimestampBytes);
 		given(data.topic()).willReturn(testTopic);
 		given(data.partition()).willReturn(testPartition);
 	}
@@ -132,20 +132,20 @@ class KafkaBackoffAwareMessageListenerAdapterTests {
 		setupCallBackOffManager();
 
 		given(kafkaConsumerBackoffManager.createContext(originalTimestamp, listenerId, topicPartition, null))
-				.willReturn(context);
+	.willReturn(context);
 
 		KafkaBackoffAwareMessageListenerAdapter<Object, Object> backoffAwareMessageListenerAdapter =
-				new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
+	new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
 
 		// when
 		backoffAwareMessageListenerAdapter.onMessage(data);
 
 		// then
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), isNull());
+	.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), isNull());
 		assertThat(timestampCaptor.getValue()).isEqualTo(originalTimestamp);
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.backOffIfNecessary(context);
+	.backOffIfNecessary(context);
 
 		then(delegate).should(times(1)).onMessage(data, null, null);
 	}
@@ -157,23 +157,23 @@ class KafkaBackoffAwareMessageListenerAdapterTests {
 		setupCallBackOffManager();
 
 		given(kafkaConsumerBackoffManager.createContext(originalTimestamp, listenerId, topicPartition, null))
-				.willReturn(context);
+	.willReturn(context);
 		RuntimeException thrownException = new RuntimeException();
 		willThrow(thrownException).given(delegate).onMessage(data, null, null);
 
 		KafkaBackoffAwareMessageListenerAdapter<Object, Object> backoffAwareMessageListenerAdapter =
-				new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
+	new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
 
 		// when
 		assertThatThrownBy(() -> backoffAwareMessageListenerAdapter.onMessage(data))
-				.isExactlyInstanceOf(TimestampedException.class).cause().isEqualTo(thrownException);
+	.isExactlyInstanceOf(TimestampedException.class).cause().isEqualTo(thrownException);
 
 		// then
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), isNull());
+	.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), isNull());
 		assertThat(timestampCaptor.getValue()).isEqualTo(originalTimestamp);
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.backOffIfNecessary(context);
+	.backOffIfNecessary(context);
 
 		then(delegate).should(times(1)).onMessage(data, null, null);
 	}
@@ -185,20 +185,20 @@ class KafkaBackoffAwareMessageListenerAdapterTests {
 		setupCallBackOffManager();
 
 		given(kafkaConsumerBackoffManager.createContext(originalTimestamp, listenerId, topicPartition, null))
-				.willReturn(context);
+	.willReturn(context);
 
 		KafkaBackoffAwareMessageListenerAdapter<Object, Object> backoffAwareMessageListenerAdapter =
-				new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
+	new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
 
 		// when
 		backoffAwareMessageListenerAdapter.onMessage(data, ack);
 
 		// then
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), isNull());
+	.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), isNull());
 		assertThat(timestampCaptor.getValue()).isEqualTo(originalTimestamp);
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.backOffIfNecessary(context);
+	.backOffIfNecessary(context);
 
 		then(delegate).should(times(1)).onMessage(data, ack, null);
 	}
@@ -209,20 +209,20 @@ class KafkaBackoffAwareMessageListenerAdapterTests {
 		// given
 		setupCallBackOffManager();
 		given(kafkaConsumerBackoffManager.createContext(originalTimestamp, listenerId, topicPartition, consumer))
-				.willReturn(context);
+	.willReturn(context);
 
 		KafkaBackoffAwareMessageListenerAdapter<Object, Object> backoffAwareMessageListenerAdapter =
-				new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
+	new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
 
 		// when
 		backoffAwareMessageListenerAdapter.onMessage(data, consumer);
 
 		// then
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), eq(consumer));
+	.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), eq(consumer));
 		assertThat(timestampCaptor.getValue()).isEqualTo(originalTimestamp);
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.backOffIfNecessary(context);
+	.backOffIfNecessary(context);
 
 		then(delegate).should(times(1)).onMessage(data, null, consumer);
 	}
@@ -233,21 +233,21 @@ class KafkaBackoffAwareMessageListenerAdapterTests {
 		// setup
 		setupCallBackOffManager();
 		given(kafkaConsumerBackoffManager.createContext(originalTimestamp, listenerId, topicPartition, consumer))
-				.willReturn(context);
+	.willReturn(context);
 
 
 		// given
 		KafkaBackoffAwareMessageListenerAdapter<Object, Object> backoffAwareMessageListenerAdapter =
-				new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
+	new KafkaBackoffAwareMessageListenerAdapter<>(delegate, kafkaConsumerBackoffManager, listenerId, clock);
 
 		backoffAwareMessageListenerAdapter.onMessage(data, ack, consumer);
 
 		// then
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), eq(consumer));
+	.createContext(timestampCaptor.capture(), eq(listenerId), eq(topicPartition), eq(consumer));
 		assertThat(timestampCaptor.getValue()).isEqualTo(originalTimestamp);
 		then(kafkaConsumerBackoffManager).should(times(1))
-				.backOffIfNecessary(context);
+	.backOffIfNecessary(context);
 
 		then(delegate).should(times(1)).onMessage(data, ack, consumer);
 	}

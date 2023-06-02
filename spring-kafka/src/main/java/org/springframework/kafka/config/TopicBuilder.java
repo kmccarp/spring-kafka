@@ -130,8 +130,8 @@ public final class TopicBuilder {
 
 	public NewTopic build() {
 		NewTopic topic = this.replicasAssignments == null
-				? new NewTopic(this.name, this.partitions, this.replicas)
-				: new NewTopic(this.name, this.replicasAssignments);
+	? new NewTopic(this.name, this.partitions, this.replicas)
+	: new NewTopic(this.name, this.replicasAssignments);
 		if (this.configs.size() > 0) {
 			topic.configs(this.configs);
 		}

@@ -57,7 +57,7 @@ public interface DestinationTopicProcessor {
 	 * @param context the context.
 	 */
 	void registerDestinationTopic(String mainTopicName, String destinationTopicName,
-			DestinationTopic.Properties destinationTopicProperties, Context context);
+DestinationTopic.Properties destinationTopicProperties, Context context);
 
 	class Context {
 

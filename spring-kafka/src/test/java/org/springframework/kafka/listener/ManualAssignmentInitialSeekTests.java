@@ -98,30 +98,30 @@ public class ManualAssignmentInitialSeekTests {
 	@Test
 	void parsePartitions() {
 		TopicPartitionOffset[] topicPartitions = registry.getListenerContainer("pp")
-				.getContainerProperties()
-				.getTopicPartitions();
+	.getContainerProperties()
+	.getTopicPartitions();
 		Stream<Integer> collected = Arrays.stream(topicPartitions)
-				.map(tp -> tp.getPartition());
+	.map(tp -> tp.getPartition());
 		assertThat(collected).containsExactly(0, 1, 2, 3, 4, 5, 7, 10, 11, 12, 13, 14, 15);
 
 		assertThat(Arrays.stream(this.registry.getListenerContainer("ppo")
-					.getContainerProperties()
-					.getTopicPartitions())).containsExactly(
-							new TopicPartitionOffset("foo", 0),
-							new TopicPartitionOffset("foo", 1),
-							new TopicPartitionOffset("foo", 2),
-							new TopicPartitionOffset("foo", 3));
+	.getContainerProperties()
+	.getTopicPartitions())).containsExactly(
+	new TopicPartitionOffset("foo", 0),
+	new TopicPartitionOffset("foo", 1),
+	new TopicPartitionOffset("foo", 2),
+	new TopicPartitionOffset("foo", 3));
 		assertThat(Arrays.stream(this.registry.getListenerContainer("ppo")
-				.getContainerProperties()
-				.getTopicPartitions())
-				.map(tpo -> tpo.getOffset())).containsExactly(0L, 0L, 1L, 1L);
+	.getContainerProperties()
+	.getTopicPartitions())
+	.map(tpo -> tpo.getOffset())).containsExactly(0L, 0L, 1L, 1L);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void parseUnitTests() throws Exception {
 		Method parser = KafkaListenerAnnotationBeanPostProcessor.class.getDeclaredMethod("parsePartitions",
-				String.class);
+	String.class);
 		parser.setAccessible(true);
 		KafkaListenerAnnotationBeanPostProcessor bpp = new KafkaListenerAnnotationBeanPostProcessor();
 		assertThat((Stream<Integer>) parser.invoke(bpp, "0-2")).containsExactly(0, 1, 2);
@@ -145,36 +145,35 @@ public class ManualAssignmentInitialSeekTests {
 		volatile Map<TopicPartition, Long> assignments;
 
 		@KafkaListener(groupId = "grp",
-				topicPartitions = @org.springframework.kafka.annotation.TopicPartition(topic = "foo",
-						partitions = "#{'0,1,2'.split(',')}",
-						partitionOffsets = @PartitionOffset(partition = "*", initialOffset = "0")))
+	topicPartitions = @org.springframework.kafka.annotation.TopicPartition(topic = "foo",
+partitions = "#{'0,1,2'.split(',')}",
+partitionOffsets = @PartitionOffset(partition = "*", initialOffset = "0")))
 		public void foo(String in) {
 		}
 
 		@KafkaListener(id = "pp", autoStartup = "false",
-				topicPartitions = @org.springframework.kafka.annotation.TopicPartition(topic = "foo",
-						partitions = "0-5, 7, 10-15"))
+	topicPartitions = @org.springframework.kafka.annotation.TopicPartition(topic = "foo",
+partitions = "0-5, 7, 10-15"))
 		public void bar(String in) {
 		}
 
 		@KafkaListener(id = "ppo", autoStartup = "false",
-				topicPartitions = @org.springframework.kafka.annotation.TopicPartition(topic = "foo",
-						partitionOffsets = { @PartitionOffset(partition = "0-1", initialOffset = "0"),
-								@PartitionOffset(partition = "#{'2-3'}", initialOffset = "1") }))
+	topicPartitions = @org.springframework.kafka.annotation.TopicPartition(topic = "foo",
+partitionOffsets = {@PartitionOffset(partition = "0-1", initialOffset = "0"),@PartitionOffset(partition = "#{'2-3'}", initialOffset = "1")}))
 		public void baz(String in) {
 		}
 
-		@SuppressWarnings({ "rawtypes" })
+		@SuppressWarnings({"rawtypes"})
 		@Bean
 		public ConsumerFactory consumerFactory() {
 			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 			final Consumer consumer = consumer();
 			given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-				.willReturn(consumer);
+		.willReturn(consumer);
 			return consumerFactory;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public Consumer consumer() {
 			final Consumer consumer = mock(Consumer.class);
@@ -195,7 +194,7 @@ public class ManualAssignmentInitialSeekTests {
 			return consumer;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();

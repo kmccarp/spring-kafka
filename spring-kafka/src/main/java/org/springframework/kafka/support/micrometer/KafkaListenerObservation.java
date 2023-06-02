@@ -86,12 +86,12 @@ public enum KafkaListenerObservation implements ObservationDocumentation {
 		 * A singleton instance of the convention.
 		 */
 		public static final DefaultKafkaListenerObservationConvention INSTANCE =
-				new DefaultKafkaListenerObservationConvention();
+	new DefaultKafkaListenerObservationConvention();
 
 		@Override
 		public KeyValues getLowCardinalityKeyValues(KafkaRecordReceiverContext context) {
 			return KeyValues.of(KafkaListenerObservation.ListenerLowCardinalityTags.LISTENER_ID.asString(),
-							context.getListenerId());
+		context.getListenerId());
 		}
 
 		@Override

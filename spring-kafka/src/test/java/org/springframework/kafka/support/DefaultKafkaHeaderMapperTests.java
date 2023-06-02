@@ -58,30 +58,30 @@ public class DefaultKafkaHeaderMapperTests {
 		mapper.addToStringClasses(Bar.class.getName());
 		MimeType utf8Text = new MimeType(MimeTypeUtils.TEXT_PLAIN, StandardCharsets.UTF_8);
 		Message<String> message = MessageBuilder.withPayload("foo")
-				.setHeader("foo", "bar".getBytes())
-				.setHeader("baz", "qux")
-				.setHeader("fix", new Foo())
-				.setHeader("linkedMVMap", new LinkedMultiValueMap<>())
-				.setHeader(MessageHeaders.REPLY_CHANNEL, new ExecutorSubscribableChannel())
-				.setHeader(MessageHeaders.ERROR_CHANNEL, "errors")
-				.setHeader(MessageHeaders.CONTENT_TYPE, utf8Text)
-				.setHeader("simpleContentType", MimeTypeUtils.TEXT_PLAIN_VALUE)
-				.setHeader("customToString", new Bar("fiz"))
-				.setHeader("uri", URI.create("https://foo.bar"))
-				.setHeader("intA", new int[] { 42 })
-				.setHeader("longA", new long[] { 42L })
-				.setHeader("floatA", new float[] { 1.0f })
-				.setHeader("doubleA", new double[] { 1.0 })
-				.setHeader("charA", new char[] { 'c' })
-				.setHeader("boolA", new boolean[] { true })
-				.setHeader("IntA", new Integer[] { 42 })
-				.setHeader("LongA", new Long[] { 42L })
-				.setHeader("FloatA", new Float[] { 1.0f })
-				.setHeader("DoubleA", new Double[] { 1.0 })
-				.setHeader("CharA", new Character[] { 'c' })
-				.setHeader("BoolA", new Boolean[] { true })
-				.setHeader("stringA", new String[] { "array" })
-				.build();
+	.setHeader("foo", "bar".getBytes())
+	.setHeader("baz", "qux")
+	.setHeader("fix", new Foo())
+	.setHeader("linkedMVMap", new LinkedMultiValueMap<>())
+	.setHeader(MessageHeaders.REPLY_CHANNEL, new ExecutorSubscribableChannel())
+	.setHeader(MessageHeaders.ERROR_CHANNEL, "errors")
+	.setHeader(MessageHeaders.CONTENT_TYPE, utf8Text)
+	.setHeader("simpleContentType", MimeTypeUtils.TEXT_PLAIN_VALUE)
+	.setHeader("customToString", new Bar("fiz"))
+	.setHeader("uri", URI.create("https://foo.bar"))
+	.setHeader("intA", new int[]{42})
+	.setHeader("longA", new long[]{42L})
+	.setHeader("floatA", new float[]{1.0f})
+	.setHeader("doubleA", new double[]{1.0})
+	.setHeader("charA", new char[]{'c'})
+	.setHeader("boolA", new boolean[]{true})
+	.setHeader("IntA", new Integer[]{42})
+	.setHeader("LongA", new Long[]{42L})
+	.setHeader("FloatA", new Float[]{1.0f})
+	.setHeader("DoubleA", new Double[]{1.0})
+	.setHeader("CharA", new Character[]{'c'})
+	.setHeader("BoolA", new Boolean[]{true})
+	.setHeader("stringA", new String[]{"array"})
+	.build();
 		RecordHeaders recordHeaders = new RecordHeaders();
 		mapper.fromHeaders(message.getHeaders(), recordHeaders);
 		int expectedSize = message.getHeaders().size() - 3; // ID, Timestamp, reply channel
@@ -99,17 +99,17 @@ public class DefaultKafkaHeaderMapperTests {
 		assertThat(headers.get(MessageHeaders.ERROR_CHANNEL)).isEqualTo("errors");
 		assertThat(headers.get("customToString")).isEqualTo("Bar [field=fiz]");
 		assertThat(headers.get("uri")).isEqualTo(URI.create("https://foo.bar"));
-		assertThat(headers.get("intA")).isEqualTo(new int[] { 42 });
-		assertThat(headers.get("longA")).isEqualTo(new long[] { 42L });
-		assertThat(headers.get("floatA")).isEqualTo(new float[] { 1.0f });
-		assertThat(headers.get("doubleA")).isEqualTo(new double[] { 1.0 });
-		assertThat(headers.get("charA")).isEqualTo(new char[] { 'c' });
-		assertThat(headers.get("IntA")).isEqualTo(new Integer[] { 42 });
-		assertThat(headers.get("LongA")).isEqualTo(new Long[] { 42L });
-		assertThat(headers.get("FloatA")).isEqualTo(new Float[] { 1.0f });
-		assertThat(headers.get("DoubleA")).isEqualTo(new Double[] { 1.0 });
-		assertThat(headers.get("CharA")).isEqualTo(new Character[] { 'c' });
-		assertThat(headers.get("stringA")).isEqualTo(new String[] { "array" });
+		assertThat(headers.get("intA")).isEqualTo(new int[]{42});
+		assertThat(headers.get("longA")).isEqualTo(new long[]{42L});
+		assertThat(headers.get("floatA")).isEqualTo(new float[]{1.0f});
+		assertThat(headers.get("doubleA")).isEqualTo(new double[]{1.0});
+		assertThat(headers.get("charA")).isEqualTo(new char[]{'c'});
+		assertThat(headers.get("IntA")).isEqualTo(new Integer[]{42});
+		assertThat(headers.get("LongA")).isEqualTo(new Long[]{42L});
+		assertThat(headers.get("FloatA")).isEqualTo(new Float[]{1.0f});
+		assertThat(headers.get("DoubleA")).isEqualTo(new Double[]{1.0});
+		assertThat(headers.get("CharA")).isEqualTo(new Character[]{'c'});
+		assertThat(headers.get("stringA")).isEqualTo(new String[]{"array"});
 		NonTrustedHeaderType ntht = (NonTrustedHeaderType) headers.get("fix");
 		assertThat(ntht.getHeaderValue()).isNotNull();
 		assertThat(ntht.getUntrustedType()).isEqualTo(Foo.class.getName());
@@ -129,8 +129,8 @@ public class DefaultKafkaHeaderMapperTests {
 	void testDeserializedNonTrusted() {
 		DefaultKafkaHeaderMapper mapper = new DefaultKafkaHeaderMapper();
 		Message<String> message = MessageBuilder.withPayload("foo")
-				.setHeader("fix", new Foo())
-				.build();
+	.setHeader("fix", new Foo())
+	.build();
 		RecordHeaders recordHeaders = new RecordHeaders();
 		mapper.fromHeaders(message.getHeaders(), recordHeaders);
 		assertThat(recordHeaders.toArray().length).isEqualTo(2); // 1 + json_types
@@ -161,8 +161,8 @@ public class DefaultKafkaHeaderMapperTests {
 	void testMimeTypeInHeaders() {
 		DefaultKafkaHeaderMapper mapper = new DefaultKafkaHeaderMapper();
 		MessageHeaders headers = new MessageHeaders(
-				Collections.singletonMap("foo",
-						Arrays.asList(MimeType.valueOf("application/json"), MimeType.valueOf("text/plain"))));
+	Collections.singletonMap("foo",
+Arrays.asList(MimeType.valueOf("application/json"), MimeType.valueOf("text/plain"))));
 
 		RecordHeaders recordHeaders = new RecordHeaders();
 		mapper.fromHeaders(headers, recordHeaders);
@@ -188,15 +188,15 @@ public class DefaultKafkaHeaderMapperTests {
 		Headers target = new RecordHeaders();
 		mapper.fromHeaders(headers, target);
 		assertThat(target).containsExactlyInAnyOrder(
-				new RecordHeader("thisOnesAString", "foo".getBytes()),
-				new RecordHeader("thisOnesBytes", "bar".getBytes()),
-				new RecordHeader("alwaysRaw", "baz".getBytes()));
+	new RecordHeader("thisOnesAString", "foo".getBytes()),
+	new RecordHeader("thisOnesBytes", "bar".getBytes()),
+	new RecordHeader("alwaysRaw", "baz".getBytes()));
 		headersMap.clear();
 		mapper.toHeaders(target, headersMap);
 		assertThat(headersMap).contains(
-				entry("thisOnesAString", "foo"),
-				entry("thisOnesBytes", "bar".getBytes()),
-				entry("alwaysRaw", "baz".getBytes()));
+	entry("thisOnesAString", "foo"),
+	entry("thisOnesBytes", "bar".getBytes()),
+	entry("alwaysRaw", "baz".getBytes()));
 	}
 
 	@Test
@@ -214,38 +214,36 @@ public class DefaultKafkaHeaderMapperTests {
 		Headers target = new RecordHeaders();
 		mapper.fromHeaders(headers, target);
 		assertThat(target).containsExactlyInAnyOrder(
-				new RecordHeader(DefaultKafkaHeaderMapper.JSON_TYPES,
-						("{\"thisOnesEmpty\":\"java.lang.String\","
-								+ "\"thisOnesAString\":\"java.lang.String\"}").getBytes()),
-				new RecordHeader("thisOnesAString", "foo".getBytes()),
-				new RecordHeader("alwaysRaw", "baz".getBytes()),
-				new RecordHeader("thisOnesEmpty", "".getBytes()),
-				new RecordHeader("thisOnesBytes", "bar".getBytes()));
+	new RecordHeader(DefaultKafkaHeaderMapper.JSON_TYPES,
+("{\"thisOnesEmpty\":\"java.lang.String\","+ "\"thisOnesAString\":\"java.lang.String\"}").getBytes()),
+	new RecordHeader("thisOnesAString", "foo".getBytes()),
+	new RecordHeader("alwaysRaw", "baz".getBytes()),
+	new RecordHeader("thisOnesEmpty", "".getBytes()),
+	new RecordHeader("thisOnesBytes", "bar".getBytes()));
 		headersMap.clear();
 		target.add(new RecordHeader(DefaultKafkaHeaderMapper.JSON_TYPES,
-				("{\"thisOnesEmpty\":\"java.lang.String\","
-						+ "\"thisOnesAString\":\"java.lang.String\","
-						+ "\"backwardCompatible\":\"java.lang.String\"}").getBytes()));
+	("{\"thisOnesEmpty\":\"java.lang.String\","
++ "\"thisOnesAString\":\"java.lang.String\","
++ "\"backwardCompatible\":\"java.lang.String\"}").getBytes()));
 		target.add(new RecordHeader("backwardCompatible", "\"qux\"".getBytes()));
 		mapper.toHeaders(target, headersMap);
 		assertThat(headersMap).contains(
-				entry("thisOnesAString", "foo"),
-				entry("thisOnesEmpty", ""),
-				entry("thisOnesBytes", "bar".getBytes()),
-				entry("alwaysRaw", "baz".getBytes()),
-				entry("backwardCompatible", "qux"));
+	entry("thisOnesAString", "foo"),
+	entry("thisOnesEmpty", ""),
+	entry("thisOnesBytes", "bar".getBytes()),
+	entry("alwaysRaw", "baz".getBytes()),
+	entry("backwardCompatible", "qux"));
 		// Now with String encoding
 		mapper.setEncodeStrings(true);
 		target = new RecordHeaders();
 		mapper.fromHeaders(headers, target);
 		assertThat(target).containsExactlyInAnyOrder(
-				new RecordHeader(DefaultKafkaHeaderMapper.JSON_TYPES,
-						("{\"thisOnesEmpty\":\"java.lang.String\","
-								+ "\"thisOnesAString\":\"java.lang.String\"}").getBytes()),
-				new RecordHeader("thisOnesAString", "\"foo\"".getBytes()),
-				new RecordHeader("thisOnesEmpty", "\"\"".getBytes()),
-				new RecordHeader("alwaysRaw", "baz".getBytes()),
-				new RecordHeader("thisOnesBytes", "bar".getBytes()));
+	new RecordHeader(DefaultKafkaHeaderMapper.JSON_TYPES,
+("{\"thisOnesEmpty\":\"java.lang.String\","+ "\"thisOnesAString\":\"java.lang.String\"}").getBytes()),
+	new RecordHeader("thisOnesAString", "\"foo\"".getBytes()),
+	new RecordHeader("thisOnesEmpty", "\"\"".getBytes()),
+	new RecordHeader("alwaysRaw", "baz".getBytes()),
+	new RecordHeader("thisOnesBytes", "bar".getBytes()));
 	}
 
 	@Test
@@ -263,15 +261,15 @@ public class DefaultKafkaHeaderMapperTests {
 		Headers target = new RecordHeaders();
 		mapper.fromHeaders(headers, target);
 		assertThat(target).containsExactlyInAnyOrder(
-				new RecordHeader("thisOnesAString", "foo".getBytes()),
-				new RecordHeader("thisOnesBytes", "bar".getBytes()),
-				new RecordHeader("alwaysRaw", "baz".getBytes()));
+	new RecordHeader("thisOnesAString", "foo".getBytes()),
+	new RecordHeader("thisOnesBytes", "bar".getBytes()),
+	new RecordHeader("alwaysRaw", "baz".getBytes()));
 		headersMap.clear();
 		mapper.toHeaders(target, headersMap);
 		assertThat(headersMap).contains(
-				entry("thisOnesAString", "foo".getBytes()),
-				entry("thisOnesBytes", "bar".getBytes()),
-				entry("alwaysRaw", "baz".getBytes()));
+	entry("thisOnesAString", "foo".getBytes()),
+	entry("thisOnesBytes", "bar".getBytes()),
+	entry("alwaysRaw", "baz".getBytes()));
 	}
 
 	@Test
@@ -279,7 +277,7 @@ public class DefaultKafkaHeaderMapperTests {
 		DefaultKafkaHeaderMapper mapper = new DefaultKafkaHeaderMapper();
 		byte[] delivery = new byte[4];
 		ByteBuffer.wrap(delivery).putInt(42);
-		Headers headers = new RecordHeaders(new Header[] { new RecordHeader(KafkaHeaders.DELIVERY_ATTEMPT, delivery) });
+		Headers headers = new RecordHeaders(new Header[]{new RecordHeader(KafkaHeaders.DELIVERY_ATTEMPT, delivery)});
 		Map<String, Object> springHeaders = new HashMap<>();
 		mapper.toHeaders(headers, springHeaders);
 		assertThat(springHeaders.get(KafkaHeaders.DELIVERY_ATTEMPT)).isEqualTo(42);
@@ -292,7 +290,7 @@ public class DefaultKafkaHeaderMapperTests {
 	void listenerInfo() {
 		DefaultKafkaHeaderMapper mapper = new DefaultKafkaHeaderMapper();
 		Headers headers = new RecordHeaders(
-				new Header[] { new RecordHeader(KafkaHeaders.LISTENER_INFO, "info".getBytes()) });
+	new Header[]{new RecordHeader(KafkaHeaders.LISTENER_INFO, "info".getBytes())});
 		Map<String, Object> springHeaders = new HashMap<>();
 		mapper.toHeaders(headers, springHeaders);
 		assertThat(springHeaders.get(KafkaHeaders.LISTENER_INFO)).isEqualTo("info");
@@ -312,13 +310,13 @@ public class DefaultKafkaHeaderMapperTests {
 		MessageHeaders msgHeaders = new MessageHeaders(map);
 		Headers headers = new RecordHeaders();
 		outboundMapper.fromHeaders(msgHeaders, headers);
-		headers.add(KafkaHeaders.DELIVERY_ATTEMPT, new byte[] { 0, 0, 0, 1 });
+		headers.add(KafkaHeaders.DELIVERY_ATTEMPT, new byte[]{0, 0, 0, 1});
 		map.clear();
 		inboundMapper.toHeaders(headers, map);
 		assertThat(map).doesNotContainKey("foo")
-				.doesNotContainKey("foa")
-				.containsKey(KafkaHeaders.DELIVERY_ATTEMPT)
-				.containsKey("baz");
+	.doesNotContainKey("foa")
+	.containsKey(KafkaHeaders.DELIVERY_ATTEMPT)
+	.containsKey("baz");
 	}
 
 	public static final class Foo {

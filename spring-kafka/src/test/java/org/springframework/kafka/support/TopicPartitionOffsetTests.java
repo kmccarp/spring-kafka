@@ -35,13 +35,13 @@ public class TopicPartitionOffsetTests {
 	@Test
 	void hashCodeTest() {
 		assertThat(new TopicPartitionOffset("foo", 1, SeekPosition.BEGINNING).hashCode())
-				.isNotEqualTo(new TopicPartitionOffset("foo",  1, SeekPosition.END).hashCode());
+	.isNotEqualTo(new TopicPartitionOffset("foo", 1, SeekPosition.END).hashCode());
 	}
 
 	@Test
 	void hashCodeNPE() {
 		assertThat(new TopicPartitionOffset("foo", 0).hashCode())
-				.isEqualTo(Objects.hash(new TopicPartition("foo", 0), null));
+	.isEqualTo(Objects.hash(new TopicPartition("foo", 0), null));
 	}
 
 }

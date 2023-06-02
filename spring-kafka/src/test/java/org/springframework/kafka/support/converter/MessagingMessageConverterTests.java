@@ -51,7 +51,7 @@ public class MessagingMessageConverterTests {
 	void missingHeaders() {
 		MessagingMessageConverter converter = new MessagingMessageConverter();
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "baz",
-				new RecordHeaders(), Optional.empty());
+	new RecordHeaders(), Optional.empty());
 		Message<?> message = converter.toMessage(record, null, null, null);
 		assertThat(message.getPayload()).isEqualTo("baz");
 		assertThat(message.getHeaders().get(KafkaHeaders.RECEIVED_TOPIC)).isEqualTo("foo");
@@ -63,7 +63,7 @@ public class MessagingMessageConverterTests {
 	void dontMapNullKey() {
 		MessagingMessageConverter converter = new MessagingMessageConverter();
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, null, "baz",
-				new RecordHeaders(), Optional.empty());
+	new RecordHeaders(), Optional.empty());
 		Message<?> message = converter.toMessage(record, null, null, null);
 		assertThat(message.getPayload()).isEqualTo("baz");
 		assertThat(message.getHeaders().get(KafkaHeaders.RECEIVED_TOPIC)).isEqualTo("foo");
@@ -75,7 +75,7 @@ public class MessagingMessageConverterTests {
 		MessagingMessageConverter converter = new MessagingMessageConverter();
 		converter.setRawRecordHeader(true);
 		ConsumerRecord<String, String> record = new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "baz",
-				new RecordHeaders(), Optional.empty());
+	new RecordHeaders(), Optional.empty());
 		Message<?> message = converter.toMessage(record, null, null, null);
 		assertThat(message.getPayload()).isEqualTo("baz");
 		assertThat(message.getHeaders().get(KafkaHeaders.RECEIVED_TOPIC)).isEqualTo("foo");
@@ -90,8 +90,8 @@ public class MessagingMessageConverterTests {
 		Headers headers = new RecordHeaders();
 		headers.add(new RecordHeader(MessageHeaders.CONTENT_TYPE, "application/json".getBytes()));
 		ConsumerRecord<String, String> record =
-				new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "{ \"foo\":\"bar\"}", headers,
-						Optional.empty());
+	new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "{ \"foo\":\"bar\"}", headers,
+Optional.empty());
 		Message<?> message = converter.toMessage(record, null, null, Foo.class);
 		assertThat(message.getPayload()).isEqualTo(new Foo("bar"));
 	}
@@ -102,8 +102,8 @@ public class MessagingMessageConverterTests {
 		MessagingMessageConverter converter = new MessagingMessageConverter();
 		converter.setMessagingConverter(new MappingJacksonParameterizedConverter());
 		ConsumerRecord<String, String> record =
-				new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "{ \"foo\":\"bar\"}",
-						new RecordHeaders(), Optional.empty());
+	new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "{ \"foo\":\"bar\"}",
+new RecordHeaders(), Optional.empty());
 		Message<?> message = converter.toMessage(record, null, null, Foo.class);
 		assertThat(message.getPayload()).isEqualTo(new Foo("bar"));
 	}
@@ -112,12 +112,12 @@ public class MessagingMessageConverterTests {
 	void contentNegotiation() {
 		MessagingMessageConverter converter = new MessagingMessageConverter();
 		Collection<MessageConverter> converters = Arrays.asList(new FooConverter(MimeType.valueOf("application/foo")),
-				new BarConverter(MimeType.valueOf("application/bar")));
+	new BarConverter(MimeType.valueOf("application/bar")));
 		converter.setMessagingConverter(new CompositeMessageConverter(converters));
 		Headers headers = new RecordHeaders();
 		headers.add(new RecordHeader(MessageHeaders.CONTENT_TYPE, "application/foo".getBytes()));
 		ConsumerRecord<String, String> record =
-				new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "qux", headers, Optional.empty());
+	new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "qux", headers, Optional.empty());
 		Message<?> message = converter.toMessage(record, null, null, Foo.class);
 		assertThat(message.getPayload()).isEqualTo(new Foo("bar"));
 		ProducerRecord<?, ?> pr = converter.fromMessage(message, "test");
@@ -144,12 +144,12 @@ public class MessagingMessageConverterTests {
 		MessagingMessageConverter converter = new MessagingMessageConverter();
 		converter.setHeaderMapper(null);
 		Collection<MessageConverter> converters = Arrays.asList(new FooConverter(MimeType.valueOf("application/foo")),
-				new BarConverter(MimeType.valueOf("application/bar")));
+	new BarConverter(MimeType.valueOf("application/bar")));
 		converter.setMessagingConverter(new CompositeMessageConverter(converters));
 		Headers headers = new RecordHeaders();
 		headers.add(new RecordHeader(MessageHeaders.CONTENT_TYPE, "application/foo".getBytes()));
 		ConsumerRecord<String, String> record =
-				new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "qux", headers, Optional.empty());
+	new ConsumerRecord<>("foo", 1, 42, -1L, null, 0, 0, "bar", "qux", headers, Optional.empty());
 		Message<?> message = converter.toMessage(record, null, null, Foo.class);
 		assertThat(message.getPayload()).isEqualTo(new Foo("bar"));
 		headers.remove(MessageHeaders.CONTENT_TYPE);
@@ -171,7 +171,7 @@ public class MessagingMessageConverterTests {
 		@Override
 		@Nullable
 		protected Object convertFromInternal(Message<?> message, Class<?> targetClass,
-				@Nullable Object conversionHint) {
+	@Nullable Object conversionHint) {
 
 			return new Foo("bar");
 		}
@@ -179,7 +179,7 @@ public class MessagingMessageConverterTests {
 		@Override
 		@Nullable
 		protected Object convertToInternal(Object payload, @Nullable MessageHeaders headers,
-				@Nullable Object conversionHint) {
+	@Nullable Object conversionHint) {
 
 			return "foo".getBytes();
 		}
@@ -195,7 +195,7 @@ public class MessagingMessageConverterTests {
 		@Override
 		@Nullable
 		protected Object convertFromInternal(Message<?> message, Class<?> targetClass,
-				@Nullable Object conversionHint) {
+	@Nullable Object conversionHint) {
 
 			return new Bar("bar");
 		}
@@ -203,7 +203,7 @@ public class MessagingMessageConverterTests {
 		@Override
 		@Nullable
 		protected Object convertToInternal(Object payload, @Nullable MessageHeaders headers,
-				@Nullable Object conversionHint) {
+	@Nullable Object conversionHint) {
 
 			return "bar".getBytes();
 		}

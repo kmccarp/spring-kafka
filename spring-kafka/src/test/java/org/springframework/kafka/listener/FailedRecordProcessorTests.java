@@ -41,7 +41,7 @@ public class FailedRecordProcessorTests {
 		TopicPartitionOffset tpo1 = new TopicPartitionOffset("foo", 0, 0L);
 		assertThat(frp.deliveryAttempt(tpo1)).isEqualTo(1);
 		List<ConsumerRecord<?, ?>> records = Collections
-				.singletonList(new ConsumerRecord<Object, Object>("foo", 0, 0L, null, null));
+	.singletonList(new ConsumerRecord<Object, Object>("foo", 0, 0L, null, null));
 		RuntimeException exception = new RuntimeException();
 		frp.getFailureTracker().recovered(records.get(0), exception, null, null);
 		assertThat(frp.deliveryAttempt(tpo1)).isEqualTo(2);
@@ -56,13 +56,13 @@ public class FailedRecordProcessorTests {
 		TopicPartitionOffset tpo2 = new TopicPartitionOffset("foo", 1, 0L);
 		assertThat(frp.deliveryAttempt(tpo2)).isEqualTo(1);
 		frp.getFailureTracker().recovered(new ConsumerRecord<Object, Object>("foo", 1, 0L, null, null),
-				exception, null, null);
+	exception, null, null);
 		assertThat(frp.deliveryAttempt(tpo2)).isEqualTo(2);
 		// new offset
 		tpo2 = new TopicPartitionOffset("foo", 1, 1L);
 		assertThat(frp.deliveryAttempt(tpo2)).isEqualTo(1);
 		frp.getFailureTracker().recovered(new ConsumerRecord<Object, Object>("foo", 1, 1L, null, null),
-				exception, null, null);
+	exception, null, null);
 		assertThat(frp.deliveryAttempt(tpo2)).isEqualTo(2);
 		// back to original
 		frp.getFailureTracker().recovered(records.get(0), exception, null, null);

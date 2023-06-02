@@ -34,8 +34,7 @@ import org.springframework.util.Assert;
  *
  */
 @Deprecated
-public class ChainedKafkaTransactionManager<K, V> extends org.springframework.data.transaction.ChainedTransactionManager
-		implements KafkaAwareTransactionManager<K, V> {
+public class ChainedKafkaTransactionManager<K, V> extends org.springframework.data.transaction.ChainedTransactionManagerimplements KafkaAwareTransactionManager<K, V> {
 
 	private final KafkaAwareTransactionManager<K, V> kafkaTransactionManager;
 

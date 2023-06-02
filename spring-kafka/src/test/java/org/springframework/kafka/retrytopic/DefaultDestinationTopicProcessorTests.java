@@ -47,7 +47,7 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 	private ArgumentCaptor<List<DestinationTopic>> destinationTopicListCaptor;
 
 	private final DefaultDestinationTopicProcessor destinationTopicProcessor =
-			new DefaultDestinationTopicProcessor(destinationTopicResolver);
+new DefaultDestinationTopicProcessor(destinationTopicResolver);
 
 	@Test
 	void shouldProcessDestinationProperties() {
@@ -99,8 +99,8 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 
 	private void registerFirstTopicDestinations(DestinationTopicProcessor.Context context) {
 		allFirstDestinationsHolders.forEach(propsHolder ->
-				destinationTopicProcessor.registerDestinationTopic(FIRST_TOPIC,
-						getSuffixedName(propsHolder), propsHolder.props, context));
+	destinationTopicProcessor.registerDestinationTopic(FIRST_TOPIC,
+getSuffixedName(propsHolder), propsHolder.props, context));
 	}
 
 	private String getSuffixedName(PropsHolder propsHolder) {
@@ -109,21 +109,21 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 
 	private void registerSecondTopicDestinations(DestinationTopicProcessor.Context context) {
 		allSecondDestinationHolders.forEach(propsHolder ->
-				destinationTopicProcessor.registerDestinationTopic(SECOND_TOPIC,
-						getSuffixedName(propsHolder), propsHolder.props, context));
+	destinationTopicProcessor.registerDestinationTopic(SECOND_TOPIC,
+getSuffixedName(propsHolder), propsHolder.props, context));
 	}
 
 	private void registerThirdTopicDestinations(DestinationTopicProcessor.Context context) {
 		allThirdDestinationHolders.forEach(propsHolder ->
-				destinationTopicProcessor.registerDestinationTopic(THIRD_TOPIC,
-						getSuffixedName(propsHolder), propsHolder.props, context));
+	destinationTopicProcessor.registerDestinationTopic(THIRD_TOPIC,
+getSuffixedName(propsHolder), propsHolder.props, context));
 	}
 
 	@Test
 	void shouldCreateDestinationMapWhenProcessDestinations() {
 		// given
 		DefaultDestinationTopicProcessor destinationTopicProcessor =
-				new DefaultDestinationTopicProcessor(destinationTopicResolver);
+	new DefaultDestinationTopicProcessor(destinationTopicResolver);
 
 		DestinationTopicProcessor.Context context = new DestinationTopicProcessor.Context("foo", allProps);
 
@@ -131,17 +131,18 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 		registerFirstTopicDestinations(context);
 		registerSecondTopicDestinations(context);
 		registerThirdTopicDestinations(context);
-		destinationTopicProcessor.processRegisteredDestinations(topic -> { }, context);
+		destinationTopicProcessor.processRegisteredDestinations(topic -> {
+		}, context);
 
 		// then
 		then(destinationTopicResolver).should(times(3))
-				.addDestinationTopics(eq("foo"), destinationTopicListCaptor.capture());
+	.addDestinationTopics(eq("foo"), destinationTopicListCaptor.capture());
 
 		List<DestinationTopic> destinationList = destinationTopicListCaptor
-				.getAllValues()
-				.stream()
-				.flatMap(list -> list.stream())
-				.collect(Collectors.toList());
+	.getAllValues()
+	.stream()
+	.flatMap(list -> list.stream())
+	.collect(Collectors.toList());
 
 		assertThat(destinationList.size()).isEqualTo(11);
 
@@ -164,19 +165,19 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 	void shouldApplyTopicsCallback() {
 		// setup
 		DefaultDestinationTopicProcessor destinationTopicProcessor =
-				new DefaultDestinationTopicProcessor(destinationTopicResolver);
+	new DefaultDestinationTopicProcessor(destinationTopicResolver);
 
 		DestinationTopicProcessor.Context context = new DestinationTopicProcessor.Context("foo", allProps);
 
 		List<String> allTopics = allFirstDestinationsTopics
-				.stream()
-				.map(destinationTopic -> destinationTopic.getDestinationName())
-				.collect(Collectors.toList());
+	.stream()
+	.map(destinationTopic -> destinationTopic.getDestinationName())
+	.collect(Collectors.toList());
 
 		allTopics.addAll(allSecondDestinationTopics
-				.stream()
-				.map(destinationTopic -> destinationTopic.getDestinationName())
-				.collect(Collectors.toList()));
+	.stream()
+	.map(destinationTopic -> destinationTopic.getDestinationName())
+	.collect(Collectors.toList()));
 
 		List<String> allProcessedTopics = new ArrayList<>();
 

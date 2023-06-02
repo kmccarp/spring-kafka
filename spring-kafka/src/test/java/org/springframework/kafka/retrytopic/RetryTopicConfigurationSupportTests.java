@@ -100,9 +100,9 @@ class RetryTopicConfigurationSupportTests {
 			@Override
 			protected void configureCustomizers(CustomizersConfigurer customizersConfigurer) {
 				customizersConfigurer
-						.customizeDeadLetterPublishingRecoverer(dlprCustomizer)
-						.customizeListenerContainer(listenerContainerCustomizer)
-						.customizeErrorHandler(errorHandlerCustomizer);
+			.customizeDeadLetterPublishingRecoverer(dlprCustomizer)
+			.customizeListenerContainer(listenerContainerCustomizer)
+			.customizeErrorHandler(errorHandlerCustomizer);
 			}
 
 			@Override
@@ -123,8 +123,8 @@ class RetryTopicConfigurationSupportTests {
 			@Override
 			protected void configureBlockingRetries(BlockingRetriesConfigurer blockingRetries) {
 				blockingRetries
-						.retryOn(RuntimeException.class)
-						.backOff(backoff);
+			.retryOn(RuntimeException.class)
+			.backOff(backoff);
 			}
 		};
 
@@ -135,7 +135,7 @@ class RetryTopicConfigurationSupportTests {
 			return sup.get();
 		}).given(prov).getIfUnique(any());
 		RetryTopicConfigurer retryTopicConfigurer = support.retryTopicConfigurer(backoffManager, resolver,
-				prov, beanFactory);
+	prov, beanFactory);
 		assertThat(retryTopicConfigurer).isNotNull();
 
 		then(componentFactory).should().destinationTopicProcessor(resolver);
@@ -170,7 +170,7 @@ class RetryTopicConfigurationSupportTests {
 			return sup.get();
 		}).given(prov).getIfUnique(any());
 		RetryTopicConfigurer retryTopicConfigurer = support.retryTopicConfigurer(backoffManager, resolver, prov,
-				beanFactory);
+	beanFactory);
 		assertThat(retryTopicConfigurer).isNotNull();
 	}
 
@@ -179,7 +179,7 @@ class RetryTopicConfigurationSupportTests {
 		ListenerContainerRegistry registry = mock(ListenerContainerRegistry.class);
 		RetryTopicComponentFactory componentFactory = mock(RetryTopicComponentFactory.class);
 		ContainerPartitionPausingBackOffManagerFactory factory = mock(
-				ContainerPartitionPausingBackOffManagerFactory.class);
+	ContainerPartitionPausingBackOffManagerFactory.class);
 		KafkaConsumerBackoffManager backoffManagerMock = mock(KafkaConsumerBackoffManager.class);
 		TaskScheduler taskSchedulerMock = mock(TaskScheduler.class);
 		Clock clock = mock(Clock.class);
@@ -201,7 +201,7 @@ class RetryTopicConfigurationSupportTests {
 			return sup.get();
 		}).given(prov).getIfUnique(any());
 		KafkaConsumerBackoffManager backoffManager = support.kafkaConsumerBackoffManager(ctx, registry, prov, null,
-				taskSchedulerMock);
+	taskSchedulerMock);
 		assertThat(backoffManager).isEqualTo(backoffManagerMock);
 		then(componentFactory).should().kafkaBackOffManagerFactory(registry, ctx);
 		then(factory).should().create();
@@ -220,7 +220,7 @@ class RetryTopicConfigurationSupportTests {
 			return sup.get();
 		}).given(prov).getIfUnique(any());
 		KafkaConsumerBackoffManager backoffManager = support.kafkaConsumerBackoffManager(ctx, registry, prov, null,
-				scheduler);
+	scheduler);
 		assertThat(backoffManager).isNotNull();
 	}
 
@@ -254,7 +254,7 @@ class RetryTopicConfigurationSupportTests {
 			return sup.get();
 		}).given(prov).getIfUnique(any());
 		DefaultDestinationTopicResolver resolver = (DefaultDestinationTopicResolver) support
-				.destinationTopicResolver(prov);
+	.destinationTopicResolver(prov);
 		assertThat(resolver).isEqualTo(resolverMock);
 		then(dtrConsumer).should().accept(resolverMock);
 		ArgumentCaptor<Map<Class<? extends Throwable>, Boolean>> captor = ArgumentCaptor.forClass(Map.class);
@@ -296,6 +296,6 @@ class RetryTopicConfigurationSupportTests {
 		ArgumentCaptor<Supplier<String>> captor = ArgumentCaptor.forClass(Supplier.class);
 		verify(logger).warn(captor.capture());
 		assertThat(captor.getValue().get()).isEqualTo("Only one RetryTopicConfigurationSupport object expected, found "
-				+ "[foo, bar]; this may result in unexpected behavior");
+	+ "[foo, bar]; this may result in unexpected behavior");
 	}
 }

@@ -66,9 +66,7 @@ import org.springframework.util.StringUtils;
  * @author Artem Bilan
  * @author Tomaz Fernandes
  */
-public abstract class AbstractMessageListenerContainer<K, V>
-		implements GenericMessageListenerContainer<K, V>, BeanNameAware, ApplicationEventPublisherAware,
-			ApplicationContextAware {
+public abstract class AbstractMessageListenerContainer<K, V>implements GenericMessageListenerContainer<K, V>, BeanNameAware, ApplicationEventPublisherAware,ApplicationContextAware {
 
 	private static final String VERSION_2_8 = "2.8";
 
@@ -105,7 +103,7 @@ public abstract class AbstractMessageListenerContainer<K, V>
 	private int phase = DEFAULT_PHASE;
 
 	private AfterRollbackProcessor<? super K, ? super V> afterRollbackProcessor =
-			new DefaultAfterRollbackProcessor<>();
+new DefaultAfterRollbackProcessor<>();
 
 	private int topicCheckTimeout = DEFAULT_TOPIC_CHECK_TIMEOUT;
 
@@ -143,7 +141,7 @@ public abstract class AbstractMessageListenerContainer<K, V>
 	 */
 	@SuppressWarnings("unchecked")
 	protected AbstractMessageListenerContainer(ConsumerFactory<? super K, ? super V> consumerFactory,
-			ContainerProperties containerProperties) {
+ContainerProperties containerProperties) {
 
 		Assert.notNull(containerProperties, "'containerProperties' cannot be null");
 		Assert.notNull(consumerFactory, "'consumerFactory' cannot be null");
@@ -169,7 +167,7 @@ public abstract class AbstractMessageListenerContainer<K, V>
 		}
 
 		BeanUtils.copyProperties(containerProperties, this.containerProperties,
-				"topics", "topicPartitions", "topicPattern", "ackCount", "ackTime", "subBatchPerPartition");
+	"topics", "topicPartitions", "topicPattern", "ackCount", "ackTime", "subBatchPerPartition");
 
 		if (containerProperties.getAckCount() > 0) {
 			this.containerProperties.setAckCount(containerProperties.getAckCount());
@@ -383,8 +381,8 @@ public abstract class AbstractMessageListenerContainer<K, V>
 	@Nullable
 	public String getGroupId() {
 		return this.containerProperties.getGroupId() == null
-				? (String) this.consumerFactory.getConfigurationProperties().get(ConsumerConfig.GROUP_ID_CONFIG)
-				: this.containerProperties.getGroupId();
+	? (String) this.consumerFactory.getConfigurationProperties().get(ConsumerConfig.GROUP_ID_CONFIG)
+	: this.containerProperties.getGroupId();
 	}
 
 	@Override
@@ -551,7 +549,7 @@ public abstract class AbstractMessageListenerContainer<K, V>
 		synchronized (this.lifecycleMonitor) {
 			if (!isRunning()) {
 				Assert.state(this.containerProperties.getMessageListener() instanceof GenericMessageListener,
-						() -> "A " + GenericMessageListener.class.getName() + " implementation must be provided");
+			() -> "A " + GenericMessageListener.class.getName() + " implementation must be provided");
 				doStart();
 			}
 		}
@@ -560,38 +558,38 @@ public abstract class AbstractMessageListenerContainer<K, V>
 	protected void checkTopics() {
 		if (this.containerProperties.isMissingTopicsFatal() && this.containerProperties.getTopicPattern() == null) {
 			Map<String, Object> configs = this.consumerFactory.getConfigurationProperties()
-					.entrySet()
-					.stream()
-					.filter(entry -> AdminClientConfig.configNames().contains(entry.getKey()))
-					.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+		.entrySet()
+		.stream()
+		.filter(entry -> AdminClientConfig.configNames().contains(entry.getKey()))
+		.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 			List<String> missing = null;
 			try (AdminClient client = AdminClient.create(configs)) { // NOSONAR - false positive null check
 				if (client != null) {
 					String[] topics = this.containerProperties.getTopics();
 					if (topics == null) {
 						topics = Arrays.stream(this.containerProperties.getTopicPartitions())
-								.map(TopicPartitionOffset::getTopic)
-								.toArray(String[]::new);
+					.map(TopicPartitionOffset::getTopic)
+					.toArray(String[]::new);
 					}
 					DescribeTopicsResult result = client.describeTopics(Arrays.asList(topics));
 					missing = result.topicNameValues()
-							.entrySet()
-							.stream()
-							.filter(entry -> {
-								try {
-									entry.getValue().get(this.topicCheckTimeout, TimeUnit.SECONDS);
-									return false;
-								}
-								catch (InterruptedException ex) {
-									Thread.currentThread().interrupt();
-									return true;
-								}
-								catch (@SuppressWarnings("unused") Exception ex) {
-									return true;
-								}
-							})
-							.map(Entry::getKey)
-							.collect(Collectors.toList());
+				.entrySet()
+				.stream()
+				.filter(entry -> {
+					try {
+						entry.getValue().get(this.topicCheckTimeout, TimeUnit.SECONDS);
+						return false;
+					}
+					catch (InterruptedException ex) {
+						Thread.currentThread().interrupt();
+						return true;
+					}
+					catch (@SuppressWarnings("unused") Exception ex) {
+						return true;
+					}
+				})
+				.map(Entry::getKey)
+				.collect(Collectors.toList());
 				}
 			}
 			catch (Exception e) {
@@ -599,8 +597,8 @@ public abstract class AbstractMessageListenerContainer<K, V>
 			}
 			if (missing != null && missing.size() > 0) {
 				throw new IllegalStateException(
-						"Topic(s) " + missing.toString()
-								+ " is/are not present and missingTopicsFatal is true");
+			"Topic(s) " + missing.toString()
+		+ " is/are not present and missingTopicsFatal is true");
 			}
 		}
 
@@ -611,13 +609,13 @@ public abstract class AbstractMessageListenerContainer<K, V>
 			boolean hasGroupIdConsumerConfig = true; // assume true for non-standard containers
 			if (this.consumerFactory != null) { // we always have one for standard containers
 				Object groupIdConfig = this.consumerFactory.getConfigurationProperties()
-						.get(ConsumerConfig.GROUP_ID_CONFIG);
+			.get(ConsumerConfig.GROUP_ID_CONFIG);
 				hasGroupIdConsumerConfig =
-						groupIdConfig instanceof String && StringUtils.hasText((String) groupIdConfig);
+			groupIdConfig instanceof String && StringUtils.hasText((String) groupIdConfig);
 			}
 			Assert.state(hasGroupIdConsumerConfig || StringUtils.hasText(this.containerProperties.getGroupId()),
-					"No group.id found in consumer config, container properties, or @KafkaListener annotation; "
-							+ "a group.id is required when group management is used.");
+		"No group.id found in consumer config, container properties, or @KafkaListener annotation; "
+	+ "a group.id is required when group management is used.");
 		}
 	}
 
@@ -705,19 +703,19 @@ public abstract class AbstractMessageListenerContainer<K, V>
 			@Override
 			public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
 				AbstractMessageListenerContainer.this.logger.info(() ->
-						getGroupId() + ": partitions revoked: " + partitions);
+			getGroupId() + ": partitions revoked: " + partitions);
 			}
 
 			@Override
 			public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
 				AbstractMessageListenerContainer.this.logger.info(() ->
-						getGroupId() + ": partitions assigned: " + partitions);
+			getGroupId() + ": partitions assigned: " + partitions);
 			}
 
 			@Override
 			public void onPartitionsLost(Collection<TopicPartition> partitions) {
 				AbstractMessageListenerContainer.this.logger.info(() ->
-				getGroupId() + ": partitions lost: " + partitions);
+			getGroupId() + ": partitions lost: " + partitions);
 			}
 
 		};

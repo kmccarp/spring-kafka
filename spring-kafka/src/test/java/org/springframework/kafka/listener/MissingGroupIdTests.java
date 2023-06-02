@@ -57,19 +57,19 @@ public class MissingGroupIdTests {
 	@Test
 	public void testContextFailsWithKafkaListener() {
 		assertThatExceptionOfType(ApplicationContextException.class).isThrownBy(() -> {
-				new AnnotationConfigApplicationContext(Config1.class);
+			new AnnotationConfigApplicationContext(Config1.class);
 		})
-			.withCauseInstanceOf(IllegalStateException.class)
-			.withStackTraceContaining("No group.id found in consumer config");
+	.withCauseInstanceOf(IllegalStateException.class)
+	.withStackTraceContaining("No group.id found in consumer config");
 	}
 
 	@Test
 	public void testContextFailsWithSubscribedContainer() {
 		assertThatExceptionOfType(ApplicationContextException.class).isThrownBy(() -> {
-				new AnnotationConfigApplicationContext(Config2.class);
+			new AnnotationConfigApplicationContext(Config2.class);
 		})
-			.withCauseInstanceOf(IllegalStateException.class)
-			.withStackTraceContaining("No group.id found in consumer config");
+	.withCauseInstanceOf(IllegalStateException.class)
+	.withStackTraceContaining("No group.id found in consumer config");
 	}
 
 	@Test
@@ -84,15 +84,15 @@ public class MissingGroupIdTests {
 		@Bean
 		public ConsumerFactory<String, String> cf() {
 			return new DefaultKafkaConsumerFactory<>(
-					Collections.singletonMap(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-							embeddedKafka.getBrokersAsString()),
-					new StringDeserializer(), new StringDeserializer());
+		Collections.singletonMap(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+	embeddedKafka.getBrokersAsString()),
+		new StringDeserializer(), new StringDeserializer());
 		}
 
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory<String, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(cf());
 			return factory;
 		}
@@ -111,9 +111,9 @@ public class MissingGroupIdTests {
 		@Bean
 		public ConsumerFactory<String, String> cf() {
 			return new DefaultKafkaConsumerFactory<>(
-					Collections.singletonMap(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-							embeddedKafka.getBrokersAsString()),
-					new StringDeserializer(), new StringDeserializer());
+		Collections.singletonMap(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+	embeddedKafka.getBrokersAsString()),
+		new StringDeserializer(), new StringDeserializer());
 		}
 
 		@Bean
@@ -131,15 +131,16 @@ public class MissingGroupIdTests {
 		@Bean
 		public ConsumerFactory<String, String> cf() {
 			return new DefaultKafkaConsumerFactory<>(
-					Collections.singletonMap(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-							embeddedKafka.getBrokersAsString()),
-					new StringDeserializer(), new StringDeserializer());
+		Collections.singletonMap(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+	embeddedKafka.getBrokersAsString()),
+		new StringDeserializer(), new StringDeserializer());
 		}
 
 		@Bean
 		public KafkaMessageListenerContainer<String, String> container() {
 			ContainerProperties props = new ContainerProperties(new TopicPartitionOffset("missing.group", 0));
-			props.setMessageListener((MessageListener<String, String>) r -> { });
+			props.setMessageListener((MessageListener<String, String>) r -> {
+			});
 			return new KafkaMessageListenerContainer<>(cf(), props);
 		}
 

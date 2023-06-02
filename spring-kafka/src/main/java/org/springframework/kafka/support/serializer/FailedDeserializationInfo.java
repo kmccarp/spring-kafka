@@ -49,7 +49,7 @@ public class FailedDeserializationInfo {
 	 * @param exception exception causing the deserialization error.
 	 */
 	public FailedDeserializationInfo(String topic, Headers headers, byte[] data, boolean isForKey,
-			Exception exception) {
+Exception exception) {
 
 		this.topic = topic;
 		this.headers = headers;
@@ -81,12 +81,12 @@ public class FailedDeserializationInfo {
 	@Override
 	public String toString() {
 		return "FailedDeserializationInfo{" +
-				"topic='" + this.topic + '\'' +
-				", headers=" + this.headers +
-				", data=" + Arrays.toString(this.data) +
-				", isForKey=" + this.isForKey +
-				", exception=" + this.exception +
-				'}';
+	"topic='" + this.topic + '\'' +
+	", headers=" + this.headers +
+	", data=" + Arrays.toString(this.data) +
+	", isForKey=" + this.isForKey +
+	", exception=" + this.exception +
+	'}';
 	}
 
 }

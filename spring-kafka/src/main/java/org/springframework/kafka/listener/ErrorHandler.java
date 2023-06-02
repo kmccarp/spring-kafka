@@ -39,7 +39,7 @@ public interface ErrorHandler extends GenericErrorHandler<ConsumerRecord<?, ?>> 
 	 * @param container the container.
 	 */
 	default void handle(Exception thrownException, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 		handle(thrownException, null);
 	}
 

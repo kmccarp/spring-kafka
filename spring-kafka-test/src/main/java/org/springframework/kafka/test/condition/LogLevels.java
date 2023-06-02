@@ -34,7 +34,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  *
  */
 @ExtendWith(LogLevelsCondition.class)
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface LogLevels {

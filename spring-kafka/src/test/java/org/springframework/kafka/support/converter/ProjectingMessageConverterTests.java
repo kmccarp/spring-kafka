@@ -49,7 +49,7 @@ import com.jayway.jsonpath.DocumentContext;
 public class ProjectingMessageConverterTests {
 
 	private static final String STRING_PAYLOAD =
-			"{ \"username\" : \"SomeUsername\", \"user\" : { \"name\" : \"SomeName\"}}";
+"{ \"username\" : \"SomeUsername\", \"user\" : { \"name\" : \"SomeName\"}}";
 
 	private static final byte[] BYTE_ARRAY_PAYLOAD = STRING_PAYLOAD.getBytes(StandardCharsets.UTF_8);
 
@@ -89,8 +89,8 @@ public class ProjectingMessageConverterTests {
 	@Test
 	public void rejectsInvalidPayload() {
 		assertThatExceptionOfType(ConversionException.class)
-			.isThrownBy(() -> assertProjectionProxy(new Object()))
-			.withMessageContaining(Object.class.getName());
+	.isThrownBy(() -> assertProjectionProxy(new Object()))
+	.withMessageContaining(Object.class.getName());
 	}
 
 	@Test

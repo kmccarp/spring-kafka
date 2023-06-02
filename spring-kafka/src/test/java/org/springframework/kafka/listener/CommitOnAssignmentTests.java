@@ -89,7 +89,7 @@ public class CommitOnAssignmentTests {
 	@Test
 	void testNever() throws InterruptedException {
 		this.registry.getListenerContainer("foo").getContainerProperties()
-				.setAssignmentCommitOption(AssignmentCommitOption.NEVER);
+	.setAssignmentCommitOption(AssignmentCommitOption.NEVER);
 		this.registry.start();
 		assertThat(this.config.assignLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		this.registry.stop();
@@ -100,12 +100,12 @@ public class CommitOnAssignmentTests {
 	@Test
 	void testLastOnly() throws InterruptedException {
 		this.registry.getListenerContainer("foo").getContainerProperties()
-				.setAssignmentCommitOption(AssignmentCommitOption.LATEST_ONLY);
+	.setAssignmentCommitOption(AssignmentCommitOption.LATEST_ONLY);
 		this.registry.start();
 		assertThat(this.config.commitLatch.await(10, TimeUnit.SECONDS)).isTrue();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void testLatestOnlyTx() throws InterruptedException {
 		ContainerProperties props = this.registry.getListenerContainer("foo").getContainerProperties();
@@ -125,7 +125,7 @@ public class CommitOnAssignmentTests {
 		assertThat(latch.await(10, TimeUnit.SECONDS)).isTrue();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void testLatestOnlyNoTx() throws InterruptedException {
 		ContainerProperties props = this.registry.getListenerContainer("foo").getContainerProperties();
@@ -158,24 +158,24 @@ public class CommitOnAssignmentTests {
 		public void foo(String in) {
 		}
 
-		@SuppressWarnings({ "rawtypes" })
+		@SuppressWarnings({"rawtypes"})
 		@Bean
 		public ConsumerFactory consumerFactory() {
 			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 			final Consumer consumer = consumer();
 			given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-				.willReturn(consumer);
+		.willReturn(consumer);
 			return consumerFactory;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public Consumer consumer() {
 			final Consumer consumer = mock(Consumer.class);
 			final TopicPartition topicPartition0 = new TopicPartition("foo", 0);
 			willAnswer(i -> {
 				((ConsumerRebalanceListener) i.getArgument(1)).onPartitionsAssigned(
-						Collections.singletonList(topicPartition0));
+			Collections.singletonList(topicPartition0));
 				this.assignLatch.countDown();
 				return null;
 			}).given(consumer).subscribe(any(Collection.class), any(ConsumerRebalanceListener.class));
@@ -201,7 +201,7 @@ public class CommitOnAssignmentTests {
 			return consumer;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();

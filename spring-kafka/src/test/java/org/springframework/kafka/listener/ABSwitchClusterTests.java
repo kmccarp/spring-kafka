@@ -55,7 +55,7 @@ public class ABSwitchClusterTests {
 
 	@Test
 	void testSwitch(@Autowired Config config, @Autowired ABSwitchCluster switcher,
-			@Autowired KafkaListenerEndpointRegistry registry) throws InterruptedException {
+@Autowired KafkaListenerEndpointRegistry registry) throws InterruptedException {
 
 		assertThat(config.latch.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(config.props.get(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG)).isEqualTo("foo");

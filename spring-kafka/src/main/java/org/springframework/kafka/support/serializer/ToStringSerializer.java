@@ -76,7 +76,7 @@ public class ToStringSerializer<T> implements Serializer<T> {
 			}
 			else {
 				throw new IllegalStateException(
-						ADD_TYPE_INFO_HEADERS + " must be Boolean or String");
+			ADD_TYPE_INFO_HEADERS + " must be Boolean or String");
 			}
 		}
 	}

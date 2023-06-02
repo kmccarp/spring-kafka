@@ -100,111 +100,109 @@ public class KafkaRuntimeHints implements RuntimeHintsRegistrar {
 	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
 		ReflectionHints reflectionHints = hints.reflection();
 		Stream.of(
-					ConsumerProperties.class,
-					ContainerProperties.class,
-					ProducerListener.class)
-				.forEach(type -> reflectionHints.registerType(type,
-						builder -> builder.withMembers(MemberCategory.INVOKE_DECLARED_METHODS)));
+	ConsumerProperties.class,
+	ContainerProperties.class,
+	ProducerListener.class)
+	.forEach(type -> reflectionHints.registerType(type,
+builder -> builder.withMembers(MemberCategory.INVOKE_DECLARED_METHODS)));
 
 		Stream.of(
-					Message.class,
-					ImplicitLinkedHashCollection.Element.class,
-					NewTopic.class,
-					AbstractKafkaListenerContainerFactory.class,
-					ConcurrentKafkaListenerContainerFactory.class,
-					KafkaListenerContainerFactory.class,
-					KafkaListenerEndpointRegistry.class,
-					DefaultKafkaConsumerFactory.class,
-					DefaultKafkaProducerFactory.class,
-					KafkaAdmin.class,
-					KafkaOperations.class,
-					KafkaResourceFactory.class,
-					KafkaTemplate.class,
-					ProducerFactory.class,
-					ConsumerFactory.class,
-					LoggingProducerListener.class,
-					KafkaListenerAnnotationBeanPostProcessor.class)
-				.forEach(type -> reflectionHints.registerType(type,
-						builder -> builder.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS,
-								MemberCategory.INVOKE_DECLARED_METHODS,
-								MemberCategory.INTROSPECT_PUBLIC_METHODS)));
+	Message.class,
+	ImplicitLinkedHashCollection.Element.class,
+	NewTopic.class,
+	AbstractKafkaListenerContainerFactory.class,
+	ConcurrentKafkaListenerContainerFactory.class,
+	KafkaListenerContainerFactory.class,
+	KafkaListenerEndpointRegistry.class,
+	DefaultKafkaConsumerFactory.class,
+	DefaultKafkaProducerFactory.class,
+	KafkaAdmin.class,
+	KafkaOperations.class,
+	KafkaResourceFactory.class,
+	KafkaTemplate.class,
+	ProducerFactory.class,
+	ConsumerFactory.class,
+	LoggingProducerListener.class,
+	KafkaListenerAnnotationBeanPostProcessor.class)
+	.forEach(type -> reflectionHints.registerType(type,
+builder -> builder.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS,MemberCategory.INVOKE_DECLARED_METHODS,MemberCategory.INTROSPECT_PUBLIC_METHODS)));
 
 		Stream.of(
-					KafkaBootstrapConfiguration.class,
-					CreatableTopic.class)
-				.forEach(type -> reflectionHints.registerType(type,
-						builder -> builder.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS)));
+	KafkaBootstrapConfiguration.class,
+	CreatableTopic.class)
+	.forEach(type -> reflectionHints.registerType(type,
+builder -> builder.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS)));
 
 		Stream.of(
-					AppInfo.class,
-					// standard assignors
-					CooperativeStickyAssignor.class,
-					RangeAssignor.class,
-					RoundRobinAssignor.class,
-					StickyAssignor.class,
-					// standard partitioners
-					org.apache.kafka.clients.producer.internals.DefaultPartitioner.class,
-					RoundRobinPartitioner.class,
-					org.apache.kafka.clients.producer.UniformStickyPartitioner.class,
-					// standard serialization
-					ByteArrayDeserializer.class,
-					ByteArraySerializer.class,
-					ByteBufferDeserializer.class,
-					ByteBufferSerializer.class,
-					BytesDeserializer.class,
-					BytesSerializer.class,
-					DoubleSerializer.class,
-					DoubleDeserializer.class,
-					FloatSerializer.class,
-					FloatDeserializer.class,
-					IntegerSerializer.class,
-					IntegerDeserializer.class,
-					ListDeserializer.class,
-					ListSerializer.class,
-					LongSerializer.class,
-					LongDeserializer.class,
-					StringDeserializer.class,
-					StringSerializer.class,
-					// Spring serialization
-					DelegatingByTopicDeserializer.class,
-					DelegatingByTypeSerializer.class,
-					DelegatingDeserializer.class,
-					ErrorHandlingDeserializer.class,
-					DelegatingSerializer.class,
-					JsonDeserializer.class,
-					JsonSerializer.class,
-					ParseStringDeserializer.class,
-					StringOrBytesSerializer.class,
-					ToStringSerializer.class,
-					Serdes.class,
-					Serdes.ByteArraySerde.class,
-					Serdes.BytesSerde.class,
-					Serdes.ByteBufferSerde.class,
-					Serdes.DoubleSerde.class,
-					Serdes.FloatSerde.class,
-					Serdes.IntegerSerde.class,
-					Serdes.LongSerde.class,
-					Serdes.ShortSerde.class,
-					Serdes.StringSerde.class,
-					Serdes.UUIDSerde.class,
-					Serdes.VoidSerde.class,
-					CRC32C.class)
-				.forEach(type -> reflectionHints.registerType(type, builder ->
-						builder.withMembers(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)));
+	AppInfo.class,
+	// standard assignors
+	CooperativeStickyAssignor.class,
+	RangeAssignor.class,
+	RoundRobinAssignor.class,
+	StickyAssignor.class,
+	// standard partitioners
+	org.apache.kafka.clients.producer.internals.DefaultPartitioner.class,
+	RoundRobinPartitioner.class,
+	org.apache.kafka.clients.producer.UniformStickyPartitioner.class,
+	// standard serialization
+	ByteArrayDeserializer.class,
+	ByteArraySerializer.class,
+	ByteBufferDeserializer.class,
+	ByteBufferSerializer.class,
+	BytesDeserializer.class,
+	BytesSerializer.class,
+	DoubleSerializer.class,
+	DoubleDeserializer.class,
+	FloatSerializer.class,
+	FloatDeserializer.class,
+	IntegerSerializer.class,
+	IntegerDeserializer.class,
+	ListDeserializer.class,
+	ListSerializer.class,
+	LongSerializer.class,
+	LongDeserializer.class,
+	StringDeserializer.class,
+	StringSerializer.class,
+	// Spring serialization
+	DelegatingByTopicDeserializer.class,
+	DelegatingByTypeSerializer.class,
+	DelegatingDeserializer.class,
+	ErrorHandlingDeserializer.class,
+	DelegatingSerializer.class,
+	JsonDeserializer.class,
+	JsonSerializer.class,
+	ParseStringDeserializer.class,
+	StringOrBytesSerializer.class,
+	ToStringSerializer.class,
+	Serdes.class,
+	Serdes.ByteArraySerde.class,
+	Serdes.BytesSerde.class,
+	Serdes.ByteBufferSerde.class,
+	Serdes.DoubleSerde.class,
+	Serdes.FloatSerde.class,
+	Serdes.IntegerSerde.class,
+	Serdes.LongSerde.class,
+	Serdes.ShortSerde.class,
+	Serdes.StringSerde.class,
+	Serdes.UUIDSerde.class,
+	Serdes.VoidSerde.class,
+	CRC32C.class)
+	.forEach(type -> reflectionHints.registerType(type, builder ->
+builder.withMembers(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)));
 
 		hints.proxies().registerJdkProxy(AopProxyUtils.completeJdkProxyInterfaces(Consumer.class));
 		hints.proxies().registerJdkProxy(AopProxyUtils.completeJdkProxyInterfaces(Producer.class));
 
 		Stream.of(
-				"org.apache.kafka.streams.processor.internals.StreamsPartitionAssignor",
-				"org.apache.kafka.streams.errors.DefaultProductionExceptionHandler",
-				"org.apache.kafka.streams.processor.FailOnInvalidTimestamp",
-				"org.apache.kafka.streams.processor.internals.assignment.HighAvailabilityTaskAssignor",
-				"org.apache.kafka.streams.processor.internals.assignment.StickyTaskAssignor",
-				"org.apache.kafka.streams.processor.internals.assignment.FallbackPriorTaskAssignor",
-				"org.apache.kafka.streams.errors.LogAndFailExceptionHandler")
-			.forEach(type -> reflectionHints.registerTypeIfPresent(classLoader, type, builder ->
-					builder.withMembers(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)));
+	"org.apache.kafka.streams.processor.internals.StreamsPartitionAssignor",
+	"org.apache.kafka.streams.errors.DefaultProductionExceptionHandler",
+	"org.apache.kafka.streams.processor.FailOnInvalidTimestamp",
+	"org.apache.kafka.streams.processor.internals.assignment.HighAvailabilityTaskAssignor",
+	"org.apache.kafka.streams.processor.internals.assignment.StickyTaskAssignor",
+	"org.apache.kafka.streams.processor.internals.assignment.FallbackPriorTaskAssignor",
+	"org.apache.kafka.streams.errors.LogAndFailExceptionHandler")
+	.forEach(type -> reflectionHints.registerTypeIfPresent(classLoader, type, builder ->
+builder.withMembers(MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)));
 	}
 
 }

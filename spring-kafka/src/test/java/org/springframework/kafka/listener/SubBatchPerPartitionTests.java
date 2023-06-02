@@ -139,10 +139,10 @@ public class SubBatchPerPartitionTests {
 		ContainerProperties containerProps = new ContainerProperties("sbpp");
 		containerProps.setMessageListener(mock(MessageListener.class));
 		KafkaMessageListenerContainer<Integer, String> container =
-				new KafkaMessageListenerContainer<>(cf, containerProps);
+	new KafkaMessageListenerContainer<>(cf, containerProps);
 		container.start();
 		assertThat(KafkaTestUtils.getPropertyValue(container, "listenerConsumer.subBatchPerPartition"))
-				.isEqualTo(Boolean.FALSE);
+	.isEqualTo(Boolean.FALSE);
 		container.stop();
 
 		containerProps = new ContainerProperties("sbpp");
@@ -151,7 +151,7 @@ public class SubBatchPerPartitionTests {
 		container = new KafkaMessageListenerContainer<>(cf, containerProps);
 		container.start();
 		assertThat(KafkaTestUtils.getPropertyValue(container, "listenerConsumer.subBatchPerPartition"))
-				.isEqualTo(Boolean.TRUE);
+	.isEqualTo(Boolean.TRUE);
 		container.stop();
 
 		containerProps = new ContainerProperties("sbpp");
@@ -160,7 +160,7 @@ public class SubBatchPerPartitionTests {
 		container = new KafkaMessageListenerContainer<>(cf, containerProps);
 		container.start();
 		assertThat(KafkaTestUtils.getPropertyValue(container, "listenerConsumer.subBatchPerPartition"))
-				.isEqualTo(Boolean.FALSE);
+	.isEqualTo(Boolean.FALSE);
 		container.stop();
 	}
 
@@ -187,24 +187,24 @@ public class SubBatchPerPartitionTests {
 		}
 
 		@KafkaListener(id = CONTAINER_ID + ".filtered", topics = "foo", autoStartup = "false",
-				containerFactory = "filteredFactory")
+	containerFactory = "filteredFactory")
 		public void filtered(List<String> in) {
 			filtered.addAll(in);
 			this.deliveryLatch.countDown();
 		}
 
-		@SuppressWarnings({ "rawtypes" })
+		@SuppressWarnings({"rawtypes"})
 		@Bean
 		public ConsumerFactory consumerFactory() {
 			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 			final Consumer consumer = consumer();
 			given(consumerFactory.createConsumer(any(), eq(""), eq("-0"),
-					eq(KafkaTestUtils.defaultPropertyOverrides())))
-							.willReturn(consumer);
+		eq(KafkaTestUtils.defaultPropertyOverrides())))
+		.willReturn(consumer);
 			return consumerFactory;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public Consumer consumer() {
 			final Consumer consumer = mock(Consumer.class);
@@ -213,25 +213,25 @@ public class SubBatchPerPartitionTests {
 			final TopicPartition topicPartition2 = new TopicPartition("foo", 2);
 			willAnswer(i -> {
 				((ConsumerRebalanceListener) i.getArgument(1)).onPartitionsAssigned(
-						Arrays.asList(topicPartition0, topicPartition1, topicPartition2));
+			Arrays.asList(topicPartition0, topicPartition1, topicPartition2));
 				return null;
 			}).given(consumer).subscribe(any(Collection.class), any(ConsumerRebalanceListener.class));
 			Map<TopicPartition, List<ConsumerRecord>> records1 = new LinkedHashMap<>();
 			records1.put(topicPartition0, Arrays.asList(
-					new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-							new RecordHeaders(), Optional.empty()),
-					new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
+	new RecordHeaders(), Optional.empty()),
+		new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
+	new RecordHeaders(), Optional.empty())));
 			records1.put(topicPartition1, Arrays.asList(
-					new ConsumerRecord("foo", 1, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
-							new RecordHeaders(), Optional.empty()),
-					new ConsumerRecord("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 1, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
+	new RecordHeaders(), Optional.empty()),
+		new ConsumerRecord("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
+	new RecordHeaders(), Optional.empty())));
 			records1.put(topicPartition2, Arrays.asList(
-					new ConsumerRecord("foo", 2, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "fiz",
-							new RecordHeaders(), Optional.empty()),
-					new ConsumerRecord("foo", 2, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "buz",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 2, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "fiz",
+	new RecordHeaders(), Optional.empty()),
+		new ConsumerRecord("foo", 2, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "buz",
+	new RecordHeaders(), Optional.empty())));
 			final ThreadLocal<AtomicInteger> which = new ThreadLocal<>();
 			willAnswer(i -> {
 				this.pollLatch.countDown();
@@ -262,7 +262,7 @@ public class SubBatchPerPartitionTests {
 			return consumer;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
@@ -273,7 +273,7 @@ public class SubBatchPerPartitionTests {
 			return factory;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory filteredFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();

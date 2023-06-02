@@ -40,13 +40,13 @@ public interface ContainerAwareErrorHandler extends RemainingRecordsErrorHandler
 
 	@Override
 	default void handle(Exception thrownException, @Nullable List<ConsumerRecord<?, ?>> records,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 
 		throw new UnsupportedOperationException("Container should never call this");
 	}
 
 	@Override
 	void handle(Exception thrownException, @Nullable List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer,
-			MessageListenerContainer container);
+MessageListenerContainer container);
 
 }

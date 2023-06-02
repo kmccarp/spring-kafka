@@ -97,7 +97,7 @@ public @interface EmbeddedKafka {
 	 * @return ports for brokers.
 	 * @since 2.2.4
 	 */
-	int[] ports() default { 0 };
+	int[] ports() default {0};
 
 	/**
 	 * Set the port on which the embedded Zookeeper should listen;
@@ -121,7 +121,7 @@ public @interface EmbeddedKafka {
 	 * context present (such as when using {@code @SpringJunitConfig or @SpringRunner}.
 	 * @return the topics to create
 	 */
-	String[] topics() default { };
+	String[] topics() default {};
 
 	/**
 	 * Properties in form {@literal key=value} that should be added to the broker config
@@ -133,7 +133,7 @@ public @interface EmbeddedKafka {
 	 * @see #brokerPropertiesLocation()
 	 * @see org.springframework.kafka.test.EmbeddedKafkaBroker#brokerProperties(java.util.Map)
 	 */
-	String[] brokerProperties() default { };
+	String[] brokerProperties() default {};
 
 	/**
 	 * Spring {@code Resource} url specifying the location of properties that should be

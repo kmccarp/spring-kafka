@@ -261,7 +261,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 	 * @since 2.2
 	 */
 	public JsonDeserializer(@Nullable Class<? super T> targetType, ObjectMapper objectMapper,
-			boolean useHeadersIfPresent) {
+boolean useHeadersIfPresent) {
 
 		Assert.notNull(objectMapper, "'objectMapper' must not be null.");
 		this.objectMapper = objectMapper;
@@ -289,10 +289,10 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 	 * @since 2.3
 	 */
 	public JsonDeserializer(TypeReference<? super T> targetType, ObjectMapper objectMapper,
-			boolean useHeadersIfPresent) {
+boolean useHeadersIfPresent) {
 
 		this(targetType != null ? TypeFactory.defaultInstance().constructType(targetType) : null,
-				objectMapper, useHeadersIfPresent);
+	objectMapper, useHeadersIfPresent);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 	 * @since 2.3
 	 */
 	public JsonDeserializer(@Nullable JavaType targetType, ObjectMapper objectMapper,
-			boolean useHeadersIfPresent) {
+boolean useHeadersIfPresent) {
 
 		Assert.notNull(objectMapper, "'objectMapper' must not be null.");
 		this.objectMapper = objectMapper;
@@ -344,7 +344,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 
 	private void doSetUseTypeMapperForKey(boolean isKey) {
 		if (!this.typeMapperExplicitlySet
-				&& this.getTypeMapper() instanceof AbstractJavaTypeMapper) {
+	&& this.getTypeMapper() instanceof AbstractJavaTypeMapper) {
 			((AbstractJavaTypeMapper) this.getTypeMapper()).setUseForKey(isKey);
 		}
 	}
@@ -404,17 +404,17 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 			return;
 		}
 		Assert.state(!this.setterCalled || !configsHasOurKeys(configs),
-				"JsonDeserializer must be configured with property setters, or via configuration properties; not both");
+	"JsonDeserializer must be configured with property setters, or via configuration properties; not both");
 		doSetUseTypeMapperForKey(isKey);
 		setUpTypePrecedence(configs);
 		setupTarget(configs, isKey);
 		if (configs.containsKey(TRUSTED_PACKAGES)
-				&& configs.get(TRUSTED_PACKAGES) instanceof String) {
+	&& configs.get(TRUSTED_PACKAGES) instanceof String) {
 			this.typeMapper.addTrustedPackages(
-					StringUtils.delimitedListToStringArray((String) configs.get(TRUSTED_PACKAGES), ",", " \r\n\f\t"));
+		StringUtils.delimitedListToStringArray((String) configs.get(TRUSTED_PACKAGES), ",", " \r\n\f\t"));
 		}
 		if (configs.containsKey(TYPE_MAPPINGS) && !this.typeMapperExplicitlySet
-				&& this.typeMapper instanceof AbstractJavaTypeMapper) {
+	&& this.typeMapper instanceof AbstractJavaTypeMapper) {
 			((AbstractJavaTypeMapper) this.typeMapper).setIdClassMapping(createMappings(configs));
 		}
 		if (configs.containsKey(REMOVE_TYPE_INFO_HEADERS)) {
@@ -435,7 +435,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 
 	private Map<String, Class<?>> createMappings(Map<String, ?> configs) {
 		Map<String, Class<?>> mappings =
-				JsonSerializer.createMappings(configs.get(JsonSerializer.TYPE_MAPPINGS).toString());
+	JsonSerializer.createMappings(configs.get(JsonSerializer.TYPE_MAPPINGS).toString());
 		addMappingsToTrusted(mappings);
 		return mappings;
 	}
@@ -456,8 +456,8 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 		catch (IllegalStateException e) {
 			if (e.getCause() instanceof NoSuchMethodException) {
 				this.typeResolver = (topic, data, headers) ->
-					(JavaType) SerializationUtils.propertyToMethodInvokingFunction(
-							method, byte[].class, getClass().getClassLoader()).apply(data, headers);
+			(JavaType) SerializationUtils.propertyToMethodInvokingFunction(
+		method, byte[].class, getClass().getClassLoader()).apply(data, headers);
 				return;
 			}
 			throw e;
@@ -496,7 +496,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 		this.targetType = type;
 		this.useTypeHeaders = useHeadersIfPresent;
 		Assert.isTrue(this.targetType != null || useHeadersIfPresent,
-				"'targetType' cannot be null if 'useHeadersIfPresent' is false");
+	"'targetType' cannot be null if 'useHeadersIfPresent' is false");
 
 		if (this.targetType != null) {
 			this.reader = this.objectMapper.readerFor(this.targetType);
@@ -512,7 +512,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 		}
 		else if (configs.get(key) instanceof String) {
 			return TypeFactory.defaultInstance()
-							.constructType(ClassUtils.forName((String) configs.get(key), null));
+		.constructType(ClassUtils.forName((String) configs.get(key), null));
 		}
 		else {
 			throw new IllegalStateException(key + " must be Class or String");
@@ -532,8 +532,8 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 	private void addMappingsToTrusted(Map<String, Class<?>> mappings) {
 		mappings.values().forEach(clazz -> {
 			String packageName = clazz.isArray()
-					? clazz.getComponentType().getPackage().getName()
-					: clazz.getPackage().getName();
+		? clazz.getComponentType().getPackage().getName()
+		: clazz.getPackage().getName();
 			doAddTrustedPackages(packageName);
 			doAddTrustedPackages(packageName + ".*");
 		});
@@ -586,7 +586,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 		}
 		catch (IOException e) {
 			throw new SerializationException("Can't deserialize data [" + Arrays.toString(data) +
-					"] from topic [" + topic + "]", e);
+		"] from topic [" + topic + "]", e);
 		}
 	}
 
@@ -608,7 +608,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 		}
 		catch (IOException e) {
 			throw new SerializationException("Can't deserialize data [" + Arrays.toString(data) +
-					"] from topic [" + topic + "]", e);
+		"] from topic [" + topic + "]", e);
 		}
 	}
 
@@ -740,7 +740,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 	private JsonTypeResolver buildTypeResolver(String methodProperty) {
 		int lastDotPosn = methodProperty.lastIndexOf('.');
 		Assert.state(lastDotPosn > 1,
-				"the method property needs to be a class name followed by the method name, separated by '.'");
+	"the method property needs to be a class name followed by the method name, separated by '.'");
 		Class<?> clazz;
 		try {
 			clazz = ClassUtils.forName(methodProperty.substring(0, lastDotPosn), getClass().getClassLoader());
@@ -753,7 +753,7 @@ public class JsonDeserializer<T> implements Deserializer<T> {
 		try {
 			method = clazz.getDeclaredMethod(methodName, String.class, byte[].class, Headers.class);
 			Assert.state(JavaType.class.isAssignableFrom(method.getReturnType()),
-					method + " return type must be JavaType");
+		method + " return type must be JavaType");
 			Assert.state(Modifier.isStatic(method.getModifiers()), method + " must be static");
 		}
 		catch (SecurityException | NoSuchMethodException e) {

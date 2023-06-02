@@ -37,33 +37,33 @@ import org.junit.jupiter.api.Test;
 class KafkaStreamBrancherTests {
 
 	@Test
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	@SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
 	void correctConsumersAreCalled() {
 		Predicate p1 = mock(Predicate.class);
 		Predicate p2 = mock(Predicate.class);
 		KStream input = mock(KStream.class);
 		KStream[] result =
-				new KStream[] { mock(KStream.class), mock(KStream.class), mock(KStream.class) };
+	new KStream[]{mock(KStream.class), mock(KStream.class), mock(KStream.class)};
 		given(input.branch(eq(p1), eq(p2), any()))
-				.willReturn(result);
+	.willReturn(result);
 		AtomicInteger invocations = new AtomicInteger(0);
 		assertThat(new KafkaStreamBrancher()
-				.branch(
-						p1,
-						ks -> {
-							assertThat(ks).isSameAs(result[0]);
-							assertThat(invocations.getAndIncrement()).isEqualTo(0);
-						})
-				.defaultBranch(ks -> {
-					assertThat(ks).isSameAs(result[2]);
-					assertThat(invocations.getAndIncrement()).isEqualTo(2);
-				})
-				.branch(p2,
-						ks -> {
-							assertThat(ks).isSameAs(result[1]);
-							assertThat(invocations.getAndIncrement()).isEqualTo(1);
-						})
-				.onTopOf(input)).isSameAs(input);
+	.branch(
+p1,
+ks -> {
+	assertThat(ks).isSameAs(result[0]);
+	assertThat(invocations.getAndIncrement()).isEqualTo(0);
+})
+	.defaultBranch(ks -> {
+		assertThat(ks).isSameAs(result[2]);
+		assertThat(invocations.getAndIncrement()).isEqualTo(2);
+	})
+	.branch(p2,
+ks -> {
+	assertThat(ks).isSameAs(result[1]);
+	assertThat(invocations.getAndIncrement()).isEqualTo(1);
+})
+	.onTopOf(input)).isSameAs(input);
 
 		assertThat(invocations.get()).isEqualTo(3);
 	}

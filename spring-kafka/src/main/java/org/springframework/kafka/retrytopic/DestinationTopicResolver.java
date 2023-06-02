@@ -41,6 +41,6 @@ public interface DestinationTopicResolver extends DestinationTopicContainer {
 	 *
 	 */
 	DestinationTopic resolveDestinationTopic(String mainListenerId, String topic, Integer attempt, Exception e,
-			long originalTimestamp);
+long originalTimestamp);
 
 }

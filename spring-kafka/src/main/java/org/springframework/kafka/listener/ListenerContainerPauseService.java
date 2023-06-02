@@ -66,7 +66,7 @@ public class ListenerContainerPauseService {
 	public void pause(String listenerId, Duration pauseDuration) {
 		Assert.notNull(this.registry, "Pause by id is only supported when a registry is provided");
 		getListenerContainer(listenerId)
-				.ifPresent(messageListenerContainer -> pause(messageListenerContainer, pauseDuration));
+	.ifPresent(messageListenerContainer -> pause(messageListenerContainer, pauseDuration));
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class ListenerContainerPauseService {
 		else {
 			Instant resumeAt = Instant.now().plusMillis(pauseDuration.toMillis());
 			LOGGER.debug(() -> "Pausing container " + messageListenerContainer + ", resume scheduled for "
-					+ resumeAt.atZone(ZoneId.systemDefault()).toLocalDateTime());
+		+ resumeAt.atZone(ZoneId.systemDefault()).toLocalDateTime());
 			messageListenerContainer.pause();
 			this.scheduler.schedule(() -> {
 				LOGGER.debug(() -> "Pausing container " + messageListenerContainer);
@@ -99,12 +99,12 @@ public class ListenerContainerPauseService {
 	 * @param pauseDuration the duration.
 	 */
 	public void pausePartition(MessageListenerContainer messageListenerContainer, TopicPartition partition,
-			Duration pauseDuration) {
+Duration pauseDuration) {
 
 		Instant resumeAt = Instant.now().plusMillis(pauseDuration.toMillis());
 		LOGGER.debug(() -> "Pausing container: " + messageListenerContainer + " partition: " + partition
-				+ ", resume scheduled for "
-				+ resumeAt.atZone(ZoneId.systemDefault()).toLocalDateTime());
+	+ ", resume scheduled for "
+	+ resumeAt.atZone(ZoneId.systemDefault()).toLocalDateTime());
 		messageListenerContainer.pausePartition(partition);
 		this.scheduler.schedule(() -> {
 			LOGGER.debug(() -> "Resuming container: " + messageListenerContainer + " partition: " + partition);

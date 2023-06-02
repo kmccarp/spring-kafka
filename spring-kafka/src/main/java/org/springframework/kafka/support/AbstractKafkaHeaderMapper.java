@@ -87,24 +87,24 @@ public abstract class AbstractKafkaHeaderMapper implements KafkaHeaderMapper {
 		this.outbound = outbound;
 		if (outbound) {
 			this.matchers.add(new NeverMatchHeaderMatcher(
-					KafkaHeaders.ACKNOWLEDGMENT,
-					KafkaHeaders.CONSUMER,
-					KafkaHeaders.KEY,
-					KafkaHeaders.OFFSET,
-					KafkaHeaders.PARTITION,
-					KafkaHeaders.RAW_DATA,
-					KafkaHeaders.RECEIVED_KEY,
-					KafkaHeaders.RECEIVED_PARTITION,
-					KafkaHeaders.RECEIVED_TIMESTAMP,
-					KafkaHeaders.RECEIVED_TOPIC,
-					KafkaHeaders.TIMESTAMP,
-					KafkaHeaders.TIMESTAMP_TYPE,
-					KafkaHeaders.BATCH_CONVERTED_HEADERS,
-					KafkaHeaders.NATIVE_HEADERS,
-					KafkaHeaders.TOPIC,
-					KafkaHeaders.DELIVERY_ATTEMPT,
-					KafkaHeaders.LISTENER_INFO,
-					KafkaHeaders.GROUP_ID));
+		KafkaHeaders.ACKNOWLEDGMENT,
+		KafkaHeaders.CONSUMER,
+		KafkaHeaders.KEY,
+		KafkaHeaders.OFFSET,
+		KafkaHeaders.PARTITION,
+		KafkaHeaders.RAW_DATA,
+		KafkaHeaders.RECEIVED_KEY,
+		KafkaHeaders.RECEIVED_PARTITION,
+		KafkaHeaders.RECEIVED_TIMESTAMP,
+		KafkaHeaders.RECEIVED_TOPIC,
+		KafkaHeaders.TIMESTAMP,
+		KafkaHeaders.TIMESTAMP_TYPE,
+		KafkaHeaders.BATCH_CONVERTED_HEADERS,
+		KafkaHeaders.NATIVE_HEADERS,
+		KafkaHeaders.TOPIC,
+		KafkaHeaders.DELIVERY_ATTEMPT,
+		KafkaHeaders.LISTENER_INFO,
+		KafkaHeaders.GROUP_ID));
 		}
 		for (String pattern : patterns) {
 			this.matchers.add(new SimplePatternBasedHeaderMatcher(pattern));
@@ -179,9 +179,9 @@ public abstract class AbstractKafkaHeaderMapper implements KafkaHeaderMapper {
 	protected boolean matches(String header, Object value) {
 		if (matches(header)) {
 			if ((header.equals(MessageHeaders.REPLY_CHANNEL) || header.equals(MessageHeaders.ERROR_CHANNEL))
-					&& !(value instanceof String)) {
+		&& !(value instanceof String)) {
 				this.logger.debug(() -> "Cannot map " + header + " when type is [" + value.getClass()
-						+ "]; it must be a String");
+			+ "]; it must be a String");
 				return false;
 			}
 			return true;
@@ -217,7 +217,7 @@ public abstract class AbstractKafkaHeaderMapper implements KafkaHeaderMapper {
 			}
 		}
 		this.logger.debug(() -> MessageFormat.format("headerName=[{0}] WILL NOT be mapped; matched no patterns",
-				header));
+	header));
 		return false;
 	}
 
@@ -303,7 +303,7 @@ public abstract class AbstractKafkaHeaderMapper implements KafkaHeaderMapper {
 
 		protected NeverMatchHeaderMatcher(String... headers) {
 			this.neverMatchHeaders = Arrays.stream(headers)
-					.collect(Collectors.toSet());
+		.collect(Collectors.toSet());
 		}
 
 		@Override
@@ -327,7 +327,7 @@ public abstract class AbstractKafkaHeaderMapper implements KafkaHeaderMapper {
 	protected static class SimplePatternBasedHeaderMatcher implements HeaderMatcher {
 
 		private static final LogAccessor LOGGER =
-				new LogAccessor(LogFactory.getLog(SimplePatternBasedHeaderMatcher.class));
+	new LogAccessor(LogFactory.getLog(SimplePatternBasedHeaderMatcher.class));
 
 		private final String pattern;
 
@@ -348,10 +348,10 @@ public abstract class AbstractKafkaHeaderMapper implements KafkaHeaderMapper {
 			String header = headerName.toLowerCase();
 			if (PatternMatchUtils.simpleMatch(this.pattern, header)) {
 				LOGGER.debug(() ->
-						MessageFormat.format(
-								"headerName=[{0}] WILL " + (this.negate ? "NOT " : "")
-										+ "be mapped, matched pattern=" + (this.negate ? "!" : "") + "{1}",
-								headerName, this.pattern));
+			MessageFormat.format(
+		"headerName=[{0}] WILL " + (this.negate ? "NOT " : "")
+	+ "be mapped, matched pattern=" + (this.negate ? "!" : "") + "{1}",
+		headerName, this.pattern));
 				return true;
 			}
 			return false;

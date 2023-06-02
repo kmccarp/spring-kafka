@@ -36,7 +36,7 @@ public class ContainerPartitionPausingBackOffManagerFactory extends AbstractKafk
 	 * @param applicationContext the application context.
 	 */
 	public ContainerPartitionPausingBackOffManagerFactory(ListenerContainerRegistry listenerContainerRegistry,
-			ApplicationContext applicationContext) {
+ApplicationContext applicationContext) {
 
 		super(listenerContainerRegistry);
 		setApplicationContext(applicationContext);

@@ -75,11 +75,11 @@ public class MessagingProcessor<Kin, Vin, Kout, Vout> extends ContextualProcesso
 		Assert.state(meta != null, "No record metadata present");
 		Headers headers = record.headers();
 		ConsumerRecord<Object, Object> rebuilt = new ConsumerRecord<Object, Object>(meta.topic(),
-				meta.partition(), meta.offset(),
-				record.timestamp(), TimestampType.NO_TIMESTAMP_TYPE,
-				0, 0,
-				record.key(), record.value(),
-				headers, Optional.empty());
+	meta.partition(), meta.offset(),
+	record.timestamp(), TimestampType.NO_TIMESTAMP_TYPE,
+	0, 0,
+	record.key(), record.value(),
+	headers, Optional.empty());
 		Message<?> message = this.converter.toMessage(rebuilt, null, null, null);
 		message = this.function.exchange(message);
 		List<String> headerList = new ArrayList<>();
@@ -92,7 +92,7 @@ public class MessagingProcessor<Kin, Vin, Kout, Vout> extends ContextualProcesso
 			}
 		});
 		context.forward(new Record<>((Kout) message.getHeaders().get(KafkaHeaders.KEY), (Vout) message.getPayload(),
-				record.timestamp(), headers));
+	record.timestamp(), headers));
 	}
 
 	@Override

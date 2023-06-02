@@ -104,7 +104,7 @@ public class EndpointHandlerMethod {
 					catch (NoSuchBeanDefinitionException e) {
 						String beanName = clazz.getSimpleName() + "-handlerMethod";
 						((BeanDefinitionRegistry) beanFactory).registerBeanDefinition(beanName,
-								new RootBeanDefinition(clazz));
+					new RootBeanDefinition(clazz));
 						this.bean = beanFactory.getBean(beanName);
 					}
 				}
@@ -123,10 +123,10 @@ public class EndpointHandlerMethod {
 	private Method forClass(Class<?> clazz) {
 		if (this.method == null) {
 			this.method = Arrays.stream(ReflectionUtils.getDeclaredMethods(clazz))
-					.filter(mthd -> mthd.getName().equals(this.methodName))
-					.findFirst()
-					.orElseThrow(() -> new IllegalArgumentException(
-							String.format("No method %s in class %s", this.methodName, clazz)));
+		.filter(mthd -> mthd.getName().equals(this.methodName))
+		.findFirst()
+		.orElseThrow(() -> new IllegalArgumentException(
+	String.format("No method %s in class %s", this.methodName, clazz)));
 		}
 		return this.method;
 	}

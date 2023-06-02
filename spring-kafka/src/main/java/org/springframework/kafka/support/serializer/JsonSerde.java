@@ -132,7 +132,7 @@ public class JsonSerde<T> implements Serde<T> {
 	 */
 	public <X> JsonSerde<X> copyWithType(Class<? super X> newTargetType) {
 		return new JsonSerde<>(this.jsonSerializer.copyWithType(newTargetType),
-			this.jsonDeserializer.copyWithType(newTargetType));
+	this.jsonDeserializer.copyWithType(newTargetType));
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class JsonSerde<T> implements Serde<T> {
 	 */
 	public <X> JsonSerde<X> copyWithType(TypeReference<? super X> newTargetType) {
 		return new JsonSerde<>(this.jsonSerializer.copyWithType(newTargetType),
-			this.jsonDeserializer.copyWithType(newTargetType));
+	this.jsonDeserializer.copyWithType(newTargetType));
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class JsonSerde<T> implements Serde<T> {
 	 */
 	public <X> JsonSerde<X> copyWithType(JavaType newTargetType) {
 		return new JsonSerde<>(this.jsonSerializer.copyWithType(newTargetType),
-			this.jsonDeserializer.copyWithType(newTargetType));
+	this.jsonDeserializer.copyWithType(newTargetType));
 	}
 
 	// Fluent API

@@ -29,8 +29,7 @@ import org.springframework.util.Assert;
  * @since 2.7
  * @see KafkaConsumerBackoffManager
  */
-public abstract class AbstractKafkaBackOffManagerFactory
-		implements KafkaBackOffManagerFactory, ApplicationContextAware {
+public abstract class AbstractKafkaBackOffManagerFactoryimplements KafkaBackOffManagerFactory, ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
 
@@ -72,14 +71,14 @@ public abstract class AbstractKafkaBackOffManagerFactory
 
 	protected ListenerContainerRegistry getListenerContainerRegistry() {
 		return this.listenerContainerRegistry != null
-				? this.listenerContainerRegistry
-				: getListenerContainerFromContext();
+	? this.listenerContainerRegistry
+	: getListenerContainerFromContext();
 	}
 
 	private ListenerContainerRegistry getListenerContainerFromContext() {
 		Assert.notNull(this.applicationContext, "ApplicationContext not set.");
 		return this.applicationContext.getBean(KafkaListenerConfigUtils.KAFKA_LISTENER_ENDPOINT_REGISTRY_BEAN_NAME,
-				ListenerContainerRegistry.class);
+	ListenerContainerRegistry.class);
 	}
 
 	protected <T> T getBean(String beanName, Class<T> beanClass) {

@@ -72,8 +72,8 @@ public final class AdapterUtils {
 		}
 		ConsumerRecord<?, ?> record = (ConsumerRecord<?, ?>) data;
 		return new ConsumerRecordMetadata(new RecordMetadata(new TopicPartition(record.topic(), record.partition()),
-				record.offset(), 0, record.timestamp(), record.serializedKeySize(),
-				record.serializedValueSize()), record.timestampType());
+	record.offset(), 0, record.timestamp(), record.serializedKeySize(),
+	record.serializedValueSize()), record.timestampType());
 	}
 
 	/**
@@ -83,7 +83,7 @@ public final class AdapterUtils {
 	 */
 	public static String getDefaultReplyTopicExpression() {
 		return PARSER_CONTEXT.getExpressionPrefix() + "source.headers['"
-				+ KafkaHeaders.REPLY_TOPIC + "']" + PARSER_CONTEXT.getExpressionSuffix();
+	+ KafkaHeaders.REPLY_TOPIC + "']" + PARSER_CONTEXT.getExpressionSuffix();
 	}
 
 }

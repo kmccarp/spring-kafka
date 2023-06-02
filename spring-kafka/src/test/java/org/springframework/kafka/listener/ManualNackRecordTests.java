@@ -88,7 +88,7 @@ public class ManualNackRecordTests {
 	 * partition, first attempt; verify partition 0,1 committed and a total of 7 records
 	 * handled after seek.
 	 */
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({"unchecked"})
 	@Test
 	public void discardRemainingRecordsFromPollAndSeek() throws Exception {
 		assertThat(this.config.deliveryLatch.await(10, TimeUnit.SECONDS)).isTrue();
@@ -113,7 +113,7 @@ public class ManualNackRecordTests {
 		inOrder.verify(this.consumer).commitSync(commit2, Duration.ofSeconds(60));
 		assertThat(this.config.count).isEqualTo(7);
 		assertThat(this.config.contents.toArray()).isEqualTo(new String[]
-				{ "foo", "bar", "baz", "qux", "qux", "fiz", "buz" });
+	{"foo", "bar", "baz", "qux", "qux", "fiz", "buz"});
 	}
 
 	@Configuration
@@ -149,17 +149,17 @@ public class ManualNackRecordTests {
 			}
 		}
 
-		@SuppressWarnings({ "rawtypes" })
+		@SuppressWarnings({"rawtypes"})
 		@Bean
 		public ConsumerFactory consumerFactory() {
 			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 			final Consumer consumer = consumer();
 			given(consumerFactory.createConsumer("grp", "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-				.willReturn(consumer);
+		.willReturn(consumer);
 			return consumerFactory;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public Consumer consumer() {
 			final Consumer consumer = mock(Consumer.class);
@@ -168,30 +168,30 @@ public class ManualNackRecordTests {
 			final TopicPartition topicPartition2 = new TopicPartition("foo", 2);
 			willAnswer(i -> {
 				((ConsumerRebalanceListener) i.getArgument(1)).onPartitionsAssigned(
-						Collections.singletonList(topicPartition1));
+			Collections.singletonList(topicPartition1));
 				return null;
 			}).given(consumer).subscribe(any(Collection.class), any(ConsumerRebalanceListener.class));
 			Map<TopicPartition, List<ConsumerRecord>> records1 = new LinkedHashMap<>();
 			records1.put(topicPartition0, Arrays.asList(
-					new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-							new RecordHeaders(), Optional.empty()),
-					new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
+	new RecordHeaders(), Optional.empty()),
+		new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
+	new RecordHeaders(), Optional.empty())));
 			records1.put(topicPartition1, Arrays.asList(
-					new ConsumerRecord("foo", 1, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
-							new RecordHeaders(), Optional.empty()),
-					new ConsumerRecord("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 1, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
+	new RecordHeaders(), Optional.empty()),
+		new ConsumerRecord("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
+	new RecordHeaders(), Optional.empty())));
 			records1.put(topicPartition2, Arrays.asList(
-					new ConsumerRecord("foo", 2, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "fiz",
-							new RecordHeaders(), Optional.empty()),
-					new ConsumerRecord("foo", 2, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "buz",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 2, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "fiz",
+	new RecordHeaders(), Optional.empty()),
+		new ConsumerRecord("foo", 2, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "buz",
+	new RecordHeaders(), Optional.empty())));
 			Map<TopicPartition, List<ConsumerRecord>> records2 = new LinkedHashMap<>(records1);
 			records2.remove(topicPartition0);
 			records2.put(topicPartition1, Arrays.asList(
-					new ConsumerRecord("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
-							new RecordHeaders(), Optional.empty())));
+		new ConsumerRecord("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
+	new RecordHeaders(), Optional.empty())));
 			final AtomicInteger which = new AtomicInteger();
 			final AtomicBoolean paused = new AtomicBoolean();
 			willAnswer(i -> {
@@ -237,7 +237,7 @@ public class ManualNackRecordTests {
 			return consumer;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
@@ -251,8 +251,8 @@ public class ManualNackRecordTests {
 				@SuppressWarnings("rawtypes")
 				public ConsumerRecord intercept(ConsumerRecord record, Consumer consumer) {
 					return new ConsumerRecord(record.topic(), record.partition(), record.offset(), 0L,
-							TimestampType.NO_TIMESTAMP_TYPE, 0, 0, record.key(), record.value(), record.headers(),
-							Optional.empty());
+				TimestampType.NO_TIMESTAMP_TYPE, 0, 0, record.key(), record.value(), record.headers(),
+				Optional.empty());
 				}
 
 			});

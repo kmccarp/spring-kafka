@@ -45,7 +45,7 @@ public class StringJsonMessageConverter extends JsonMessageConverter {
 	protected Object convertPayload(Message<?> message) {
 		try {
 			return getObjectMapper()
-					.writeValueAsString(message.getPayload());
+		.writeValueAsString(message.getPayload());
 		}
 		catch (JsonProcessingException e) {
 			throw new ConversionException("Failed to convert to JSON", message, e);

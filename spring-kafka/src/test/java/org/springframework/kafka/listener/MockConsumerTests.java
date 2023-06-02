@@ -77,8 +77,8 @@ public class MockConsumerTests {
 		volatile int count;
 
 		@KafkaListener(topicPartitions =
-				@org.springframework.kafka.annotation.TopicPartition(topic = "foo", partitions = "0,1,2"),
-				groupId = "grp")
+	@org.springframework.kafka.annotation.TopicPartition(topic = "foo", partitions = "0,1,2"),
+	groupId = "grp")
 		public void foo(String in) {
 			this.contents.add(in);
 			this.count++;
@@ -92,34 +92,34 @@ public class MockConsumerTests {
 			TopicPartition topicPartition1 = new TopicPartition("foo", 1);
 			TopicPartition topicPartition2 = new TopicPartition("foo", 2);
 			List<TopicPartition> topicPartitions = Arrays
-					.asList(topicPartition0, topicPartition1, topicPartition2);
+		.asList(topicPartition0, topicPartition1, topicPartition2);
 			Map<TopicPartition, Long> beginningOffsets = topicPartitions.stream().collect(Collectors
-					.toMap(Function.identity(), tp -> 0L));
+		.toMap(Function.identity(), tp -> 0L));
 			consumer.updateBeginningOffsets(beginningOffsets);
 			consumer.schedulePollTask(() -> {
 				consumer.addRecord(
-						new ConsumerRecord<>("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-								new RecordHeaders(), Optional.empty()));
+			new ConsumerRecord<>("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
+		new RecordHeaders(), Optional.empty()));
 				consumer.addRecord(
-						new ConsumerRecord<>("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
-								new RecordHeaders(), Optional.empty()));
+			new ConsumerRecord<>("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
+		new RecordHeaders(), Optional.empty()));
 				consumer.addRecord(
-						new ConsumerRecord<>("foo", 1, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
-								new RecordHeaders(), Optional.empty()));
+			new ConsumerRecord<>("foo", 1, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
+		new RecordHeaders(), Optional.empty()));
 				consumer.addRecord(
-						new ConsumerRecord<>("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
-								new RecordHeaders(), Optional.empty()));
+			new ConsumerRecord<>("foo", 1, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
+		new RecordHeaders(), Optional.empty()));
 				consumer.addRecord(
-						new ConsumerRecord<>("foo", 2, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "fiz",
-								new RecordHeaders(), Optional.empty()));
+			new ConsumerRecord<>("foo", 2, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "fiz",
+		new RecordHeaders(), Optional.empty()));
 				consumer.addRecord(
-						new ConsumerRecord<>("foo", 2, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "buz",
-								new RecordHeaders(), Optional.empty()));
+			new ConsumerRecord<>("foo", 2, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "buz",
+		new RecordHeaders(), Optional.empty()));
 			});
 			return new MockConsumerFactory(() -> consumer);
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory kafkaListenerContainerFactory(ConsumerFactory consumerFactory) {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();

@@ -49,13 +49,13 @@ import org.springframework.util.backoff.FixedBackOff;
  */
 public class FailedBatchProcessorTests {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void indexOutOfBounds() {
 		class TestFBP extends FailedBatchProcessor {
 
 			TestFBP(BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer, BackOff backOff,
-					CommonErrorHandler fallbackHandler) {
+		CommonErrorHandler fallbackHandler) {
 
 				super(recoverer, backOff, fallbackHandler);
 			}
@@ -64,29 +64,30 @@ public class FailedBatchProcessorTests {
 		CommonErrorHandler mockEH = mock(CommonErrorHandler.class);
 		willThrow(new IllegalStateException("fallback")).given(mockEH).handleBatch(any(), any(), any(), any(), any());
 
-		TestFBP testFBP = new TestFBP((rec, ex) -> { }, new FixedBackOff(0L, 0L), mockEH);
+		TestFBP testFBP = new TestFBP((rec, ex) -> {
+		}, new FixedBackOff(0L, 0L), mockEH);
 		LogAccessor logger = spy(new LogAccessor(LogFactory.getLog("test")));
 		new DirectFieldAccessFallbackBeanWrapper(testFBP).setPropertyValue("logger", logger);
 
 
 		ConsumerRecords records = new ConsumerRecords(Map.of(new TopicPartition("topic", 0),
-				List.of(mock(ConsumerRecord.class), mock(ConsumerRecord.class))));
+	List.of(mock(ConsumerRecord.class), mock(ConsumerRecord.class))));
 		assertThatIllegalStateException().isThrownBy(() -> testFBP.handle(new BatchListenerFailedException("test", 3),
-					records, mock(Consumer.class), mock(MessageListenerContainer.class), mock(Runnable.class)))
-				.withMessage("fallback");
+	records, mock(Consumer.class), mock(MessageListenerContainer.class), mock(Runnable.class)))
+	.withMessage("fallback");
 		ArgumentCaptor<Supplier<String>> captor = ArgumentCaptor.forClass(Supplier.class);
 		verify(logger).warn(any(BatchListenerFailedException.class), captor.capture());
 		String output = captor.getValue().get();
 		assertThat(output).contains("Record not found in batch, index 3 out of bounds (0, 1);");
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void recordNotPresent() {
 		class TestFBP extends FailedBatchProcessor {
 
 			TestFBP(BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer, BackOff backOff,
-					CommonErrorHandler fallbackHandler) {
+		CommonErrorHandler fallbackHandler) {
 
 				super(recoverer, backOff, fallbackHandler);
 			}
@@ -95,7 +96,8 @@ public class FailedBatchProcessorTests {
 		CommonErrorHandler mockEH = mock(CommonErrorHandler.class);
 		willThrow(new IllegalStateException("fallback")).given(mockEH).handleBatch(any(), any(), any(), any(), any());
 
-		TestFBP testFBP = new TestFBP((rec, ex) -> { }, new FixedBackOff(0L, 0L), mockEH);
+		TestFBP testFBP = new TestFBP((rec, ex) -> {
+		}, new FixedBackOff(0L, 0L), mockEH);
 		LogAccessor logger = spy(new LogAccessor(LogFactory.getLog("test")));
 		new DirectFieldAccessFallbackBeanWrapper(testFBP).setPropertyValue("logger", logger);
 
@@ -105,9 +107,9 @@ public class FailedBatchProcessorTests {
 		ConsumerRecords records = new ConsumerRecords(Map.of(new TopicPartition("topic", 0), List.of(rec1, rec2)));
 		ConsumerRecord unknownRecord = new ConsumerRecord("topic", 42, 123L, null, null);
 		assertThatIllegalStateException().isThrownBy(() ->
-					testFBP.handle(new BatchListenerFailedException("topic", unknownRecord),
-							records, mock(Consumer.class), mock(MessageListenerContainer.class), mock(Runnable.class)))
-				.withMessage("fallback");
+	testFBP.handle(new BatchListenerFailedException("topic", unknownRecord),
+records, mock(Consumer.class), mock(MessageListenerContainer.class), mock(Runnable.class)))
+	.withMessage("fallback");
 		ArgumentCaptor<Supplier<String>> captor = ArgumentCaptor.forClass(Supplier.class);
 		verify(logger).warn(any(BatchListenerFailedException.class), captor.capture());
 		String output = captor.getValue().get();

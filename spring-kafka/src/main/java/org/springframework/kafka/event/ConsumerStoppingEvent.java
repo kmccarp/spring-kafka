@@ -48,7 +48,7 @@ public class ConsumerStoppingEvent extends KafkaEvent {
 	 * @since 2.2.1
 	 */
 	public ConsumerStoppingEvent(Object source, Object container,
-			Consumer<?, ?> consumer, Collection<TopicPartition> partitions) {
+Consumer<?, ?> consumer, Collection<TopicPartition> partitions) {
 		super(source, container);
 		this.consumer = consumer;
 		this.partitions = partitions;

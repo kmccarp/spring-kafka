@@ -136,14 +136,14 @@ public class MethodKafkaListenerEndpoint<K, V> extends AbstractKafkaListenerEndp
 			if (ann != null) {
 				if (replyingMethod.getReturnType().equals(void.class)) {
 					this.logger.warn(() -> "Method "
-							+ replyingMethod
-							+ " has a void return type; @SendTo is ignored" +
-							(this.errorHandler == null ? "" : " unless the error handler returns a result"));
+				+ replyingMethod
+				+ " has a void return type; @SendTo is ignored" +
+				(this.errorHandler == null ? "" : " unless the error handler returns a result"));
 				}
 				String[] destinations = ann.value();
 				if (destinations.length > 1) {
 					throw new IllegalStateException("Invalid @" + SendTo.class.getSimpleName() + " annotation on '"
-							+ replyingMethod + "' one destination must be set (got " + Arrays.toString(destinations) + ")");
+				+ replyingMethod + "' one destination must be set (got " + Arrays.toString(destinations) + ")");
 				}
 				String topic = destinations.length == 1 ? destinations[0] : "";
 				BeanFactory beanFactory = getBeanFactory();
@@ -169,19 +169,19 @@ public class MethodKafkaListenerEndpoint<K, V> extends AbstractKafkaListenerEndp
 
 	@Override
 	protected MessagingMessageListenerAdapter<K, V> createMessageListener(MessageListenerContainer container,
-			@Nullable MessageConverter messageConverter) {
+@Nullable MessageConverter messageConverter) {
 
 		Assert.state(this.messageHandlerMethodFactory != null,
-				"Could not create message listener - MessageHandlerMethodFactory not set");
+	"Could not create message listener - MessageHandlerMethodFactory not set");
 		MessagingMessageListenerAdapter<K, V> messageListener = createMessageListenerInstance(messageConverter);
 		messageListener.setHandlerMethod(configureListenerAdapter(messageListener));
 		JavaUtils.INSTANCE
-			.acceptIfNotNull(getReplyTopic(), replyTopic -> {
-				Assert.state(getMethod().getReturnType().equals(void.class)
-						|| getReplyTemplate() != null, "a KafkaTemplate is required to support replies");
-				messageListener.setReplyTopic(replyTopic);
-			})
-			.acceptIfNotNull(getReplyTemplate(), messageListener::setReplyTemplate);
+	.acceptIfNotNull(getReplyTopic(), replyTopic -> {
+		Assert.state(getMethod().getReturnType().equals(void.class)
+	|| getReplyTemplate() != null, "a KafkaTemplate is required to support replies");
+		messageListener.setReplyTopic(replyTopic);
+	})
+	.acceptIfNotNull(getReplyTemplate(), messageListener::setReplyTemplate);
 
 		return messageListener;
 	}
@@ -193,7 +193,7 @@ public class MethodKafkaListenerEndpoint<K, V> extends AbstractKafkaListenerEndp
 	 */
 	protected HandlerAdapter configureListenerAdapter(MessagingMessageListenerAdapter<K, V> messageListener) {
 		InvocableHandlerMethod invocableHandlerMethod =
-				this.messageHandlerMethodFactory.createInvocableHandlerMethod(getBean(), getMethod());
+	this.messageHandlerMethodFactory.createInvocableHandlerMethod(getBean(), getMethod());
 		return new HandlerAdapter(invocableHandlerMethod);
 	}
 
@@ -203,12 +203,12 @@ public class MethodKafkaListenerEndpoint<K, V> extends AbstractKafkaListenerEndp
 	 * @return the {@link MessagingMessageListenerAdapter} instance.
 	 */
 	protected MessagingMessageListenerAdapter<K, V> createMessageListenerInstance(
-			@Nullable MessageConverter messageConverter) {
+@Nullable MessageConverter messageConverter) {
 
 		MessagingMessageListenerAdapter<K, V> listener;
 		if (isBatchListener()) {
 			BatchMessagingMessageListenerAdapter<K, V> messageListener = new BatchMessagingMessageListenerAdapter<K, V>(
-					this.bean, this.method, this.errorHandler);
+		this.bean, this.method, this.errorHandler);
 			BatchToRecordAdapter<K, V> batchToRecordAdapter = getBatchToRecordAdapter();
 			if (batchToRecordAdapter != null) {
 				messageListener.setBatchToRecordAdapter(batchToRecordAdapter);
@@ -220,7 +220,7 @@ public class MethodKafkaListenerEndpoint<K, V> extends AbstractKafkaListenerEndp
 		}
 		else {
 			RecordMessagingMessageListenerAdapter<K, V> messageListener = new RecordMessagingMessageListenerAdapter<K, V>(
-					this.bean, this.method, this.errorHandler);
+		this.bean, this.method, this.errorHandler);
 			if (messageConverter instanceof RecordMessageConverter) {
 				messageListener.setMessageConverter((RecordMessageConverter) messageConverter);
 			}
@@ -253,8 +253,8 @@ public class MethodKafkaListenerEndpoint<K, V> extends AbstractKafkaListenerEndp
 	@Override
 	protected StringBuilder getEndpointDescription() {
 		return super.getEndpointDescription()
-				.append(" | bean='").append(this.bean).append("'")
-				.append(" | method='").append(this.method).append("'");
+	.append(" | bean='").append(this.bean).append("'")
+	.append(" | method='").append(this.method).append("'");
 	}
 
 }

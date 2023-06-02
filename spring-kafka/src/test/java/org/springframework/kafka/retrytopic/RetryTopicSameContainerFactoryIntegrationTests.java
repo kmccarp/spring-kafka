@@ -66,8 +66,7 @@ import org.springframework.util.backoff.FixedBackOff;
  */
 @SpringJUnitConfig
 @DirtiesContext
-@EmbeddedKafka(topics = { RetryTopicSameContainerFactoryIntegrationTests.FIRST_TOPIC,
-		RetryTopicSameContainerFactoryIntegrationTests.SECOND_TOPIC, RetryTopicSameContainerFactoryIntegrationTests.THIRD_TOPIC}, partitions = 1)
+@EmbeddedKafka(topics = {RetryTopicSameContainerFactoryIntegrationTests.FIRST_TOPIC,RetryTopicSameContainerFactoryIntegrationTests.SECOND_TOPIC, RetryTopicSameContainerFactoryIntegrationTests.THIRD_TOPIC}, partitions = 1)
 public class RetryTopicSameContainerFactoryIntegrationTests {
 
 	private static final Logger logger = LoggerFactory.getLogger(RetryTopicSameContainerFactoryIntegrationTests.class);
@@ -118,10 +117,10 @@ public class RetryTopicSameContainerFactoryIntegrationTests {
 		CountDownLatchContainer countDownLatchContainer;
 
 		@RetryableTopic(
-				attempts = "4",
-				backoff = @Backoff(delay = 1000, multiplier = 2.0),
-				autoCreateTopics = "false",
-				topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
+	attempts = "4",
+	backoff = @Backoff(delay = 1000, multiplier = 2.0),
+	autoCreateTopics = "false",
+	topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
 		@KafkaListener(topics = RetryTopicSameContainerFactoryIntegrationTests.FIRST_TOPIC)
 		public void listen(String in, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 			countDownLatchContainer.countDownLatchFirstRetryable.countDown();
@@ -209,7 +208,7 @@ public class RetryTopicSameContainerFactoryIntegrationTests {
 
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(
-				ConsumerFactory<String, String> consumerFactory, CountDownLatchContainer latchContainer) {
+	ConsumerFactory<String, String> consumerFactory, CountDownLatchContainer latchContainer) {
 
 			ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory);
@@ -219,12 +218,12 @@ public class RetryTopicSameContainerFactoryIntegrationTests {
 			props.setIdlePartitionEventInterval(100L);
 			factory.setConsumerFactory(consumerFactory);
 			DefaultErrorHandler errorHandler = new DefaultErrorHandler(
-					(cr, ex) -> latchContainer.countDownLatchBasic.countDown(),
-					new FixedBackOff(0, 2));
+		(cr, ex) -> latchContainer.countDownLatchBasic.countDown(),
+		new FixedBackOff(0, 2));
 			factory.setCommonErrorHandler(errorHandler);
 			factory.setConcurrency(1);
 			factory.setContainerCustomizer(
-					container -> latchContainer.customizerLatch.countDown());
+		container -> latchContainer.customizerLatch.countDown());
 			return factory;
 		}
 
@@ -232,14 +231,14 @@ public class RetryTopicSameContainerFactoryIntegrationTests {
 		public ProducerFactory<String, String> producerFactory() {
 			Map<String, Object> configProps = new HashMap<>();
 			configProps.put(
-					ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					this.broker.getBrokersAsString());
+		ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+		this.broker.getBrokersAsString());
 			configProps.put(
-					ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
+		ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+		StringSerializer.class);
 			configProps.put(
-					ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
-					StringSerializer.class);
+		ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+		StringSerializer.class);
 			return new DefaultKafkaProducerFactory<>(configProps);
 		}
 
@@ -252,19 +251,19 @@ public class RetryTopicSameContainerFactoryIntegrationTests {
 		public ConsumerFactory<String, String> consumerFactory() {
 			Map<String, Object> props = new HashMap<>();
 			props.put(
-					ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					this.broker.getBrokersAsString());
+		ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+		this.broker.getBrokersAsString());
 			props.put(
-					ConsumerConfig.GROUP_ID_CONFIG,
-					"groupId");
+		ConsumerConfig.GROUP_ID_CONFIG,
+		"groupId");
 			props.put(
-					ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
+		ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+		StringDeserializer.class);
 			props.put(
-					ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-					StringDeserializer.class);
+		ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+		StringDeserializer.class);
 			props.put(
-					ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
+		ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
 			props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
 			return new DefaultKafkaConsumerFactory<>(props);

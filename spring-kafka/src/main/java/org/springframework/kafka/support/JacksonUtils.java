@@ -33,17 +33,16 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 public final class JacksonUtils {
 
 	private static final boolean JDK8_MODULE_PRESENT =
-			ClassUtils.isPresent("com.fasterxml.jackson.datatype.jdk8.Jdk8Module", null);
+ClassUtils.isPresent("com.fasterxml.jackson.datatype.jdk8.Jdk8Module", null);
 
 	private static final boolean JAVA_TIME_MODULE_PRESENT =
-			ClassUtils.isPresent("com.fasterxml.jackson.datatype.jsr310.JavaTimeModule", null);
+ClassUtils.isPresent("com.fasterxml.jackson.datatype.jsr310.JavaTimeModule", null);
 
 	private static final boolean JODA_MODULE_PRESENT =
-			ClassUtils.isPresent("com.fasterxml.jackson.datatype.joda.JodaModule", null);
+ClassUtils.isPresent("com.fasterxml.jackson.datatype.joda.JodaModule", null);
 
 	private static final boolean KOTLIN_MODULE_PRESENT =
-			ClassUtils.isPresent("kotlin.Unit", null) &&
-					ClassUtils.isPresent("com.fasterxml.jackson.module.kotlin.KotlinModule", null);
+ClassUtils.isPresent("kotlin.Unit", null) &&ClassUtils.isPresent("com.fasterxml.jackson.module.kotlin.KotlinModule", null);
 
 	/**
 	 * Factory for {@link ObjectMapper} instances with registered well-known modules
@@ -53,9 +52,9 @@ public final class JacksonUtils {
 	 */
 	public static ObjectMapper enhancedObjectMapper() {
 		ObjectMapper objectMapper = JsonMapper.builder()
-				.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false)
-				.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-				.build();
+	.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false)
+	.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+	.build();
 		registerWellKnownModulesIfAvailable(objectMapper);
 		return objectMapper;
 	}
@@ -85,21 +84,21 @@ public final class JacksonUtils {
 	private static final class Jdk8ModuleProvider {
 
 		static final com.fasterxml.jackson.databind.Module MODULE =
-				new com.fasterxml.jackson.datatype.jdk8.Jdk8Module();
+	new com.fasterxml.jackson.datatype.jdk8.Jdk8Module();
 
 	}
 
 	private static final class JavaTimeModuleProvider {
 
 		static final com.fasterxml.jackson.databind.Module MODULE =
-				new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule();
+	new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule();
 
 	}
 
 	private static final class JodaModuleProvider {
 
 		static final com.fasterxml.jackson.databind.Module MODULE =
-				new com.fasterxml.jackson.datatype.joda.JodaModule();
+	new com.fasterxml.jackson.datatype.joda.JodaModule();
 
 	}
 
@@ -107,7 +106,7 @@ public final class JacksonUtils {
 
 		@SuppressWarnings("deprecation")
 		static final com.fasterxml.jackson.databind.Module MODULE =
-				new com.fasterxml.jackson.module.kotlin.KotlinModule();
+	new com.fasterxml.jackson.module.kotlin.KotlinModule();
 
 	}
 

@@ -55,14 +55,14 @@ public class ListenerErrorHandlerTests {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void record() throws Exception {
 		RecordMessagingMessageListenerAdapter adapter = new RecordMessagingMessageListenerAdapter(getClass(), test1,
-				(ManualAckListenerErrorHandler) (msg, ex, cons, ack) -> {
-					ack.acknowledge();
-					return null;
-				});
+	(ManualAckListenerErrorHandler) (msg, ex, cons, ack) -> {
+		ack.acknowledge();
+		return null;
+	});
 		HandlerAdapter handler = mock(HandlerAdapter.class);
 		willThrow(new RuntimeException("test")).given(handler).invoke(any(), any());
 		adapter.setHandlerMethod(handler);
@@ -71,14 +71,14 @@ public class ListenerErrorHandlerTests {
 		verify(ack).acknowledge();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void batch() throws Exception {
 		BatchMessagingMessageListenerAdapter adapter = new BatchMessagingMessageListenerAdapter(getClass(), test2,
-				(ManualAckListenerErrorHandler) (msg, ex, cons, ack) -> {
-					ack.acknowledge();
-					return null;
-				});
+	(ManualAckListenerErrorHandler) (msg, ex, cons, ack) -> {
+		ack.acknowledge();
+		return null;
+	});
 		HandlerAdapter handler = mock(HandlerAdapter.class);
 		willThrow(new RuntimeException("test")).given(handler).invoke(any(), any());
 		adapter.setHandlerMethod(handler);

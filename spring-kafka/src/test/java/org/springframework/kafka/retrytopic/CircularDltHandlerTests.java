@@ -54,7 +54,7 @@ public class CircularDltHandlerTests {
 		@Bean
 		ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory<Object, Object> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(mock(ConsumerFactory.class));
 			return factory;
 		}
@@ -62,10 +62,10 @@ public class CircularDltHandlerTests {
 		@Bean
 		RetryTopicConfiguration retryConfig() {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.maxAttempts(1)
-					.dltHandlerMethod("listener", "dlt")
-					.create(mock(KafkaTemplate.class));
+		.newInstance()
+		.maxAttempts(1)
+		.dltHandlerMethod("listener", "dlt")
+		.create(mock(KafkaTemplate.class));
 		}
 
 		@Bean

@@ -117,15 +117,15 @@ public class DefaultErrorHandlerBatchTests {
 		offsets.put(new TopicPartition("foo", 0), new OffsetAndMetadata(6L));
 		inOrder.verify(this.consumer).commitSync(offsets, Duration.ofMinutes(1));
 		assertThat(config.received).containsExactly(
-				"foo", "bar", "baz", "qux", "fiz", "buz",
-				"baz", "qux", "fiz", "buz",
-				"qux", "fiz", "buz");
+	"foo", "bar", "baz", "qux", "fiz", "buz",
+	"baz", "qux", "fiz", "buz",
+	"qux", "fiz", "buz");
 		assertThat(this.config.recovered.value()).isEqualTo("baz");
 		assertThat(this.config.listenerFailed.value()).isEqualTo("baz");
 		assertThat(this.config.listenerRecovered.value()).isEqualTo("baz");
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void outOfRange() {
 		Consumer mockConsumer = mock(Consumer.class);
@@ -134,18 +134,17 @@ public class DefaultErrorHandlerBatchTests {
 		}, new FixedBackOff(0, 0));
 		TopicPartition tp = new TopicPartition("foo", 0);
 		ConsumerRecords<?, ?> records = new ConsumerRecords(Collections.singletonMap(tp,
-				Collections.singletonList(
-						new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-								new RecordHeaders(), Optional.empty()))));
+	Collections.singletonList(
+new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",new RecordHeaders(), Optional.empty()))));
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() ->
-			beh.handleBatch(new ListenerExecutionFailedException("",
-					new BatchListenerFailedException("", 2)), records, mockConsumer,
-						mock(MessageListenerContainer.class), () -> { }))
-				.withMessageStartingWith("Seek to current after exception");
+	beh.handleBatch(new ListenerExecutionFailedException("",new BatchListenerFailedException("", 2)), records, mockConsumer,
+mock(MessageListenerContainer.class), () -> {
+}))
+	.withMessageStartingWith("Seek to current after exception");
 		verify(mockConsumer).seek(tp, 0L);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void wrappedBatchListenerFailedException() {
 		Consumer mockConsumer = mock(Consumer.class);
@@ -162,17 +161,15 @@ public class DefaultErrorHandlerBatchTests {
 		DefaultErrorHandler beh = new DefaultErrorHandler(new FixedBackOff(0, 0));
 		TopicPartition tp = new TopicPartition("foo", 0);
 		ConsumerRecords<?, ?> records = new ConsumerRecords(Collections.singletonMap(tp,
-			Arrays.asList(
-				new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-						new RecordHeaders(), Optional.empty()),
-				new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
-						new RecordHeaders(), Optional.empty()),
-				new ConsumerRecord("foo", 0, 2L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
-						new RecordHeaders(), Optional.empty()))
+	Arrays.asList(
+new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",new RecordHeaders(), Optional.empty()),
+new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",new RecordHeaders(), Optional.empty()),
+new ConsumerRecord("foo", 0, 2L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",new RecordHeaders(), Optional.empty()))
 		));
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() ->
-			beh.handleBatch(new ListenerExecutionFailedException("", new MessagingException("",
-					new BatchListenerFailedException("", 1))), records, mockConsumer, container, () -> { })
+	beh.handleBatch(new ListenerExecutionFailedException("", new MessagingException("",
+new BatchListenerFailedException("", 1))), records, mockConsumer, container, () -> {
+	})
 		);
 
 		Map<TopicPartition, OffsetAndMetadata> offsets = new LinkedHashMap<>();
@@ -186,7 +183,7 @@ public class DefaultErrorHandlerBatchTests {
 		inOrder.verify(mockConsumer).commitSync(offsets, syncCommitTimeout);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void missingRecordSoFallback() {
 		Consumer mockConsumer = mock(Consumer.class);
@@ -195,20 +192,19 @@ public class DefaultErrorHandlerBatchTests {
 		}, new FixedBackOff(0, 0));
 		TopicPartition tp = new TopicPartition("foo", 0);
 		ConsumerRecords<?, ?> records = new ConsumerRecords(Collections.singletonMap(tp,
-				Collections.singletonList(
-						new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-								new RecordHeaders(), Optional.empty()))));
+	Collections.singletonList(
+new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",new RecordHeaders(), Optional.empty()))));
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() ->
-			beh.handleBatch(new ListenerExecutionFailedException("",
-						new BatchListenerFailedException("",
+	beh.handleBatch(new ListenerExecutionFailedException("",new BatchListenerFailedException("",
 					new ConsumerRecord("bar", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
 							new RecordHeaders(), Optional.empty()))),
-					records, mockConsumer, mock(MessageListenerContainer.class), () -> { }))
-				.withMessageStartingWith("Seek to current after exception");
+records, mockConsumer, mock(MessageListenerContainer.class), () -> {
+}))
+	.withMessageStartingWith("Seek to current after exception");
 		verify(mockConsumer).seek(tp, 0L);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void fallbackListener() {
 		Consumer mockConsumer = mock(Consumer.class);
@@ -218,16 +214,14 @@ public class DefaultErrorHandlerBatchTests {
 		beh.setRetryListeners(retryListener);
 		TopicPartition tp = new TopicPartition("foo", 0);
 		ConsumerRecords<?, ?> records = new ConsumerRecords(Collections.singletonMap(tp,
-				List.of(new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-								new RecordHeaders(), Optional.empty()),
-						new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-								new RecordHeaders(), Optional.empty()))));
+	List.of(new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",new RecordHeaders(), Optional.empty()),
+new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",new RecordHeaders(), Optional.empty()))));
 		MessageListenerContainer container = mock(MessageListenerContainer.class);
 		given(container.isRunning()).willReturn(true);
 		beh.handleBatch(new ListenerExecutionFailedException("test"),
-				records, mockConsumer, container, () -> {
-					throw new ListenerExecutionFailedException("test");
-				});
+	records, mockConsumer, container, () -> {
+		throw new ListenerExecutionFailedException("test");
+	});
 		verify(retryListener).failedDelivery(any(ConsumerRecords.class), any(), eq(1));
 		verify(retryListener).failedDelivery(any(ConsumerRecords.class), any(), eq(2));
 		verify(retryListener).failedDelivery(any(ConsumerRecords.class), any(), eq(3));
@@ -235,7 +229,7 @@ public class DefaultErrorHandlerBatchTests {
 		verify(retryListener).recovered(any(ConsumerRecords.class), any());
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	void notRetryable() {
 		Consumer mockConsumer = mock(Consumer.class);
@@ -246,15 +240,13 @@ public class DefaultErrorHandlerBatchTests {
 		beh.setRetryListeners(retryListener);
 		TopicPartition tp = new TopicPartition("foo", 0);
 		ConsumerRecords<?, ?> records = new ConsumerRecords(Collections.singletonMap(tp,
-				List.of(new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-								new RecordHeaders(), Optional.empty()),
-						new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-								new RecordHeaders(), Optional.empty()))));
+	List.of(new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",new RecordHeaders(), Optional.empty()),
+new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",new RecordHeaders(), Optional.empty()))));
 		MessageListenerContainer container = mock(MessageListenerContainer.class);
 		given(container.isRunning()).willReturn(true);
 		beh.handleBatch(new ListenerExecutionFailedException("test", new IllegalStateException()),
-				records, mockConsumer, container, () -> {
-				});
+	records, mockConsumer, container, () -> {
+	});
 		verify(retryListener).failedDelivery(any(ConsumerRecords.class), any(), eq(1));
 		// no retries
 		verify(retryListener, never()).failedDelivery(any(ConsumerRecords.class), any(), eq(2));
@@ -289,41 +281,41 @@ public class DefaultErrorHandlerBatchTests {
 			}
 		}
 
-		@SuppressWarnings({ "rawtypes" })
+		@SuppressWarnings({"rawtypes"})
 		@Bean
 		public ConsumerFactory consumerFactory() {
 			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 			final Consumer consumer = consumer();
 			given(consumerFactory.createConsumer(CONTAINER_ID, "", "-0", KafkaTestUtils.defaultPropertyOverrides()))
-				.willReturn(consumer);
+		.willReturn(consumer);
 			return consumerFactory;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public Consumer consumer() {
 			final Consumer consumer = mock(Consumer.class);
 			final TopicPartition topicPartition = new TopicPartition("foo", 0);
 			willAnswer(i -> {
 				((ConsumerRebalanceListener) i.getArgument(1)).onPartitionsAssigned(
-						Collections.singletonList(topicPartition));
+			Collections.singletonList(topicPartition));
 				return null;
 			}).given(consumer).subscribe(any(Collection.class), any(ConsumerRebalanceListener.class));
 			List<ConsumerRecord> records1 = new ArrayList<>();
 			records1.add(new ConsumerRecord("foo", 0, 0L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "foo",
-					new RecordHeaders(), Optional.empty()));
+		new RecordHeaders(), Optional.empty()));
 			records1.add(new ConsumerRecord("foo", 0, 1L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "bar",
-					new RecordHeaders(), Optional.empty()));
+		new RecordHeaders(), Optional.empty()));
 			List<ConsumerRecord> records2 = new ArrayList<>();
 			records2.add(new ConsumerRecord("foo", 0, 2L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "baz",
-					new RecordHeaders(), Optional.empty()));
+		new RecordHeaders(), Optional.empty()));
 			List<ConsumerRecord> records3 = new ArrayList<>();
 			records3.add(new ConsumerRecord("foo", 0, 3L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "qux",
-					new RecordHeaders(), Optional.empty()));
+		new RecordHeaders(), Optional.empty()));
 			records3.add(new ConsumerRecord("foo", 0, 4L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "fiz",
-					new RecordHeaders(), Optional.empty()));
+		new RecordHeaders(), Optional.empty()));
 			records3.add(new ConsumerRecord("foo", 0, 5L, 0L, TimestampType.NO_TIMESTAMP_TYPE, 0, 0, null, "buz",
-					new RecordHeaders(), Optional.empty()));
+		new RecordHeaders(), Optional.empty()));
 			List<ConsumerRecord> recordsOne = new ArrayList<>(records1);
 			recordsOne.addAll(records2);
 			recordsOne.addAll(records3);
@@ -358,13 +350,13 @@ public class DefaultErrorHandlerBatchTests {
 			return consumer;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
 			factory.setConsumerFactory(consumerFactory());
 			DefaultErrorHandler errorHandler = new DefaultErrorHandler((cr, ex) -> this.recovered = cr,
-					new FixedBackOff(0, 1));
+		new FixedBackOff(0, 1));
 			errorHandler.setRetryListeners(new RetryListener() {
 
 				@Override

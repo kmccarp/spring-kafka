@@ -65,9 +65,7 @@ import org.springframework.util.Assert;
  *
  * @see AbstractMessageListenerContainer
  */
-public abstract class AbstractKafkaListenerContainerFactory<C extends AbstractMessageListenerContainer<K, V>, K, V>
-		implements KafkaListenerContainerFactory<C>, ApplicationEventPublisherAware, InitializingBean,
-			ApplicationContextAware {
+public abstract class AbstractKafkaListenerContainerFactory<C extends AbstractMessageListenerContainer<K, V>, K, V>implements KafkaListenerContainerFactory<C>, ApplicationEventPublisherAware, InitializingBean,ApplicationContextAware {
 
 	protected final LogAccessor logger = new LogAccessor(LogFactory.getLog(getClass())); // NOSONAR protected
 
@@ -239,10 +237,10 @@ public abstract class AbstractKafkaListenerContainerFactory<C extends AbstractMe
 	public void setReplyTemplate(KafkaTemplate<?, ?> replyTemplate) {
 		if (replyTemplate instanceof ReplyingKafkaOperations) {
 			this.logger.warn(
-					"The 'replyTemplate' should not be an implementation of 'ReplyingKafkaOperations'; "
-							+ "such implementations are for client-side request/reply operations; here we "
-							+ "are simply sending a reply to an incoming request so the reply container will "
-							+ "never be used and will consume unnecessary resources.");
+		"The 'replyTemplate' should not be an implementation of 'ReplyingKafkaOperations'; "
+	+ "such implementations are for client-side request/reply operations; here we "
+	+ "are simply sending a reply to an incoming request so the reply container will "
+	+ "never be used and will consume unnecessary resources.");
 		}
 		this.replyTemplate = replyTemplate;
 	}
@@ -402,13 +400,13 @@ public abstract class AbstractKafkaListenerContainerFactory<C extends AbstractMe
 		if (this.commonErrorHandler == null && this.errorHandler != null) {
 			if (Boolean.TRUE.equals(this.batchListener)) {
 				Assert.state(this.errorHandler instanceof org.springframework.kafka.listener.BatchErrorHandler,
-						() -> "The error handler must be a BatchErrorHandler, not " +
-								this.errorHandler.getClass().getName());
+			() -> "The error handler must be a BatchErrorHandler, not " +
+		this.errorHandler.getClass().getName());
 			}
 			else {
 				Assert.state(this.errorHandler instanceof org.springframework.kafka.listener.ErrorHandler,
-						() -> "The error handler must be an ErrorHandler, not " +
-								this.errorHandler.getClass().getName());
+			() -> "The error handler must be an ErrorHandler, not " +
+		this.errorHandler.getClass().getName());
 			}
 		}
 	}
@@ -418,8 +416,8 @@ public abstract class AbstractKafkaListenerContainerFactory<C extends AbstractMe
 	public C createListenerContainer(KafkaListenerEndpoint endpoint) {
 		C instance = createContainerInstance(endpoint);
 		JavaUtils.INSTANCE
-				.acceptIfNotNull(endpoint.getId(), instance::setBeanName)
-				.acceptIfNotNull(endpoint.getMainListenerId(), instance::setMainListenerId);
+	.acceptIfNotNull(endpoint.getId(), instance::setBeanName)
+	.acceptIfNotNull(endpoint.getMainListenerId(), instance::setMainListenerId);
 		if (endpoint instanceof AbstractKafkaListenerEndpoint) {
 			configureEndpoint((AbstractKafkaListenerEndpoint<K, V>) endpoint);
 		}
@@ -438,17 +436,17 @@ public abstract class AbstractKafkaListenerContainerFactory<C extends AbstractMe
 	private void configureEndpoint(AbstractKafkaListenerEndpoint<K, V> aklEndpoint) {
 		if (aklEndpoint.getRecordFilterStrategy() == null) {
 			JavaUtils.INSTANCE
-					.acceptIfNotNull(this.recordFilterStrategy, aklEndpoint::setRecordFilterStrategy);
+		.acceptIfNotNull(this.recordFilterStrategy, aklEndpoint::setRecordFilterStrategy);
 		}
 		JavaUtils.INSTANCE
-				.acceptIfNotNull(this.ackDiscarded, aklEndpoint::setAckDiscarded)
-				.acceptIfNotNull(this.replyTemplate, aklEndpoint::setReplyTemplate)
-				.acceptIfNotNull(this.replyHeadersConfigurer, aklEndpoint::setReplyHeadersConfigurer)
-				.acceptIfNotNull(this.batchToRecordAdapter, aklEndpoint::setBatchToRecordAdapter)
-				.acceptIfNotNull(this.correlationHeaderName, aklEndpoint::setCorrelationHeaderName);
+	.acceptIfNotNull(this.ackDiscarded, aklEndpoint::setAckDiscarded)
+	.acceptIfNotNull(this.replyTemplate, aklEndpoint::setReplyTemplate)
+	.acceptIfNotNull(this.replyHeadersConfigurer, aklEndpoint::setReplyHeadersConfigurer)
+	.acceptIfNotNull(this.batchToRecordAdapter, aklEndpoint::setBatchToRecordAdapter)
+	.acceptIfNotNull(this.correlationHeaderName, aklEndpoint::setCorrelationHeaderName);
 		if (aklEndpoint.getBatchListener() == null) {
 			JavaUtils.INSTANCE
-					.acceptIfNotNull(this.batchListener, aklEndpoint::setBatchListener);
+		.acceptIfNotNull(this.batchListener, aklEndpoint::setBatchListener);
 		}
 	}
 
@@ -470,20 +468,20 @@ public abstract class AbstractKafkaListenerContainerFactory<C extends AbstractMe
 	protected void initializeContainer(C instance, KafkaListenerEndpoint endpoint) {
 		ContainerProperties properties = instance.getContainerProperties();
 		BeanUtils.copyProperties(this.containerProperties, properties, "topics", "topicPartitions", "topicPattern",
-				"messageListener", "ackCount", "ackTime", "subBatchPerPartition", "kafkaConsumerProperties");
+	"messageListener", "ackCount", "ackTime", "subBatchPerPartition", "kafkaConsumerProperties");
 		JavaUtils.INSTANCE
-				.acceptIfNotNull(this.afterRollbackProcessor, instance::setAfterRollbackProcessor)
-				.acceptIfCondition(this.containerProperties.getAckCount() > 0, this.containerProperties.getAckCount(),
-						properties::setAckCount)
-				.acceptIfCondition(this.containerProperties.getAckTime() > 0, this.containerProperties.getAckTime(),
-						properties::setAckTime)
-				.acceptIfNotNull(this.containerProperties.getSubBatchPerPartition(),
-						properties::setSubBatchPerPartition)
-				.acceptIfNotNull(this.errorHandler, instance::setGenericErrorHandler)
-				.acceptIfNotNull(this.commonErrorHandler, instance::setCommonErrorHandler)
-				.acceptIfNotNull(this.missingTopicsFatal, instance.getContainerProperties()::setMissingTopicsFatal)
-				.acceptIfNotNull(this.changeConsumerThreadName, instance::setChangeConsumerThreadName)
-				.acceptIfNotNull(this.threadNameSupplier, instance::setThreadNameSupplier);
+	.acceptIfNotNull(this.afterRollbackProcessor, instance::setAfterRollbackProcessor)
+	.acceptIfCondition(this.containerProperties.getAckCount() > 0, this.containerProperties.getAckCount(),
+properties::setAckCount)
+	.acceptIfCondition(this.containerProperties.getAckTime() > 0, this.containerProperties.getAckTime(),
+properties::setAckTime)
+	.acceptIfNotNull(this.containerProperties.getSubBatchPerPartition(),
+properties::setSubBatchPerPartition)
+	.acceptIfNotNull(this.errorHandler, instance::setGenericErrorHandler)
+	.acceptIfNotNull(this.commonErrorHandler, instance::setCommonErrorHandler)
+	.acceptIfNotNull(this.missingTopicsFatal, instance.getContainerProperties()::setMissingTopicsFatal)
+	.acceptIfNotNull(this.changeConsumerThreadName, instance::setChangeConsumerThreadName)
+	.acceptIfNotNull(this.threadNameSupplier, instance::setThreadNameSupplier);
 		Boolean autoStart = endpoint.getAutoStartup();
 		if (autoStart != null) {
 			instance.setAutoStartup(autoStart);
@@ -494,14 +492,14 @@ public abstract class AbstractKafkaListenerContainerFactory<C extends AbstractMe
 		instance.setRecordInterceptor(this.recordInterceptor);
 		instance.setBatchInterceptor(this.batchInterceptor);
 		JavaUtils.INSTANCE
-				.acceptIfNotNull(this.phase, instance::setPhase)
-				.acceptIfNotNull(this.applicationContext, instance::setApplicationContext)
-				.acceptIfNotNull(this.applicationEventPublisher, instance::setApplicationEventPublisher)
-				.acceptIfHasText(endpoint.getGroupId(), instance.getContainerProperties()::setGroupId)
-				.acceptIfHasText(endpoint.getClientIdPrefix(), instance.getContainerProperties()::setClientId)
-				.acceptIfNotNull(endpoint.getConsumerProperties(),
-						instance.getContainerProperties()::setKafkaConsumerProperties)
-				.acceptIfNotNull(endpoint.getListenerInfo(), instance::setListenerInfo);
+	.acceptIfNotNull(this.phase, instance::setPhase)
+	.acceptIfNotNull(this.applicationContext, instance::setApplicationContext)
+	.acceptIfNotNull(this.applicationEventPublisher, instance::setApplicationEventPublisher)
+	.acceptIfHasText(endpoint.getGroupId(), instance.getContainerProperties()::setGroupId)
+	.acceptIfHasText(endpoint.getClientIdPrefix(), instance.getContainerProperties()::setClientId)
+	.acceptIfNotNull(endpoint.getConsumerProperties(),
+instance.getContainerProperties()::setKafkaConsumerProperties)
+	.acceptIfNotNull(endpoint.getListenerInfo(), instance::setListenerInfo);
 	}
 
 	private void customizeContainer(C instance) {

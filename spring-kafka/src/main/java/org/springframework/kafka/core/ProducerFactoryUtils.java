@@ -53,7 +53,7 @@ public final class ProducerFactoryUtils {
 	 * @return the resource holder.
 	 */
 	public static <K, V> KafkaResourceHolder<K, V> getTransactionalResourceHolder(
-			final ProducerFactory<K, V> producerFactory) {
+final ProducerFactory<K, V> producerFactory) {
 
 		return getTransactionalResourceHolder(producerFactory, null, DEFAULT_CLOSE_TIMEOUT);
 	}
@@ -68,7 +68,7 @@ public final class ProducerFactoryUtils {
 	 * @since 2.1.14
 	 */
 	public static <K, V> KafkaResourceHolder<K, V> getTransactionalResourceHolder(
-			final ProducerFactory<K, V> producerFactory, Duration closeTimeout) {
+final ProducerFactory<K, V> producerFactory, Duration closeTimeout) {
 
 		return getTransactionalResourceHolder(producerFactory, null, closeTimeout);
 	}
@@ -85,13 +85,13 @@ public final class ProducerFactoryUtils {
 	 * @since 2.3
 	 */
 	public static <K, V> KafkaResourceHolder<K, V> getTransactionalResourceHolder(
-			final ProducerFactory<K, V> producerFactory, @Nullable String txIdPrefix, Duration closeTimeout) {
+final ProducerFactory<K, V> producerFactory, @Nullable String txIdPrefix, Duration closeTimeout) {
 
 		Assert.notNull(producerFactory, "ProducerFactory must not be null");
 
 		@SuppressWarnings("unchecked")
 		KafkaResourceHolder<K, V> resourceHolder = (KafkaResourceHolder<K, V>) TransactionSynchronizationManager
-				.getResource(producerFactory);
+	.getResource(producerFactory);
 		if (resourceHolder == null) {
 			Producer<K, V> producer = producerFactory.createProducer(txIdPrefix);
 
@@ -116,12 +116,12 @@ public final class ProducerFactoryUtils {
 	}
 
 	private static <K, V> void bindResourceToTransaction(KafkaResourceHolder<K, V> resourceHolder,
-			ProducerFactory<K, V> producerFactory) {
+ProducerFactory<K, V> producerFactory) {
 		TransactionSynchronizationManager.bindResource(producerFactory, resourceHolder);
 		resourceHolder.setSynchronizedWithTransaction(true);
 		if (TransactionSynchronizationManager.isSynchronizationActive()) {
 			TransactionSynchronizationManager
-					.registerSynchronization(new KafkaResourceSynchronization<K, V>(resourceHolder, producerFactory));
+		.registerSynchronization(new KafkaResourceSynchronization<K, V>(resourceHolder, producerFactory));
 		}
 	}
 
@@ -131,7 +131,7 @@ public final class ProducerFactoryUtils {
 	 * @see org.springframework.transaction.jta.JtaTransactionManager
 	 */
 	private static final class KafkaResourceSynchronization<K, V> extends
-			ResourceHolderSynchronization<KafkaResourceHolder<K, V>, Object> {
+ResourceHolderSynchronization<KafkaResourceHolder<K, V>, Object> {
 
 		private final KafkaResourceHolder<K, V> resourceHolder;
 

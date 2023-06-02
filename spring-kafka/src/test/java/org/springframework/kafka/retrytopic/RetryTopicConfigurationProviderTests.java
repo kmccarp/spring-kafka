@@ -113,7 +113,7 @@ class RetryTopicConfigurationProviderTests {
 
 		// setup
 		willReturn(Collections.singletonMap("retryTopicConfiguration", retryTopicConfiguration))
-				.given(this.beanFactory).getBeansOfType(RetryTopicConfiguration.class);
+	.given(this.beanFactory).getBeansOfType(RetryTopicConfiguration.class);
 		given(retryTopicConfiguration.hasConfigurationForTopics(topics)).willReturn(true);
 
 		// given
@@ -131,7 +131,7 @@ class RetryTopicConfigurationProviderTests {
 
 		// setup
 		willReturn(Collections.singletonMap("retryTopicConfiguration", retryTopicConfiguration))
-				.given(this.beanFactory).getBeansOfType(RetryTopicConfiguration.class);
+	.given(this.beanFactory).getBeansOfType(RetryTopicConfiguration.class);
 		given(retryTopicConfiguration.hasConfigurationForTopics(topics)).willReturn(false);
 
 		// given

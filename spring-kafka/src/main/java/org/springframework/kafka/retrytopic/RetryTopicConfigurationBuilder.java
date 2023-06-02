@@ -286,7 +286,7 @@ public class RetryTopicConfigurationBuilder {
 	public RetryTopicConfigurationBuilder maxAttempts(int maxAttempts) {
 		Assert.isTrue(maxAttempts > 0, "Number of attempts should be positive");
 		Assert.isTrue(this.maxAttempts == RetryTopicConstants.NOT_SET,
-				"You have already set the number of attempts");
+	"You have already set the number of attempts");
 		this.maxAttempts = maxAttempts;
 		return this;
 	}
@@ -323,14 +323,14 @@ public class RetryTopicConfigurationBuilder {
 	 * @return the builder.
 	 */
 	public RetryTopicConfigurationBuilder exponentialBackoff(long initialInterval, double multiplier, long maxInterval,
-			boolean withRandom) {
+boolean withRandom) {
 
 		Assert.isNull(this.backOffPolicy, ALREADY_SELECTED);
 		Assert.isTrue(initialInterval >= 1, "Initial interval should be >= 1");
 		Assert.isTrue(multiplier > 1, "Multiplier should be > 1");
 		Assert.isTrue(maxInterval > initialInterval, "Max interval should be > than initial interval");
 		ExponentialBackOffPolicy policy = withRandom ? new ExponentialRandomBackOffPolicy()
-				: new ExponentialBackOffPolicy();
+	: new ExponentialBackOffPolicy();
 		policy.setInitialInterval(initialInterval);
 		policy.setMultiplier(multiplier);
 		policy.setMaxInterval(maxInterval);
@@ -453,7 +453,7 @@ public class RetryTopicConfigurationBuilder {
 	 */
 	public RetryTopicConfigurationBuilder autoCreateTopicsWith(int numPartitions, short replicationFactor) {
 		this.topicCreationConfiguration = new RetryTopicConfiguration.TopicCreation(true, numPartitions,
-				replicationFactor);
+	replicationFactor);
 		return this;
 	}
 
@@ -467,10 +467,10 @@ public class RetryTopicConfigurationBuilder {
 	 * @return the builder.
 	 */
 	public RetryTopicConfigurationBuilder autoCreateTopics(boolean shouldCreate, int numPartitions,
-			short replicationFactor) {
+short replicationFactor) {
 
 		this.topicCreationConfiguration = new RetryTopicConfiguration.TopicCreation(shouldCreate, numPartitions,
-				replicationFactor);
+	replicationFactor);
 		return this;
 	}
 
@@ -503,8 +503,8 @@ public class RetryTopicConfigurationBuilder {
 	 */
 	public RetryTopicConfigurationBuilder retryOn(List<Class<? extends Throwable>> throwables) {
 		throwables
-				.stream()
-				.forEach(throwable -> classifierBuilder().retryOn(throwable));
+	.stream()
+	.forEach(throwable -> classifierBuilder().retryOn(throwable));
 		return this;
 	}
 
@@ -515,8 +515,8 @@ public class RetryTopicConfigurationBuilder {
 	 */
 	public RetryTopicConfigurationBuilder notRetryOn(List<Class<? extends Throwable>> throwables) {
 		throwables
-				.stream()
-				.forEach(throwable -> classifierBuilder().notRetryOn(throwable));
+	.stream()
+	.forEach(throwable -> classifierBuilder().notRetryOn(throwable));
 		return this;
 	}
 
@@ -578,33 +578,33 @@ public class RetryTopicConfigurationBuilder {
 	public RetryTopicConfiguration create(KafkaOperations<?, ?> sendToTopicKafkaTemplate) {
 
 		ListenerContainerFactoryResolver.Configuration factoryResolverConfig =
-				new ListenerContainerFactoryResolver.Configuration(this.listenerContainerFactory,
-						this.listenerContainerFactoryName);
+	new ListenerContainerFactoryResolver.Configuration(this.listenerContainerFactory,
+this.listenerContainerFactoryName);
 
 		AllowDenyCollectionManager<String> allowListManager =
-				new AllowDenyCollectionManager<>(this.includeTopicNames, this.excludeTopicNames);
+	new AllowDenyCollectionManager<>(this.includeTopicNames, this.excludeTopicNames);
 
 		List<Long> backOffValues = new BackOffValuesGenerator(this.maxAttempts, this.backOffPolicy).generateValues();
 
 		ListenerContainerFactoryConfigurer.Configuration factoryConfigurerConfig =
-				new ListenerContainerFactoryConfigurer.Configuration(backOffValues);
+	new ListenerContainerFactoryConfigurer.Configuration(backOffValues);
 
 		List<DestinationTopic.Properties> destinationTopicProperties =
-				new DestinationTopicPropertiesFactory(this.retryTopicSuffix, this.dltSuffix, backOffValues,
-						buildClassifier(), this.topicCreationConfiguration.getNumPartitions(),
-						sendToTopicKafkaTemplate, this.fixedDelayStrategy, this.dltStrategy,
-						this.topicSuffixingStrategy, this.sameIntervalTopicReuseStrategy, this.timeout)
-								.autoStartDltHandler(this.autoStartDltHandler)
-								.createProperties();
+	new DestinationTopicPropertiesFactory(this.retryTopicSuffix, this.dltSuffix, backOffValues,
+buildClassifier(), this.topicCreationConfiguration.getNumPartitions(),
+sendToTopicKafkaTemplate, this.fixedDelayStrategy, this.dltStrategy,
+this.topicSuffixingStrategy, this.sameIntervalTopicReuseStrategy, this.timeout)
+.autoStartDltHandler(this.autoStartDltHandler)
+.createProperties();
 		return new RetryTopicConfiguration(destinationTopicProperties,
-				this.dltHandlerMethod, this.topicCreationConfiguration, allowListManager,
-				factoryResolverConfig, factoryConfigurerConfig, this.concurrency);
+	this.dltHandlerMethod, this.topicCreationConfiguration, allowListManager,
+	factoryResolverConfig, factoryConfigurerConfig, this.concurrency);
 	}
 
 	private BinaryExceptionClassifier buildClassifier() {
 		return this.classifierBuilder != null
-				? this.classifierBuilder.build()
-				: new BinaryExceptionClassifierBuilder().retryOn(Throwable.class).build();
+	? this.classifierBuilder.build()
+	: new BinaryExceptionClassifierBuilder().retryOn(Throwable.class).build();
 	}
 
 	/**

@@ -57,8 +57,8 @@ public interface MessageConverter {
 	 * @param timestamp the timestamp.
 	 */
 	default void commonHeaders(Acknowledgment acknowledgment, Consumer<?, ?> consumer, Map<String, Object> rawHeaders,
-			@Nullable Object theKey, Object topic, Object partition, Object offset,
-			@Nullable Object timestampType, Object timestamp) {
+@Nullable Object theKey, Object topic, Object partition, Object offset,
+@Nullable Object timestampType, Object timestamp) {
 
 		rawHeaders.put(KafkaHeaders.RECEIVED_TOPIC, topic);
 		rawHeaders.put(KafkaHeaders.RECEIVED_PARTITION, partition);
@@ -66,11 +66,11 @@ public interface MessageConverter {
 		rawHeaders.put(KafkaHeaders.TIMESTAMP_TYPE, timestampType);
 		rawHeaders.put(KafkaHeaders.RECEIVED_TIMESTAMP, timestamp);
 		JavaUtils.INSTANCE
-			.acceptIfNotNull(KafkaHeaders.RECEIVED_KEY, theKey, (key, val) -> rawHeaders.put(key, val))
-			.acceptIfNotNull(KafkaHeaders.GROUP_ID, MessageConverter.getGroupId(),
-					(key, val) -> rawHeaders.put(key, val))
-			.acceptIfNotNull(KafkaHeaders.ACKNOWLEDGMENT, acknowledgment, (key, val) -> rawHeaders.put(key, val))
-			.acceptIfNotNull(KafkaHeaders.CONSUMER, consumer, (key, val) -> rawHeaders.put(key, val));
+	.acceptIfNotNull(KafkaHeaders.RECEIVED_KEY, theKey, (key, val) -> rawHeaders.put(key, val))
+	.acceptIfNotNull(KafkaHeaders.GROUP_ID, MessageConverter.getGroupId(),
+(key, val) -> rawHeaders.put(key, val))
+	.acceptIfNotNull(KafkaHeaders.ACKNOWLEDGMENT, acknowledgment, (key, val) -> rawHeaders.put(key, val))
+	.acceptIfNotNull(KafkaHeaders.CONSUMER, consumer, (key, val) -> rawHeaders.put(key, val));
 	}
 
 }

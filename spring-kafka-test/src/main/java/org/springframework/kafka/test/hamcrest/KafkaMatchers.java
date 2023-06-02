@@ -88,7 +88,7 @@ public final class KafkaMatchers {
 	}
 
 	public static class ConsumerRecordKeyMatcher<K>
-			extends DiagnosingMatcher<ConsumerRecord<K, ?>> {
+extends DiagnosingMatcher<ConsumerRecord<K, ?>> {
 
 		private final K key;
 
@@ -99,7 +99,7 @@ public final class KafkaMatchers {
 		@Override
 		public void describeTo(Description description) {
 			description.appendText("a ConsumerRecord with key ")
-					.appendText(this.key.toString());
+		.appendText(this.key.toString());
 		}
 
 		@Override
@@ -107,8 +107,8 @@ public final class KafkaMatchers {
 			@SuppressWarnings(UNCHECKED)
 			ConsumerRecord<K, Object> record = (ConsumerRecord<K, Object>) item;
 			boolean matches = record != null
-					&& ((record.key() == null && this.key == null)
-					|| record.key().equals(this.key));
+		&& ((record.key() == null && this.key == null)
+		|| record.key().equals(this.key));
 			if (!matches) {
 				mismatchDescription.appendText(IS_SPACE).appendValue(record);
 			}
@@ -128,7 +128,7 @@ public final class KafkaMatchers {
 		@Override
 		public void describeTo(Description description) {
 			description.appendText("a ConsumerRecord with value ")
-					.appendText(this.payload.toString());
+		.appendText(this.payload.toString());
 		}
 
 		@Override
@@ -155,7 +155,7 @@ public final class KafkaMatchers {
 		@Override
 		public void describeTo(Description description) {
 			description.appendText("a ConsumerRecord with partition ")
-					.appendValue(this.partition);
+		.appendValue(this.partition);
 		}
 
 		@Override
@@ -188,7 +188,7 @@ public final class KafkaMatchers {
 			ConsumerRecord<Object, Object> record = (ConsumerRecord<Object, Object>) item;
 
 			boolean matches = record != null &&
-					(record.timestampType() == this.type && record.timestamp() == this.ts);
+		(record.timestampType() == this.type && record.timestamp() == this.ts);
 
 			if (!matches) {
 				mismatchDescription.appendText(IS_SPACE).appendValue(record);
@@ -199,7 +199,7 @@ public final class KafkaMatchers {
 		@Override
 		public void describeTo(Description description) {
 			description.appendText("a ConsumerRecord with timestamp of type: ")
-					.appendValue(this.type).appendText(" and value: ").appendValue(this.ts);
+		.appendValue(this.type).appendText(" and value: ").appendValue(this.ts);
 		}
 
 	}

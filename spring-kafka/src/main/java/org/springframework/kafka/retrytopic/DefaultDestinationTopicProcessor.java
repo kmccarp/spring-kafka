@@ -41,37 +41,37 @@ public class DefaultDestinationTopicProcessor implements DestinationTopicProcess
 
 	@Override
 	public void processDestinationTopicProperties(Consumer<DestinationTopic.Properties> destinationPropertiesProcessor,
-												Context context) {
+Context context) {
 		context
-				.properties
-				.stream()
-				.forEach(destinationPropertiesProcessor);
+	.properties
+	.stream()
+	.forEach(destinationPropertiesProcessor);
 	}
 
 	@Override
 	public void registerDestinationTopic(String mainTopicName, String destinationTopicName,
-										DestinationTopic.Properties destinationTopicProperties, Context context) {
+DestinationTopic.Properties destinationTopicProperties, Context context) {
 		List<DestinationTopic> topicDestinations = context.destinationsByTopicMap
-				.computeIfAbsent(mainTopicName, newTopic -> new ArrayList<>());
+	.computeIfAbsent(mainTopicName, newTopic -> new ArrayList<>());
 		topicDestinations.add(new DestinationTopic(destinationTopicName, destinationTopicProperties));
 	}
 
 	@Override
 	public void processRegisteredDestinations(Consumer<Collection<String>> topicsCallback, Context context) {
 		context
-				.destinationsByTopicMap
-				.values()
-				.forEach(topicDestinations -> this.destinationTopicResolver.addDestinationTopics(
-						context.listenerId, topicDestinations));
+	.destinationsByTopicMap
+	.values()
+	.forEach(topicDestinations -> this.destinationTopicResolver.addDestinationTopics(
+context.listenerId, topicDestinations));
 		topicsCallback.accept(getAllTopicsNamesForThis(context));
 	}
 
 	private List<String> getAllTopicsNamesForThis(Context context) {
 		return context.destinationsByTopicMap
-				.values()
-				.stream()
-				.flatMap(Collection::stream)
-				.map(DestinationTopic::getDestinationName)
-				.collect(Collectors.toList());
+	.values()
+	.stream()
+	.flatMap(Collection::stream)
+	.map(DestinationTopic::getDestinationName)
+	.collect(Collectors.toList());
 	}
 }

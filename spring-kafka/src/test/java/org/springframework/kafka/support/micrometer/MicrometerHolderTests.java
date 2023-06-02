@@ -57,7 +57,7 @@ public class MicrometerHolderTests {
 		given(beanProvider.getIfUnique()).willReturn(meterRegistry);
 
 		MicrometerHolder micrometerHolder = new MicrometerHolder(ctx, "holderName",
-				"timerName", "timerDesc", r -> Collections.emptyMap());
+	"timerName", "timerDesc", r -> Collections.emptyMap());
 		Map<String, Timer> meters = (Map<String, Timer>) ReflectionTestUtils.getField(micrometerHolder, "meters");
 		assertThat(meters).hasSize(1);
 
@@ -77,23 +77,23 @@ public class MicrometerHolderTests {
 	@Test
 	void multiReg() {
 		assertThatIllegalStateException().isThrownBy(() -> new MicrometerHolder(
-					new AnnotationConfigApplicationContext(Config1.class), "", "", "", r -> Collections.emptyMap()))
-				.withMessage("No micrometer registry present (or more than one and "
-						+ "there is not exactly one marked with @Primary)");
+	new AnnotationConfigApplicationContext(Config1.class), "", "", "", r -> Collections.emptyMap()))
+	.withMessage("No micrometer registry present (or more than one and "
++ "there is not exactly one marked with @Primary)");
 	}
 
 	@Test
 	void twoPrimaries() {
 		assertThatIllegalStateException().isThrownBy(() -> new MicrometerHolder(
-					new AnnotationConfigApplicationContext(Config2.class), "", "", "", r -> Collections.emptyMap()))
-			.withMessageContaining("more than one 'primary' bean");
+	new AnnotationConfigApplicationContext(Config2.class), "", "", "", r -> Collections.emptyMap()))
+	.withMessageContaining("more than one 'primary' bean");
 	}
 
 	@Test
 	void primary() {
 		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(Config3.class);
 		MicrometerHolder micrometerHolder = new MicrometerHolder(ctx, "holderName",
-				"timerName", "timerDesc", r -> Collections.emptyMap());
+	"timerName", "timerDesc", r -> Collections.emptyMap());
 		@SuppressWarnings("unchecked")
 		Map<String, Timer> meters = (Map<String, Timer>) ReflectionTestUtils.getField(micrometerHolder, "meters");
 		assertThat(meters).hasSize(1);

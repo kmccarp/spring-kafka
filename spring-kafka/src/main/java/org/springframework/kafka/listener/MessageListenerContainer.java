@@ -245,7 +245,7 @@ public interface MessageListenerContainer extends SmartLifecycle, DisposableBean
 	 * @param callback the callback.
 	 * @since 2.8
 	 * @see #isInExpectedState()
- 	 */
+	 */
 	default void stopAbnormally(Runnable callback) {
 		stop(callback);
 	}

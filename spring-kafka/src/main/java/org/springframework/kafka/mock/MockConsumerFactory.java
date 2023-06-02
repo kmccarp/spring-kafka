@@ -56,14 +56,14 @@ public class MockConsumerFactory<K, V> implements ConsumerFactory<K, V> {
 
 	@Override
 	public Consumer<K, V> createConsumer(@Nullable String groupId, @Nullable String clientIdPrefix,
-			@Nullable String clientIdSuffix) {
+@Nullable String clientIdSuffix) {
 
 		return this.consumerProvider.get();
 	}
 
 	@Override
 	public Consumer<K, V> createConsumer(@Nullable String groupId, @Nullable String clientIdPrefix,
-			@Nullable String clientIdSuffix, @Nullable Properties properties) {
+@Nullable String clientIdSuffix, @Nullable Properties properties) {
 
 		return this.consumerProvider.get();
 	}

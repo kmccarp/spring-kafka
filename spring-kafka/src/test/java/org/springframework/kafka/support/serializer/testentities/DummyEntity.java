@@ -43,9 +43,9 @@ public class DummyEntity {
 		}
 		DummyEntity that = (DummyEntity) o;
 		return intValue == that.intValue &&
-				Objects.equals(longValue, that.longValue) &&
-				Objects.equals(stringValue, that.stringValue) &&
-				Objects.equals(complexStruct, that.complexStruct);
+	Objects.equals(longValue, that.longValue) &&
+	Objects.equals(stringValue, that.stringValue) &&
+	Objects.equals(complexStruct, that.complexStruct);
 	}
 
 	@Override

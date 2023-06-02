@@ -76,14 +76,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
  * @author Artem Yakshin
  * @author Vladimir Tsanev
  */
-@EmbeddedKafka(topics = { ConcurrentMessageListenerContainerTests.topic1,
-		ConcurrentMessageListenerContainerTests.topic2,
-		ConcurrentMessageListenerContainerTests.topic4, ConcurrentMessageListenerContainerTests.topic5,
-		ConcurrentMessageListenerContainerTests.topic6, ConcurrentMessageListenerContainerTests.topic7,
-		ConcurrentMessageListenerContainerTests.topic8, ConcurrentMessageListenerContainerTests.topic9,
-		ConcurrentMessageListenerContainerTests.topic10, ConcurrentMessageListenerContainerTests.topic11,
-		ConcurrentMessageListenerContainerTests.topic12 },
-			brokerProperties = "group.initial.rebalance.delay.ms:500")
+@EmbeddedKafka(topics = {ConcurrentMessageListenerContainerTests.topic1,ConcurrentMessageListenerContainerTests.topic2,ConcurrentMessageListenerContainerTests.topic4, ConcurrentMessageListenerContainerTests.topic5,ConcurrentMessageListenerContainerTests.topic6, ConcurrentMessageListenerContainerTests.topic7,ConcurrentMessageListenerContainerTests.topic8, ConcurrentMessageListenerContainerTests.topic9,ConcurrentMessageListenerContainerTests.topic10, ConcurrentMessageListenerContainerTests.topic11,ConcurrentMessageListenerContainerTests.topic12},brokerProperties = "group.initial.rebalance.delay.ms:500")
 public class ConcurrentMessageListenerContainerTests {
 
 	private final LogAccessor logger = new LogAccessor(LogFactory.getLog(this.getClass()));
@@ -127,7 +120,7 @@ public class ConcurrentMessageListenerContainerTests {
 
 			@Override
 			protected Consumer<Integer, String> createKafkaConsumer(String groupId, String clientIdPrefix,
-					String clientIdSuffixArg, Properties properties) {
+		String clientIdSuffixArg, Properties properties) {
 
 				overrides.set(properties);
 				return super.createKafkaConsumer(groupId, clientIdPrefix, clientIdSuffixArg, properties);
@@ -149,7 +142,7 @@ public class ConcurrentMessageListenerContainerTests {
 		});
 
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setConcurrency(2);
 		container.setBeanName("testAuto");
 		container.setChangeConsumerThreadName(true);
@@ -189,16 +182,17 @@ public class ConcurrentMessageListenerContainerTests {
 		assertThat(payloads).containsExactlyInAnyOrder("foo", "bar", "qux");
 		assertThat(listenerThreadNames).contains("testAuto-0", "testAuto-1");
 		List<KafkaMessageListenerContainer<Integer, String>> containers = KafkaTestUtils.getPropertyValue(container,
-				"containers", List.class);
+	"containers", List.class);
 		assertThat(containers).hasSize(2);
 		for (int i = 0; i < 2; i++) {
 			assertThat(KafkaTestUtils.getPropertyValue(containers.get(i), "listenerConsumer.acks", Collection.class)
-					.size()).isEqualTo(0);
+		.size()).isEqualTo(0);
 		}
 		assertThat(container.metrics()).isNotNull();
 		Set<KafkaMessageListenerContainer<Integer, String>> children = new HashSet<>(containers);
 		assertThat(container.isInExpectedState()).isTrue();
-		container.getContainers().get(0).stopAbnormally(() -> { });
+		container.getContainers().get(0).stopAbnormally(() -> {
+		});
 		assertThat(container.isInExpectedState()).isFalse();
 		container.getContainers().get(0).start();
 		container.stop();
@@ -231,11 +225,11 @@ public class ConcurrentMessageListenerContainerTests {
 
 			@Override
 			protected Consumer<Integer, String> createKafkaConsumer(String groupId, String clientIdPrefix,
-					String clientIdSuffixArg, Properties properties) {
+		String clientIdSuffixArg, Properties properties) {
 
 				overrides.set(properties);
 				Consumer<Integer, String> created = super.createKafkaConsumer(groupId, clientIdPrefix,
-						clientIdSuffixArg, properties);
+			clientIdSuffixArg, properties);
 				assertThat(KafkaTestUtils.getPropertyValue(created, "requestTimeoutMs", Long.class)).isEqualTo(23000L);
 				return created;
 			}
@@ -273,7 +267,7 @@ public class ConcurrentMessageListenerContainerTests {
 		});
 
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setConcurrency(2);
 		container.setBeanName("testAuto");
 		container.start();
@@ -309,7 +303,7 @@ public class ConcurrentMessageListenerContainerTests {
 
 			@Override
 			protected Consumer<Integer, String> createKafkaConsumer(String groupId, String clientIdPrefix,
-					String clientIdSuffixArg, Properties properties) {
+		String clientIdSuffixArg, Properties properties) {
 
 				overrides.set(properties);
 				return super.createKafkaConsumer(groupId, clientIdPrefix, clientIdSuffixArg, properties);
@@ -338,7 +332,7 @@ public class ConcurrentMessageListenerContainerTests {
 		});
 
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setConcurrency(2);
 		container.setBeanName("testBatch");
 		container.start();
@@ -361,8 +355,8 @@ public class ConcurrentMessageListenerContainerTests {
 		assertThat(rebalLatch.await(10, TimeUnit.SECONDS)).isTrue();
 		container.stop();
 		assertThat(listenerThreadNames)
-				.extracting(str -> str.substring(str.length() - 5))
-				.containsExactlyInAnyOrder("0-C-1", "1-C-1", "0-C-2", "1-C-2", "2-C-1");
+	.extracting(str -> str.substring(str.length() - 5))
+	.containsExactlyInAnyOrder("0-C-1", "1-C-1", "0-C-2", "1-C-2", "2-C-1");
 		assertThat(overrides.get().getProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG)).isEqualTo("false");
 		this.logger.info("Stop manual");
 	}
@@ -390,7 +384,7 @@ public class ConcurrentMessageListenerContainerTests {
 
 		containerProps.setAckMode(ackMode);
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setConcurrency(2);
 		container.setBeanName("test" + ackMode);
 		container.start();
@@ -444,7 +438,7 @@ public class ConcurrentMessageListenerContainerTests {
 		});
 
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setConcurrency(1);
 		container.setBeanName("testManualExisting");
 
@@ -490,7 +484,7 @@ public class ConcurrentMessageListenerContainerTests {
 		containerProps.setClientId("myClientId");
 
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setConcurrency(1);
 		container.setBeanName("testManualExisting");
 		container.start();
@@ -523,7 +517,7 @@ public class ConcurrentMessageListenerContainerTests {
 		});
 		containerProps.setClientId("myClientId");
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setConcurrency(2);
 		container.setAlwaysClientIdSuffix(false);
 		container.setBeanName("testBatch");
@@ -556,43 +550,44 @@ public class ConcurrentMessageListenerContainerTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testConcurrencyWithPartitions() {
-		TopicPartitionOffset[] topic1PartitionS = new TopicPartitionOffset[] {
-				new TopicPartitionOffset(topic1, 0),
-				new TopicPartitionOffset(topic1, 1),
-				new TopicPartitionOffset(topic1, 2),
-				new TopicPartitionOffset(topic1, 3),
-				new TopicPartitionOffset(topic1, 4),
-				new TopicPartitionOffset(topic1, 5),
-				new TopicPartitionOffset(topic1, 6)
+		TopicPartitionOffset[] topic1PartitionS = new TopicPartitionOffset[]{
+	new TopicPartitionOffset(topic1, 0),
+	new TopicPartitionOffset(topic1, 1),
+	new TopicPartitionOffset(topic1, 2),
+	new TopicPartitionOffset(topic1, 3),
+	new TopicPartitionOffset(topic1, 4),
+	new TopicPartitionOffset(topic1, 5),
+	new TopicPartitionOffset(topic1, 6)
 		};
 		ConsumerFactory<Integer, String> cf = mock(ConsumerFactory.class);
 		Consumer<Integer, String> consumer = mock(Consumer.class);
 		given(cf.createConsumer(anyString(), anyString(), anyString(), any())).willReturn(consumer);
 		given(consumer.poll(any(Duration.class)))
-			.willAnswer(new Answer<ConsumerRecords<Integer, String>>() {
+	.willAnswer(new Answer<ConsumerRecords<Integer, String>>() {
 
-				@Override
-				public ConsumerRecords<Integer, String> answer(InvocationOnMock invocation) throws Throwable {
-					Thread.sleep(100);
-					return null;
-				}
+		@Override
+		public ConsumerRecords<Integer, String> answer(InvocationOnMock invocation) throws Throwable {
+			Thread.sleep(100);
+			return null;
+		}
 
-			});
+	});
 		ContainerProperties containerProps = new ContainerProperties(topic1PartitionS);
 		containerProps.setGroupId("grp");
-		containerProps.setMessageListener((MessageListener<Integer, String>) message -> { });
+		containerProps.setMessageListener((MessageListener<Integer, String>) message -> {
+		});
 		containerProps.setMissingTopicsFatal(false);
 
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setConcurrency(3);
 		container.start();
 		List<KafkaMessageListenerContainer<Integer, String>> containers = KafkaTestUtils.getPropertyValue(container,
-				"containers", List.class);
+	"containers", List.class);
 		assertThat(containers).hasSize(3);
 		for (int i = 0; i < 3; i++) {
 			assertThat(KafkaTestUtils.getPropertyValue(containers.get(i), "topicPartitions",
-					TopicPartitionOffset[].class).length).isEqualTo(i < 2 ? 2 : 3);
+		TopicPartitionOffset[].class).length).isEqualTo(i < 2 ? 2 : 3);
 		}
 		container.stop();
 	}
@@ -619,14 +614,14 @@ public class ConcurrentMessageListenerContainerTests {
 		containerProps.setKafkaConsumerProperties(consumerProperties);
 
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setConcurrency(2);
 		container.setBeanName("testException");
 		container.setCommonErrorHandler(new CommonErrorHandler() {
 
 			@Override
 			public void handleRecord(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-					MessageListenerContainer container) {
+		MessageListenerContainer container) {
 
 				catchError.set(true);
 			}
@@ -667,7 +662,7 @@ public class ConcurrentMessageListenerContainerTests {
 		containerProps.setSyncCommits(true);
 		containerProps.setAckMode(ContainerProperties.AckMode.RECORD);
 		ConcurrentMessageListenerContainer<Integer, String> container = new ConcurrentMessageListenerContainer<>(cf,
-				containerProps);
+	containerProps);
 		container.setConcurrency(2);
 		container.setBeanName("testAckOnError");
 		container.setCommonErrorHandler(new CommonErrorHandler() {
@@ -756,7 +751,7 @@ public class ConcurrentMessageListenerContainerTests {
 		});
 		containerProps.setClientId("myClientId");
 		ConcurrentMessageListenerContainer<Integer, String> container = new ConcurrentMessageListenerContainer<>(cf,
-				containerProps);
+	containerProps);
 		container.setConcurrency(1);
 		container.setAlwaysClientIdSuffix(false);
 		container.setBeanName("testAckOnErrorWithManualImmediate");

@@ -33,18 +33,18 @@ public class JsonSerdeTests {
 	@Test
 	void noTypeInfo() {
 		JsonSerde<String> serde = new JsonSerde<>(String.class)
-				.forKeys()
-				.noTypeInfo()
-				.ignoreTypeHeaders()
-				.dontRemoveTypeHeaders();
+	.forKeys()
+	.noTypeInfo()
+	.ignoreTypeHeaders()
+	.dontRemoveTypeHeaders();
 		assertThat(KafkaTestUtils.getPropertyValue(serde, "jsonSerializer.typeMapper.classIdFieldName"))
-				.isEqualTo(AbstractJavaTypeMapper.KEY_DEFAULT_CLASSID_FIELD_NAME);
+	.isEqualTo(AbstractJavaTypeMapper.KEY_DEFAULT_CLASSID_FIELD_NAME);
 		assertThat(KafkaTestUtils.getPropertyValue(serde, "jsonDeserializer.typeMapper.classIdFieldName"))
-				.isEqualTo(AbstractJavaTypeMapper.KEY_DEFAULT_CLASSID_FIELD_NAME);
+	.isEqualTo(AbstractJavaTypeMapper.KEY_DEFAULT_CLASSID_FIELD_NAME);
 		assertThat(KafkaTestUtils.getPropertyValue(serde, "jsonSerializer.addTypeInfo", Boolean.class)).isFalse();
 		assertThat(KafkaTestUtils.getPropertyValue(serde, "jsonDeserializer.useTypeHeaders", Boolean.class)).isFalse();
 		assertThat(KafkaTestUtils.getPropertyValue(serde, "jsonDeserializer.removeTypeHeaders", Boolean.class))
-				.isFalse();
+	.isFalse();
 		serde.close();
 	}
 

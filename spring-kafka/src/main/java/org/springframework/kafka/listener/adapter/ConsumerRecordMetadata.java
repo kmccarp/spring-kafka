@@ -87,7 +87,7 @@ public class ConsumerRecordMetadata {
 		}
 		ConsumerRecordMetadata crm = (ConsumerRecordMetadata) obj;
 		return this.delegate.equals(crm.delegate)
-				&& this.timestampType.equals(crm.timestampType());
+	&& this.timestampType.equals(crm.timestampType());
 	}
 
 	@Override

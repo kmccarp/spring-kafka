@@ -44,39 +44,39 @@ import org.springframework.transaction.support.TransactionTemplate;
  */
 public class TransactionSynchronizationTests {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void commitAfterAnotherSyncFails() {
 		Producer producer = mock(Producer.class);
 		ProducerFactory pf = mock(ProducerFactory.class);
 		given(pf.createProducer(any())).willReturn(producer);
 		assertThatExceptionOfType(RuntimeException.class)
-				.isThrownBy(() ->
-					new TransactionTemplate(new TM()).executeWithoutResult(status -> {
-						KafkaResourceHolder holder = ProducerFactoryUtils.getTransactionalResourceHolder(pf);
-						TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+	.isThrownBy(() ->
+new TransactionTemplate(new TM()).executeWithoutResult(status -> {
+	KafkaResourceHolder holder = ProducerFactoryUtils.getTransactionalResourceHolder(pf);
+	TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
 
-							@Override
-							public void afterCommit() {
-								if (true) {
-									throw new RuntimeException("Test");
-								}
-							}
+		@Override
+		public void afterCommit() {
+			if (true) {
+				throw new RuntimeException("Test");
+			}
+		}
 
-							@Override
-							public int getOrder() {
-								return Ordered.HIGHEST_PRECEDENCE;
-							}
+		@Override
+		public int getOrder() {
+			return Ordered.HIGHEST_PRECEDENCE;
+		}
 
-						});
-					}))
-				.withMessage("Test");
+	});
+}))
+	.withMessage("Test");
 		verify(producer).beginTransaction();
 		verify(producer).commitTransaction();
 		verify(producer).close(any());
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Test
 	void onlyOnceCommit() {
 		Producer producer = mock(Producer.class);

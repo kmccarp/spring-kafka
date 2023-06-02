@@ -50,10 +50,11 @@ public class MissingTopicsTests {
 		Map<String, Object> props = KafkaTestUtils.consumerProps("missing1", "true", embeddedKafka);
 		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(props);
 		ContainerProperties containerProps = new ContainerProperties("notexisting");
-		containerProps.setMessageListener((MessageListener<Integer, String>) message -> { });
+		containerProps.setMessageListener((MessageListener<Integer, String>) message -> {
+		});
 		containerProps.setMissingTopicsFatal(true);
 		ConcurrentMessageListenerContainer<Integer, String> container =
-				new ConcurrentMessageListenerContainer<>(cf, containerProps);
+	new ConcurrentMessageListenerContainer<>(cf, containerProps);
 		container.setBeanName("testMissing1");
 
 		try {
@@ -70,10 +71,11 @@ public class MissingTopicsTests {
 		Map<String, Object> props = KafkaTestUtils.consumerProps("missing2", "true", embeddedKafka);
 		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(props);
 		ContainerProperties containerProps = new ContainerProperties("notexisting");
-		containerProps.setMessageListener((MessageListener<Integer, String>) message -> { });
+		containerProps.setMessageListener((MessageListener<Integer, String>) message -> {
+		});
 		containerProps.setMissingTopicsFatal(true);
 		KafkaMessageListenerContainer<Integer, String> container =
-				new KafkaMessageListenerContainer<>(cf, containerProps);
+	new KafkaMessageListenerContainer<>(cf, containerProps);
 		container.setBeanName("testMissing2");
 		try {
 			container.start();

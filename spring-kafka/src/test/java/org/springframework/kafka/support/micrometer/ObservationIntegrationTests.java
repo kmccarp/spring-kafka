@@ -75,42 +75,42 @@ public class ObservationIntegrationTests extends SampleTestRunner {
 
 			List<FinishedSpan> finishedSpans = bb.getFinishedSpans();
 			SpansAssert.assertThat(finishedSpans)
-					.haveSameTraceId()
-					.hasSize(4);
+		.haveSameTraceId()
+		.hasSize(4);
 			List<FinishedSpan> producerSpans = finishedSpans.stream()
-					.filter(span -> span.getKind().equals(Kind.PRODUCER))
-					.collect(Collectors.toList());
+		.filter(span -> span.getKind().equals(Kind.PRODUCER))
+		.collect(Collectors.toList());
 			List<FinishedSpan> consumerSpans = finishedSpans.stream()
-					.filter(span -> span.getKind().equals(Kind.CONSUMER))
-					.collect(Collectors.toList());
+		.filter(span -> span.getKind().equals(Kind.CONSUMER))
+		.collect(Collectors.toList());
 			SpanAssert.assertThat(producerSpans.get(0))
-					.hasTag("spring.kafka.template.name", "template");
+		.hasTag("spring.kafka.template.name", "template");
 			assertThat(producerSpans.get(0).getRemoteServiceName())
-					.startsWith("Apache Kafka: ")
-					.doesNotEndWith("Kafka: ");
+		.startsWith("Apache Kafka: ")
+		.doesNotEndWith("Kafka: ");
 			SpanAssert.assertThat(producerSpans.get(1))
-					.hasTag("spring.kafka.template.name", "template");
+		.hasTag("spring.kafka.template.name", "template");
 			SpanAssert.assertThat(consumerSpans.get(0))
-					.hasTagWithKey("spring.kafka.listener.id");
+		.hasTagWithKey("spring.kafka.listener.id");
 			assertThat(consumerSpans.get(0).getRemoteServiceName())
-					.startsWith("Apache Kafka: ")
-					.doesNotEndWith("Kafka: ");
+		.startsWith("Apache Kafka: ")
+		.doesNotEndWith("Kafka: ");
 			assertThat(consumerSpans.get(0).getTags().get("spring.kafka.listener.id")).isIn("obs1-0", "obs2-0");
 			SpanAssert.assertThat(consumerSpans.get(1))
-					.hasTagWithKey("spring.kafka.listener.id");
+		.hasTagWithKey("spring.kafka.listener.id");
 			assertThat(consumerSpans.get(1).getTags().get("spring.kafka.listener.id")).isIn("obs1-0", "obs2-0");
 			assertThat(consumerSpans.get(0).getTags().get("spring.kafka.listener.id"))
-					.isNotEqualTo(consumerSpans.get(1).getTags().get("spring.kafka.listener.id"));
+		.isNotEqualTo(consumerSpans.get(1).getTags().get("spring.kafka.listener.id"));
 
 			MeterRegistryAssert.assertThat(getMeterRegistry())
-					.hasTimerWithNameAndTags("spring.kafka.template",
-							KeyValues.of("spring.kafka.template.name", "template"))
-					.hasTimerWithNameAndTags("spring.kafka.template",
-							KeyValues.of("spring.kafka.template.name", "template"))
-					.hasTimerWithNameAndTags("spring.kafka.listener",
-							KeyValues.of("spring.kafka.listener.id", "obs1-0"))
-					.hasTimerWithNameAndTags("spring.kafka.listener",
-							KeyValues.of("spring.kafka.listener.id", "obs2-0"));
+		.hasTimerWithNameAndTags("spring.kafka.template",
+	KeyValues.of("spring.kafka.template.name", "template"))
+		.hasTimerWithNameAndTags("spring.kafka.template",
+	KeyValues.of("spring.kafka.template.name", "template"))
+		.hasTimerWithNameAndTags("spring.kafka.listener",
+	KeyValues.of("spring.kafka.listener.id", "obs1-0"))
+		.hasTimerWithNameAndTags("spring.kafka.listener",
+	KeyValues.of("spring.kafka.listener.id", "obs2-0"));
 		};
 	}
 
@@ -150,10 +150,10 @@ public class ObservationIntegrationTests extends SampleTestRunner {
 
 		@Bean
 		ConcurrentKafkaListenerContainerFactory<Integer, String> kafkaListenerContainerFactory(
-				ConsumerFactory<Integer, String> cf) {
+	ConsumerFactory<Integer, String> cf) {
 
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(cf);
 			factory.getContainerProperties().setObservationEnabled(true);
 			return factory;

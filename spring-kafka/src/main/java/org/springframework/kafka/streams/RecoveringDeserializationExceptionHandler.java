@@ -56,7 +56,7 @@ public class RecoveringDeserializationExceptionHandler implements Deserializatio
 
 	@Override
 	public DeserializationHandlerResponse handle(ProcessorContext context, ConsumerRecord<byte[], byte[]> record,
-			Exception exception) {
+Exception exception) {
 
 		if (this.recoverer == null) {
 			return DeserializationHandlerResponse.FAIL;
@@ -86,7 +86,7 @@ public class RecoveringDeserializationExceptionHandler implements Deserializatio
 			}
 			else {
 				LOGGER.error("Unkown property type for " + KSTREAM_DESERIALIZATION_RECOVERER
-						+ "; failed deserializations cannot be recovered");
+			+ "; failed deserializations cannot be recovered");
 			}
 		}
 
@@ -96,9 +96,9 @@ public class RecoveringDeserializationExceptionHandler implements Deserializatio
 		try {
 			@SuppressWarnings("unchecked")
 			Class<? extends ConsumerRecordRecoverer> clazz =
-					(Class<? extends ConsumerRecordRecoverer>) ClassUtils
-						.forName((String) configValue,
-									RecoveringDeserializationExceptionHandler.class.getClassLoader());
+		(Class<? extends ConsumerRecordRecoverer>) ClassUtils
+	.forName((String) configValue,
+RecoveringDeserializationExceptionHandler.class.getClassLoader());
 			Constructor<? extends ConsumerRecordRecoverer> constructor = clazz.getConstructor();
 			this.recoverer = constructor.newInstance();
 		}
@@ -111,7 +111,7 @@ public class RecoveringDeserializationExceptionHandler implements Deserializatio
 		try {
 			@SuppressWarnings("unchecked")
 			Class<? extends ConsumerRecordRecoverer> clazz =
-				(Class<? extends ConsumerRecordRecoverer>) configValue;
+		(Class<? extends ConsumerRecordRecoverer>) configValue;
 			Constructor<? extends ConsumerRecordRecoverer> constructor = clazz.getConstructor();
 			this.recoverer = constructor.newInstance();
 		}

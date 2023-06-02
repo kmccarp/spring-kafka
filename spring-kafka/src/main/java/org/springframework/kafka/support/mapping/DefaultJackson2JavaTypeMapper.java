@@ -42,14 +42,11 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
  *
  * @since 2.1
  */
-public class DefaultJackson2JavaTypeMapper extends AbstractJavaTypeMapper
-		implements Jackson2JavaTypeMapper {
+public class DefaultJackson2JavaTypeMapper extends AbstractJavaTypeMapperimplements Jackson2JavaTypeMapper {
 
 	private static final List<String> TRUSTED_PACKAGES =
-			Arrays.asList(
-					"java.util",
-					"java.lang"
-			);
+Arrays.asList("java.util","java.lang"
+);
 
 	private final Set<String> trustedPackages = new LinkedHashSet<>(TRUSTED_PACKAGES);
 
@@ -108,12 +105,12 @@ public class DefaultJackson2JavaTypeMapper extends AbstractJavaTypeMapper
 			JavaType contentClassType = getClassIdType(retrieveHeader(headers, getContentClassIdFieldName()));
 			if (classType.getKeyType() == null) {
 				return TypeFactory.defaultInstance()
-						.constructCollectionLikeType(classType.getRawClass(), contentClassType);
+			.constructCollectionLikeType(classType.getRawClass(), contentClassType);
 			}
 
 			JavaType keyClassType = getClassIdType(retrieveHeader(headers, getKeyClassIdFieldName()));
 			return TypeFactory.defaultInstance()
-					.constructMapLikeType(classType.getRawClass(), keyClassType, contentClassType);
+		.constructMapLikeType(classType.getRawClass(), keyClassType, contentClassType);
 		}
 
 		return null;
@@ -127,24 +124,24 @@ public class DefaultJackson2JavaTypeMapper extends AbstractJavaTypeMapper
 			try {
 				if (!isTrustedPackage(classId)) {
 					throw new IllegalArgumentException("The class '" + classId
-							+ "' is not in the trusted packages: "
-							+ this.trustedPackages + ". "
-							+ "If you believe this class is safe to deserialize, please provide its name. "
-							+ "If the serialization is only done by a trusted source, you can also enable "
-							+ "trust all (*).");
+				+ "' is not in the trusted packages: "
+				+ this.trustedPackages + ". "
+				+ "If you believe this class is safe to deserialize, please provide its name. "
+				+ "If the serialization is only done by a trusted source, you can also enable "
+				+ "trust all (*).");
 				}
 				else {
 					return TypeFactory.defaultInstance()
-							.constructType(ClassUtils.forName(classId, getClassLoader()));
+				.constructType(ClassUtils.forName(classId, getClassLoader()));
 				}
 			}
 			catch (ClassNotFoundException e) {
 				throw new MessageConversionException("failed to resolve class name. Class not found ["
-						+ classId + "]", e);
+			+ classId + "]", e);
 			}
 			catch (LinkageError e) {
 				throw new MessageConversionException("failed to resolve class name. Linkage error ["
-						+ classId + "]", e);
+			+ classId + "]", e);
 			}
 		}
 	}

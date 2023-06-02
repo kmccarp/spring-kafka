@@ -98,32 +98,32 @@ public class ReactiveKafkaProducerTemplateIntegrationTests {
 	@BeforeAll
 	public static void setUpBeforeClass() {
 		Map<String, Object> consumerProps = KafkaTestUtils
-				.consumerProps("reactive_consumer_group", "false", EmbeddedKafkaCondition.getBroker());
+	.consumerProps("reactive_consumer_group", "false", EmbeddedKafkaCondition.getBroker());
 		reactiveKafkaConsumerTemplate =
-				new ReactiveKafkaConsumerTemplate<>(setupReceiverOptionsWithDefaultTopic(consumerProps));
+	new ReactiveKafkaConsumerTemplate<>(setupReceiverOptionsWithDefaultTopic(consumerProps));
 	}
 
 	@BeforeEach
 	public void setUp() {
 		this.reactiveKafkaProducerTemplate = new ReactiveKafkaProducerTemplate<>(setupSenderOptionsWithDefaultTopic(),
-				new MessagingMessageConverter());
+	new MessagingMessageConverter());
 	}
 
 	private SenderOptions<Integer, String> setupSenderOptionsWithDefaultTopic() {
 		Map<String, Object> senderProps =
-				KafkaTestUtils.producerProps(EmbeddedKafkaCondition.getBroker().getBrokersAsString());
+	KafkaTestUtils.producerProps(EmbeddedKafkaCondition.getBroker().getBrokersAsString());
 		return SenderOptions.create(senderProps);
 	}
 
 	private static ReceiverOptions<Integer, String> setupReceiverOptionsWithDefaultTopic(
-			Map<String, Object> consumerProps) {
+Map<String, Object> consumerProps) {
 
 		ReceiverOptions<Integer, String> basicReceiverOptions = ReceiverOptions.create(consumerProps);
 		return basicReceiverOptions
-				.consumerProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
-				.addAssignListener(p -> assertThat(p.iterator().next().topicPartition().topic())
-						.isEqualTo(REACTIVE_INT_KEY_TOPIC))
-				.subscription(Collections.singletonList(REACTIVE_INT_KEY_TOPIC));
+	.consumerProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+	.addAssignListener(p -> assertThat(p.iterator().next().topicPartition().topic())
+.isEqualTo(REACTIVE_INT_KEY_TOPIC))
+	.subscription(Collections.singletonList(REACTIVE_INT_KEY_TOPIC));
 	}
 
 	@AfterEach
@@ -134,298 +134,297 @@ public class ReactiveKafkaProducerTemplateIntegrationTests {
 	@Test
 	public void shouldNotCreateTemplateIfOptionsIsNull() {
 		assertThatIllegalArgumentException()
-				.isThrownBy(() -> new ReactiveKafkaProducerTemplate<>((SenderOptions<String, String>) null))
-				.withMessage("Sender options can not be null");
+	.isThrownBy(() -> new ReactiveKafkaProducerTemplate<>((SenderOptions<String, String>) null))
+	.withMessage("Sender options can not be null");
 	}
 
 	@Test
 	public void shouldNotCreateTemplateIfSenderIsNull() {
 		assertThatIllegalArgumentException()
-				.isThrownBy(() -> new ReactiveKafkaProducerTemplate<>((KafkaSender<String, String>) null))
-				.withMessage("Sender can not be null");
+	.isThrownBy(() -> new ReactiveKafkaProducerTemplate<>((KafkaSender<String, String>) null))
+	.withMessage("Sender can not be null");
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
 	public void shouldNotCreateTemplateIfConverterIsNull() {
 		assertThatIllegalArgumentException()
-				.isThrownBy(() ->
-						new ReactiveKafkaProducerTemplate<String, String>(Mockito.mock(SenderOptions.class), null))
-				.withMessage("Message converter can not be null");
+	.isThrownBy(() ->
+new ReactiveKafkaProducerTemplate<String, String>(Mockito.mock(SenderOptions.class), null))
+	.withMessage("Message converter can not be null");
 
 		assertThatIllegalArgumentException()
-			.isThrownBy(() ->
-						new ReactiveKafkaProducerTemplate<String, String>(Mockito.mock(KafkaSender.class), null))
-			.withMessage("Message converter can not be null");
+	.isThrownBy(() ->
+new ReactiveKafkaProducerTemplate<String, String>(Mockito.mock(KafkaSender.class), null))
+	.withMessage("Message converter can not be null");
 	}
 
 	@Test
 	public void shouldSendSingleRecordAsKeyAndReceiveIt() {
 		Mono<SenderResult<Void>> senderResultMono =
-				this.reactiveKafkaProducerTemplate.send(REACTIVE_INT_KEY_TOPIC, DEFAULT_VALUE);
+	this.reactiveKafkaProducerTemplate.send(REACTIVE_INT_KEY_TOPIC, DEFAULT_VALUE);
 
 		StepVerifier.create(senderResultMono)
-				.assertNext(senderResult -> {
-					assertThat(senderResult.recordMetadata())
-							.extracting(RecordMetadata::topic)
-							.isEqualTo(REACTIVE_INT_KEY_TOPIC);
-				})
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(senderResult -> {
+		assertThat(senderResult.recordMetadata())
+	.extracting(RecordMetadata::topic)
+	.isEqualTo(REACTIVE_INT_KEY_TOPIC);
+	})
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 
 		StepVerifier.create(reactiveKafkaConsumerTemplate.receive().doOnNext(rr -> rr.receiverOffset().acknowledge()))
-				.assertNext(receiverRecord -> assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE))
-				.thenCancel()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(receiverRecord -> assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE))
+	.thenCancel()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@Test
 	public void shouldSendSingleRecordAsKeyValueAndReceiveIt() {
 		Mono<SenderResult<Void>> resultMono =
-				this.reactiveKafkaProducerTemplate.send(REACTIVE_INT_KEY_TOPIC, DEFAULT_KEY, DEFAULT_VALUE);
+	this.reactiveKafkaProducerTemplate.send(REACTIVE_INT_KEY_TOPIC, DEFAULT_KEY, DEFAULT_VALUE);
 
 		StepVerifier.create(resultMono)
-				.assertNext(senderResult -> {
-					assertThat(senderResult.recordMetadata())
-							.extracting(RecordMetadata::topic)
-							.isEqualTo(REACTIVE_INT_KEY_TOPIC);
-				})
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(senderResult -> {
+		assertThat(senderResult.recordMetadata())
+	.extracting(RecordMetadata::topic)
+	.isEqualTo(REACTIVE_INT_KEY_TOPIC);
+	})
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 		StepVerifier.create(reactiveKafkaConsumerTemplate.receive().doOnNext(rr -> rr.receiverOffset().acknowledge()))
-				.assertNext(receiverRecord -> {
-					assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
-					assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
-				})
-				.thenCancel()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(receiverRecord -> {
+		assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
+		assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
+	})
+	.thenCancel()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@Test
 	public void shouldSendSingleRecordAsPartitionKeyValueAndReceiveIt() {
 		Mono<SenderResult<Void>> resultMono = reactiveKafkaProducerTemplate
-				.send(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_KEY, DEFAULT_VALUE);
+	.send(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_KEY, DEFAULT_VALUE);
 
 		StepVerifier.create(resultMono)
-				.assertNext(senderResult -> {
-					assertThat(senderResult.recordMetadata())
-							.extracting(RecordMetadata::topic, RecordMetadata::partition)
-							.containsExactly(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION);
-				})
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(senderResult -> {
+		assertThat(senderResult.recordMetadata())
+	.extracting(RecordMetadata::topic, RecordMetadata::partition)
+	.containsExactly(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION);
+	})
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 
 		StepVerifier.create(reactiveKafkaConsumerTemplate.receive().doOnNext(rr -> rr.receiverOffset().acknowledge()))
-				.assertNext(receiverRecord -> {
-					assertThat(receiverRecord.partition()).isEqualTo(DEFAULT_PARTITION);
-					assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
-					assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
-				})
-				.thenCancel()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(receiverRecord -> {
+		assertThat(receiverRecord.partition()).isEqualTo(DEFAULT_PARTITION);
+		assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
+		assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
+	})
+	.thenCancel()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@Test
 	public void shouldSendSingleRecordAsPartitionTimestampKeyValueAndReceiveIt() {
 		Mono<SenderResult<Void>> resultMono = reactiveKafkaProducerTemplate
-				.send(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP, DEFAULT_KEY, DEFAULT_VALUE);
+	.send(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP, DEFAULT_KEY, DEFAULT_VALUE);
 
 		StepVerifier.create(resultMono)
-				.assertNext(senderResult -> {
-					assertThat(senderResult.recordMetadata())
-							.extracting(RecordMetadata::topic, RecordMetadata::partition, RecordMetadata::timestamp)
-							.containsExactly(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP);
-				})
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(senderResult -> {
+		assertThat(senderResult.recordMetadata())
+	.extracting(RecordMetadata::topic, RecordMetadata::partition, RecordMetadata::timestamp)
+	.containsExactly(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP);
+	})
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 
 		StepVerifier.create(reactiveKafkaConsumerTemplate.receive().doOnNext(rr -> rr.receiverOffset().acknowledge()))
-				.assertNext(receiverRecord -> {
-					assertThat(receiverRecord.partition()).isEqualTo(DEFAULT_PARTITION);
-					assertThat(receiverRecord.timestamp()).isEqualTo(DEFAULT_TIMESTAMP);
-					assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
-					assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
-				})
-				.thenCancel()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(receiverRecord -> {
+		assertThat(receiverRecord.partition()).isEqualTo(DEFAULT_PARTITION);
+		assertThat(receiverRecord.timestamp()).isEqualTo(DEFAULT_TIMESTAMP);
+		assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
+		assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
+	})
+	.thenCancel()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@Test
 	public void shouldSendSingleRecordAsProducerRecordAndReceiveIt() {
 		List<Header> producerRecordHeaders = convertToKafkaHeaders(
-				new SimpleImmutableEntry<>(KafkaHeaders.PARTITION, 0),
-				new SimpleImmutableEntry<>("foo", "bar"),
-				new SimpleImmutableEntry<>(KafkaHeaders.RECEIVED_TOPIC, "dummy"));
+	new SimpleImmutableEntry<>(KafkaHeaders.PARTITION, 0),
+	new SimpleImmutableEntry<>("foo", "bar"),
+	new SimpleImmutableEntry<>(KafkaHeaders.RECEIVED_TOPIC, "dummy"));
 
 		ProducerRecord<Integer, String> producerRecord =
-				new ProducerRecord<>(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP, DEFAULT_KEY,
-						DEFAULT_VALUE, producerRecordHeaders);
+	new ProducerRecord<>(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP, DEFAULT_KEY,
+DEFAULT_VALUE, producerRecordHeaders);
 
 		Mono<SenderResult<Void>> resultMono = reactiveKafkaProducerTemplate.send(producerRecord);
 
 		StepVerifier.create(resultMono)
-				.assertNext(senderResult -> {
-					assertThat(senderResult.recordMetadata())
-							.extracting(RecordMetadata::topic, RecordMetadata::partition, RecordMetadata::timestamp)
-							.containsExactly(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP);
-				})
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(senderResult -> {
+		assertThat(senderResult.recordMetadata())
+	.extracting(RecordMetadata::topic, RecordMetadata::partition, RecordMetadata::timestamp)
+	.containsExactly(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP);
+	})
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 
 		StepVerifier.create(reactiveKafkaConsumerTemplate.receive().doOnNext(rr -> rr.receiverOffset().acknowledge()))
-				.assertNext(receiverRecord -> {
-					assertThat(receiverRecord.partition()).isEqualTo(DEFAULT_PARTITION);
-					assertThat(receiverRecord.timestamp()).isEqualTo(DEFAULT_TIMESTAMP);
-					assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
-					assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
-					assertThat(receiverRecord.headers().toArray()).isEqualTo(producerRecordHeaders.toArray());
-				})
-				.thenCancel()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(receiverRecord -> {
+		assertThat(receiverRecord.partition()).isEqualTo(DEFAULT_PARTITION);
+		assertThat(receiverRecord.timestamp()).isEqualTo(DEFAULT_TIMESTAMP);
+		assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
+		assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
+		assertThat(receiverRecord.headers().toArray()).isEqualTo(producerRecordHeaders.toArray());
+	})
+	.thenCancel()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@Test
 	public void shouldSendSingleRecordAsSenderRecordAndReceiveIt() {
 		List<Header> producerRecordHeaders = convertToKafkaHeaders(
-				new SimpleImmutableEntry<>(KafkaHeaders.PARTITION, 0),
-				new SimpleImmutableEntry<>("foo", "bar"),
-				new SimpleImmutableEntry<>(KafkaHeaders.RECEIVED_TOPIC, "dummy"));
+	new SimpleImmutableEntry<>(KafkaHeaders.PARTITION, 0),
+	new SimpleImmutableEntry<>("foo", "bar"),
+	new SimpleImmutableEntry<>(KafkaHeaders.RECEIVED_TOPIC, "dummy"));
 
 		ProducerRecord<Integer, String> producerRecord =
-				new ProducerRecord<>(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP, DEFAULT_KEY,
-						DEFAULT_VALUE, producerRecordHeaders);
+	new ProducerRecord<>(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP, DEFAULT_KEY,
+DEFAULT_VALUE, producerRecordHeaders);
 
 		int correlationMetadata = 42;
 		SenderRecord<Integer, String, Integer> senderRecord = SenderRecord.create(producerRecord, correlationMetadata);
 		Mono<SenderResult<Integer>> resultMono = reactiveKafkaProducerTemplate.send(senderRecord);
 
 		StepVerifier.create(resultMono)
-				.assertNext(senderResult -> {
-					assertThat(senderRecord.correlationMetadata()).isEqualTo(correlationMetadata);
-					assertThat(senderResult.recordMetadata())
-							.extracting(RecordMetadata::topic, RecordMetadata::partition, RecordMetadata::timestamp)
-							.containsExactly(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP);
-				})
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(senderResult -> {
+		assertThat(senderRecord.correlationMetadata()).isEqualTo(correlationMetadata);
+		assertThat(senderResult.recordMetadata())
+	.extracting(RecordMetadata::topic, RecordMetadata::partition, RecordMetadata::timestamp)
+	.containsExactly(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, DEFAULT_TIMESTAMP);
+	})
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 
 		StepVerifier.create(reactiveKafkaConsumerTemplate.receive().doOnNext(rr -> rr.receiverOffset().acknowledge()))
-				.assertNext(receiverRecord -> {
-					assertThat(receiverRecord.partition()).isEqualTo(DEFAULT_PARTITION);
-					assertThat(receiverRecord.timestamp()).isEqualTo(DEFAULT_TIMESTAMP);
-					assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
-					assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
-					assertThat(receiverRecord.headers().toArray()).isEqualTo(producerRecordHeaders.toArray());
-				})
-				.thenCancel()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(receiverRecord -> {
+		assertThat(receiverRecord.partition()).isEqualTo(DEFAULT_PARTITION);
+		assertThat(receiverRecord.timestamp()).isEqualTo(DEFAULT_TIMESTAMP);
+		assertThat(receiverRecord.key()).isEqualTo(DEFAULT_KEY);
+		assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
+		assertThat(receiverRecord.headers().toArray()).isEqualTo(producerRecordHeaders.toArray());
+	})
+	.thenCancel()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@Test
 	public void shouldSendSingleRecordAsMessageAndReceiveIt() {
 		Message<String> message = MessageBuilder.withPayload(DEFAULT_VALUE)
-				.setHeader(KafkaHeaders.PARTITION, 0)
-				.setHeader("foo", "bar")
-				.setHeader(KafkaHeaders.RECEIVED_TOPIC, "dummy")
-				.build();
+	.setHeader(KafkaHeaders.PARTITION, 0)
+	.setHeader("foo", "bar")
+	.setHeader(KafkaHeaders.RECEIVED_TOPIC, "dummy")
+	.build();
 
 		Mono<SenderResult<Void>> resultMono = reactiveKafkaProducerTemplate.send(REACTIVE_INT_KEY_TOPIC, message);
 
 		StepVerifier.create(resultMono)
-				.assertNext(senderResult -> {
-					assertThat(senderResult.recordMetadata())
-							.extracting(RecordMetadata::topic)
-							.isEqualTo(REACTIVE_INT_KEY_TOPIC);
-				})
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(senderResult -> {
+		assertThat(senderResult.recordMetadata())
+	.extracting(RecordMetadata::topic)
+	.isEqualTo(REACTIVE_INT_KEY_TOPIC);
+	})
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 
 		StepVerifier.create(reactiveKafkaConsumerTemplate.receive().doOnNext(rr -> rr.receiverOffset().acknowledge()))
-				.assertNext(receiverRecord -> {
-					assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
+	.assertNext(receiverRecord -> {
+		assertThat(receiverRecord.value()).isEqualTo(DEFAULT_VALUE);
 
-					List<Header> messageHeaders = convertToKafkaHeaders(message.getHeaders());
-					assertThat(receiverRecord.headers().toArray()).isEqualTo(messageHeaders.toArray());
-				})
-				.thenCancel()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+		List<Header> messageHeaders = convertToKafkaHeaders(message.getHeaders());
+		assertThat(receiverRecord.headers().toArray()).isEqualTo(messageHeaders.toArray());
+	})
+	.thenCancel()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@Test
 	public void sendMultipleRecordsAsPublisherAndReceiveThem() {
 		int msgCount = 10;
 		List<SenderRecord<Integer, String, Integer>> senderRecords =
-				IntStream.range(0, msgCount)
-						.mapToObj(i -> SenderRecord.create(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, System
-								.currentTimeMillis(), DEFAULT_KEY, DEFAULT_VALUE + i, i))
-						.collect(Collectors.toList());
+	IntStream.range(0, msgCount)
+.mapToObj(i -> SenderRecord.create(REACTIVE_INT_KEY_TOPIC, DEFAULT_PARTITION, System.currentTimeMillis(), DEFAULT_KEY, DEFAULT_VALUE + i, i))
+.collect(Collectors.toList());
 
 		Flux<SenderRecord<Integer, String, Integer>> senderRecordWithDelay = Flux.fromIterable(senderRecords)
-				.delayElements(Duration.ofMillis(100));
+	.delayElements(Duration.ofMillis(100));
 		Flux<SenderResult<Integer>> resultFlux = reactiveKafkaProducerTemplate.send(senderRecordWithDelay);
 
 		StepVerifier.create(resultFlux)
-				.recordWith(ArrayList::new)
-				.expectNextCount(msgCount)
-				.consumeRecordedWith(senderResults -> {
-					assertThat(senderResults).hasSize(msgCount);
+	.recordWith(ArrayList::new)
+	.expectNextCount(msgCount)
+	.consumeRecordedWith(senderResults -> {
+		assertThat(senderResults).hasSize(msgCount);
 
-					List<RecordMetadata> records = senderResults.stream().map(SenderResult::recordMetadata)
-							.collect(Collectors.toList());
+		List<RecordMetadata> records = senderResults.stream().map(SenderResult::recordMetadata)
+	.collect(Collectors.toList());
 
-					assertThat(records).extracting(RecordMetadata::topic)
-							.allSatisfy(actualTopic -> assertThat(actualTopic)
-									.isEqualTo(REACTIVE_INT_KEY_TOPIC));
-					assertThat(records).extracting(RecordMetadata::partition)
-							.allSatisfy(actualPartition -> assertThat(actualPartition)
-									.isEqualTo(DEFAULT_PARTITION));
-					List<Long> senderRecordsTimestamps = senderRecords.stream().map(SenderRecord::timestamp)
-							.collect(Collectors.toList());
-					assertThat(records).extracting(RecordMetadata::timestamp)
-							.containsExactlyElementsOf(senderRecordsTimestamps);
-					List<Integer> senderRecordsCorrelationMetadata = senderRecords.stream()
-							.map(SenderRecord::correlationMetadata).collect(Collectors.toList());
-					assertThat(senderRecords).extracting(SenderRecord::correlationMetadata)
-							.containsExactlyElementsOf(senderRecordsCorrelationMetadata);
-				})
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+		assertThat(records).extracting(RecordMetadata::topic)
+	.allSatisfy(actualTopic -> assertThat(actualTopic)
+.isEqualTo(REACTIVE_INT_KEY_TOPIC));
+		assertThat(records).extracting(RecordMetadata::partition)
+	.allSatisfy(actualPartition -> assertThat(actualPartition)
+.isEqualTo(DEFAULT_PARTITION));
+		List<Long> senderRecordsTimestamps = senderRecords.stream().map(SenderRecord::timestamp)
+	.collect(Collectors.toList());
+		assertThat(records).extracting(RecordMetadata::timestamp)
+	.containsExactlyElementsOf(senderRecordsTimestamps);
+		List<Integer> senderRecordsCorrelationMetadata = senderRecords.stream()
+	.map(SenderRecord::correlationMetadata).collect(Collectors.toList());
+		assertThat(senderRecords).extracting(SenderRecord::correlationMetadata)
+	.containsExactlyElementsOf(senderRecordsCorrelationMetadata);
+	})
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 
 		StepVerifier.create(reactiveKafkaConsumerTemplate.receive().doOnNext(rr -> rr.receiverOffset().acknowledge())
-				.take(msgCount))
-				.recordWith(ArrayList::new)
-				.expectNextCount(msgCount)
-				.consumeSubscriptionWith(Subscription::cancel)
-				.consumeRecordedWith(receiverRecords -> {
-					assertThat(receiverRecords).hasSize(msgCount);
+	.take(msgCount))
+	.recordWith(ArrayList::new)
+	.expectNextCount(msgCount)
+	.consumeSubscriptionWith(Subscription::cancel)
+	.consumeRecordedWith(receiverRecords -> {
+		assertThat(receiverRecords).hasSize(msgCount);
 
-					assertThat(receiverRecords).extracting(ReceiverRecord::partition)
-							.allSatisfy(actualPartition -> assertThat(actualPartition)
-									.isEqualTo(DEFAULT_PARTITION));
-					assertThat(receiverRecords).extracting(ReceiverRecord::key)
-							.allSatisfy(actualKey -> assertThat(actualKey).isEqualTo(DEFAULT_KEY));
-					List<Long> senderRecordsTimestamps = senderRecords.stream().map(SenderRecord::timestamp)
-							.collect(Collectors.toList());
-					assertThat(receiverRecords).extracting(ReceiverRecord::timestamp)
-							.containsExactlyElementsOf(senderRecordsTimestamps);
-					List<String> senderRecordsValues = senderRecords.stream().map(SenderRecord::value)
-							.collect(Collectors.toList());
-					assertThat(receiverRecords).extracting(ReceiverRecord::value)
-							.containsExactlyElementsOf(senderRecordsValues);
-				})
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+		assertThat(receiverRecords).extracting(ReceiverRecord::partition)
+	.allSatisfy(actualPartition -> assertThat(actualPartition)
+.isEqualTo(DEFAULT_PARTITION));
+		assertThat(receiverRecords).extracting(ReceiverRecord::key)
+	.allSatisfy(actualKey -> assertThat(actualKey).isEqualTo(DEFAULT_KEY));
+		List<Long> senderRecordsTimestamps = senderRecords.stream().map(SenderRecord::timestamp)
+	.collect(Collectors.toList());
+		assertThat(receiverRecords).extracting(ReceiverRecord::timestamp)
+	.containsExactlyElementsOf(senderRecordsTimestamps);
+		List<String> senderRecordsValues = senderRecords.stream().map(SenderRecord::value)
+	.collect(Collectors.toList());
+		assertThat(receiverRecords).extracting(ReceiverRecord::value)
+	.containsExactlyElementsOf(senderRecordsValues);
+	})
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@Test
 	public void shouldReturnPartitionsForTopic() {
 		Flux<PartitionInfo> topicPartitionsMono = reactiveKafkaProducerTemplate
-				.partitionsFromProducerFor(REACTIVE_INT_KEY_TOPIC);
+	.partitionsFromProducerFor(REACTIVE_INT_KEY_TOPIC);
 
 		StepVerifier.create(topicPartitionsMono)
-				.expectNextCount(DEFAULT_PARTITIONS_COUNT)
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.expectNextCount(DEFAULT_PARTITIONS_COUNT)
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@Test
@@ -433,16 +432,16 @@ public class ReactiveKafkaProducerTemplateIntegrationTests {
 		Flux<Tuple2<MetricName, ? extends Metric>> metricsMono = reactiveKafkaProducerTemplate.metricsFromProducer();
 
 		StepVerifier.create(metricsMono.collectList())
-				.assertNext(metrics -> assertThat(metrics).isNotNull().isNotEmpty())
-				.expectComplete()
-				.verify(DEFAULT_VERIFY_TIMEOUT);
+	.assertNext(metrics -> assertThat(metrics).isNotNull().isNotEmpty())
+	.expectComplete()
+	.verify(DEFAULT_VERIFY_TIMEOUT);
 	}
 
 	@SafeVarargs
 	@SuppressWarnings("varargs")
 	private final List<Header> convertToKafkaHeaders(Map.Entry<String, Object>... headerEntries) {
 		Map<String, Object> headers = Stream.of(headerEntries)
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+	.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 		return convertToKafkaHeaders(headers);
 	}
 

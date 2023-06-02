@@ -64,8 +64,7 @@ import org.springframework.util.ObjectUtils;
  *
  * @see MethodKafkaListenerEndpoint
  */
-public abstract class AbstractKafkaListenerEndpoint<K, V>
-		implements KafkaListenerEndpoint, BeanFactoryAware, InitializingBean {
+public abstract class AbstractKafkaListenerEndpoint<K, V>implements KafkaListenerEndpoint, BeanFactoryAware, InitializingBean {
 
 	private final LogAccessor logger = new LogAccessor(LogFactory.getLog(getClass()));
 
@@ -477,17 +476,17 @@ public abstract class AbstractKafkaListenerEndpoint<K, V>
 		}
 		if (this.topicPattern != null && (!topicsEmpty || !topicPartitionsEmpty)) {
 			throw new IllegalStateException("Only one of topics, topicPartitions or topicPattern must are allowed for "
-					+ this);
+		+ this);
 		}
 		if (this.topicPattern == null && topicsEmpty && topicPartitionsEmpty) {
 			throw new IllegalStateException("At least one of topics, topicPartitions or topicPattern must be provided "
-					+ "for " + this);
+		+ "for " + this);
 		}
 	}
 
 	@Override
 	public void setupListenerContainer(MessageListenerContainer listenerContainer,
-			@Nullable MessageConverter messageConverter) {
+@Nullable MessageConverter messageConverter) {
 
 		setupMessageListener(listenerContainer, messageConverter);
 	}
@@ -500,35 +499,35 @@ public abstract class AbstractKafkaListenerEndpoint<K, V>
 	 * @return a {@link MessageListener} instance.
 	 */
 	protected abstract MessagingMessageListenerAdapter<K, V> createMessageListener(MessageListenerContainer container,
-			@Nullable MessageConverter messageConverter);
+@Nullable MessageConverter messageConverter);
 
 	@SuppressWarnings("unchecked")
 	private void setupMessageListener(MessageListenerContainer container,
-			@Nullable MessageConverter messageConverter) {
+@Nullable MessageConverter messageConverter) {
 
 		MessagingMessageListenerAdapter<K, V> adapter = createMessageListener(container, messageConverter);
 		JavaUtils.INSTANCE
-				.acceptIfNotNull(this.replyHeadersConfigurer, adapter::setReplyHeadersConfigurer)
-				.acceptIfNotNull(this.correlationHeaderName, adapter::setCorrelationHeaderName);
+	.acceptIfNotNull(this.replyHeadersConfigurer, adapter::setReplyHeadersConfigurer)
+	.acceptIfNotNull(this.correlationHeaderName, adapter::setCorrelationHeaderName);
 		adapter.setSplitIterables(this.splitIterables);
 		Object messageListener = adapter;
 		boolean isBatchListener = isBatchListener();
 		Assert.state(messageListener != null,
-				() -> "Endpoint [" + this + "] must provide a non null message listener");
+	() -> "Endpoint [" + this + "] must provide a non null message listener");
 		if (this.recordFilterStrategy != null) {
 			if (isBatchListener) {
 				if (((MessagingMessageListenerAdapter<K, V>) messageListener).isConsumerRecords()) {
 					this.logger.warn(() -> "Filter strategy ignored when consuming 'ConsumerRecords' instead of a List"
-							+ (this.id != null ? " id: " + this.id : ""));
+				+ (this.id != null ? " id: " + this.id : ""));
 				}
 				else {
 					messageListener = new FilteringBatchMessageListenerAdapter<>(
-							(BatchMessageListener<K, V>) messageListener, this.recordFilterStrategy, this.ackDiscarded);
+				(BatchMessageListener<K, V>) messageListener, this.recordFilterStrategy, this.ackDiscarded);
 				}
 			}
 			else {
 				messageListener = new FilteringMessageListenerAdapter<>((MessageListener<K, V>) messageListener,
-						this.recordFilterStrategy, this.ackDiscarded);
+			this.recordFilterStrategy, this.ackDiscarded);
 			}
 		}
 		container.setupMessageListener(messageListener);
@@ -542,9 +541,9 @@ public abstract class AbstractKafkaListenerEndpoint<K, V>
 	protected StringBuilder getEndpointDescription() {
 		StringBuilder result = new StringBuilder();
 		return result.append(getClass().getSimpleName()).append("[").append(this.id).
-				append("] topics=").append(this.topics).
-				append("' | topicPartitions='").append(this.topicPartitions).
-				append("' | topicPattern='").append(this.topicPattern).append("'");
+	append("] topics=").append(this.topics).
+	append("' | topicPartitions='").append(this.topicPartitions).
+	append("' | topicPattern='").append(this.topicPattern).append("'");
 	}
 
 	@Override

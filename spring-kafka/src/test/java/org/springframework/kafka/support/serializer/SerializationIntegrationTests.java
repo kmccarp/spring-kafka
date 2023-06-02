@@ -48,15 +48,15 @@ public class SerializationIntegrationTests {
 	@Test
 	void configurePreLoadedDelegates() {
 		Map<String, Object> consumerProps =
-				KafkaTestUtils.consumerProps(DBTD_TOPIC, "false", EmbeddedKafkaCondition.getBroker());
+	KafkaTestUtils.consumerProps(DBTD_TOPIC, "false", EmbeddedKafkaCondition.getBroker());
 		consumerProps.put(DelegatingByTopicDeserializer.VALUE_SERIALIZATION_TOPIC_CONFIG, DBTD_TOPIC + ":"
-				+ TestDeserializer.class.getName());
+	+ TestDeserializer.class.getName());
 		TestDeserializer testDeser = new TestDeserializer();
 		DelegatingByTopicDeserializer delegating = new DelegatingByTopicDeserializer(
-				Map.of(Pattern.compile(DBTD_TOPIC), testDeser), new StringDeserializer());
+	Map.of(Pattern.compile(DBTD_TOPIC), testDeser), new StringDeserializer());
 		DefaultKafkaConsumerFactory<String, Object> cFact =
-				new DefaultKafkaConsumerFactory<String, Object>(consumerProps,
-					new StringDeserializer(), delegating);
+	new DefaultKafkaConsumerFactory<String, Object>(consumerProps,
+new StringDeserializer(), delegating);
 		ContainerProperties props = new ContainerProperties(DBTD_TOPIC);
 		props.setCheckDeserExWhenKeyNull(true);
 		props.setCheckDeserExWhenValueNull(true);
@@ -64,15 +64,15 @@ public class SerializationIntegrationTests {
 		KafkaMessageListenerContainer<String, Object> container = new KafkaMessageListenerContainer<>(cFact, props);
 		container.start();
 		assertThat(KafkaTestUtils.getPropertyValue(container, "listenerConsumer.consumer.valueDeserializer"))
-				.isSameAs(delegating);
+	.isSameAs(delegating);
 		Map<?, ?> delegates = KafkaTestUtils.getPropertyValue(delegating, "delegates", Map.class);
 		assertThat(delegates).hasSize(1);
 		assertThat(delegates.values().iterator().next()).isSameAs(testDeser);
 		assertThat(testDeser.configured).isTrue();
 		assertThat(KafkaTestUtils.getPropertyValue(container, "listenerConsumer.checkNullKeyForExceptions",
-				Boolean.class)).isTrue();
+	Boolean.class)).isTrue();
 		assertThat(KafkaTestUtils.getPropertyValue(container, "listenerConsumer.checkNullValueForExceptions",
-				Boolean.class)).isTrue();
+	Boolean.class)).isTrue();
 		container.stop();
 	}
 

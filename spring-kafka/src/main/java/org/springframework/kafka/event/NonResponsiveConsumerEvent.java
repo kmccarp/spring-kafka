@@ -55,8 +55,8 @@ public class NonResponsiveConsumerEvent extends KafkaEvent {
 	 * @since 2.2.1
 	 */
 	public NonResponsiveConsumerEvent(Object source, Object container,
-			long timeSinceLastPoll, String id,
-			Collection<TopicPartition> topicPartitions, Consumer<?, ?> consumer) {
+long timeSinceLastPoll, String id,
+Collection<TopicPartition> topicPartitions, Consumer<?, ?> consumer) {
 
 		super(source, container);
 		this.timeSinceLastPoll = timeSinceLastPoll;
@@ -101,9 +101,9 @@ public class NonResponsiveConsumerEvent extends KafkaEvent {
 	@Override
 	public String toString() {
 		return "NonResponsiveConsumerEvent [timeSinceLastPoll="
-				+ ((float) this.timeSinceLastPoll / 1000) + "s, listenerId=" + this.listenerId // NOSONAR magic #
-				+ ", container=" + getSource()
-				+ ", topicPartitions=" + this.topicPartitions + "]";
+	+ ((float) this.timeSinceLastPoll / 1000) + "s, listenerId=" + this.listenerId // NOSONAR magic #
+	+ ", container=" + getSource()
+	+ ", topicPartitions=" + this.topicPartitions + "]";
 	}
 
 }

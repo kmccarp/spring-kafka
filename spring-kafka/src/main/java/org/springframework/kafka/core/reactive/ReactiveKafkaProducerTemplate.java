@@ -140,8 +140,8 @@ public class ReactiveKafkaProducerTemplate<K, V> implements AutoCloseable, Dispo
 
 	public Flux<Tuple2<MetricName, ? extends Metric>> metricsFromProducer() {
 		return doOnProducer(Producer::metrics)
-				.flatMapIterable(Map::entrySet)
-				.map(m -> Tuples.of(m.getKey(), m.getValue()));
+	.flatMapIterable(Map::entrySet)
+	.map(m -> Tuples.of(m.getKey(), m.getValue()));
 	}
 
 	public <T> Mono<T> doOnProducer(Function<Producer<K, V>, ? extends T> action) {

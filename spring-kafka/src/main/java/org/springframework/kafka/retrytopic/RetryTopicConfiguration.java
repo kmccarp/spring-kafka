@@ -50,12 +50,12 @@ public class RetryTopicConfiguration {
 	private final Integer concurrency;
 
 	RetryTopicConfiguration(List<DestinationTopic.Properties> destinationTopicProperties,
-							EndpointHandlerMethod dltHandlerMethod,
-							TopicCreation kafkaTopicAutoCreationConfig,
-							AllowDenyCollectionManager<String> topicAllowListManager,
-							ListenerContainerFactoryResolver.Configuration factoryResolverConfig,
-							ListenerContainerFactoryConfigurer.Configuration factoryConfigurerConfig,
-							@Nullable Integer concurrency) {
+EndpointHandlerMethod dltHandlerMethod,
+TopicCreation kafkaTopicAutoCreationConfig,
+AllowDenyCollectionManager<String> topicAllowListManager,
+ListenerContainerFactoryResolver.Configuration factoryResolverConfig,
+ListenerContainerFactoryConfigurer.Configuration factoryConfigurerConfig,
+@Nullable Integer concurrency) {
 		this.destinationTopicProperties = destinationTopicProperties;
 		this.dltHandlerMethod = dltHandlerMethod;
 		this.kafkaTopicAutoCreationConfig = kafkaTopicAutoCreationConfig;

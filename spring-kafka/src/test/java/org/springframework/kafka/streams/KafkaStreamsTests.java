@@ -86,15 +86,12 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig
 @DirtiesContext
 @TestPropertySource(properties = "streaming.topic.two=streamingTopic2")
-@EmbeddedKafka(partitions = 1,
-		topics = {
+@EmbeddedKafka(partitions = 1,topics = {
 				KafkaStreamsTests.STREAMING_TOPIC1,
 				"${streaming.topic.two}",
-				KafkaStreamsTests.FOOS },
-		brokerProperties = {
+				KafkaStreamsTests.FOOS},brokerProperties = {
 				"auto.create.topics.enable=${topics.autoCreate:false}",
-				"delete.topic.enable=${topic.delete:true}" },
-		brokerPropertiesLocation = "classpath:/${broker.filename:broker}.properties")
+				"delete.topic.enable=${topic.delete:true}"},brokerPropertiesLocation = "classpath:/${broker.filename:broker}.properties")
 public class KafkaStreamsTests {
 
 	static final String STREAMING_TOPIC1 = "streamingTopic1";
@@ -158,7 +155,7 @@ public class KafkaStreamsTests {
 		KafkaStreams kafkaStreams = this.streamsBuilderFactoryBean.getKafkaStreams();
 
 		assertThat(KafkaTestUtils.getPropertyValue(kafkaStreams, "streamsUncaughtExceptionHandler.arg$2"))
-				.isSameAs(exceptionHandler);
+	.isSameAs(exceptionHandler);
 		assertThat(this.stateChangeCalled.get()).isTrue();
 	}
 
@@ -198,7 +195,7 @@ public class KafkaStreamsTests {
 			props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.Integer().getClass().getName());
 			props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
 			props.put(StreamsConfig.DEFAULT_TIMESTAMP_EXTRACTOR_CLASS_CONFIG,
-					WallclockTimestampExtractor.class.getName());
+		WallclockTimestampExtractor.class.getName());
 			props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, "100");
 			return new KafkaStreamsConfiguration(props);
 		}
@@ -223,17 +220,18 @@ public class KafkaStreamsTests {
 			SpelExpressionParser parser = new SpelExpressionParser();
 			headers.put("spel", parser.parseExpression("context.timestamp() + key + value"));
 			stream.mapValues((ValueMapper<String, String>) String::toUpperCase)
-					.mapValues(Foo::new)
-					.repartition(Repartitioned.with(Serdes.Integer(), new JsonSerde<Foo>() { }))
-					.mapValues(Foo::getName)
-					.groupByKey()
-					.windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofMillis(1000)))
-					.reduce((value1, value2) -> value1 + value2, Materialized.as("windowStore"))
-					.toStream()
-					.map((windowedId, value) -> new KeyValue<>(windowedId.key(), value))
-					.filter((i, s) -> s.length() > 40)
-					.process(() -> new HeaderEnricherProcessor<>(headers))
-					.to(streamingTopic2);
+		.mapValues(Foo::new)
+		.repartition(Repartitioned.with(Serdes.Integer(), new JsonSerde<Foo>() {
+		}))
+		.mapValues(Foo::getName)
+		.groupByKey()
+		.windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofMillis(1000)))
+		.reduce((value1, value2) -> value1 + value2, Materialized.as("windowStore"))
+		.toStream()
+		.map((windowedId, value) -> new KeyValue<>(windowedId.key(), value))
+		.filter((i, s) -> s.length() > 40)
+		.process(() -> new HeaderEnricherProcessor<>(headers))
+		.to(streamingTopic2);
 
 			stream.print(Printed.toSysOut());
 
@@ -243,7 +241,7 @@ public class KafkaStreamsTests {
 		@Bean
 		public Map<String, Object> consumerConfigs() {
 			Map<String, Object> consumerProps = KafkaTestUtils.consumerProps(this.brokerAddresses, "testGroup",
-					"false");
+		"false");
 			return consumerProps;
 		}
 
@@ -254,10 +252,10 @@ public class KafkaStreamsTests {
 
 		@Bean
 		public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<Integer, String>>
-					kafkaListenerContainerFactory() {
+	kafkaListenerContainerFactory() {
 
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory());
 			return factory;
 		}

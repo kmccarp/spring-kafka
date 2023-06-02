@@ -49,7 +49,7 @@ public class ContainerPartitionPausingBackOffManager implements KafkaConsumerBac
 	 * @param backOffHandler the handler.
 	 */
 	public ContainerPartitionPausingBackOffManager(ListenerContainerRegistry listenerContainerRegistry,
-			BackOffHandler backOffHandler) {
+BackOffHandler backOffHandler) {
 
 		Assert.notNull(listenerContainerRegistry, "'listenerContainerRegistry' cannot be null");
 		Assert.notNull(backOffHandler, "'backOffHandler' cannot be null");
@@ -77,9 +77,9 @@ public class ContainerPartitionPausingBackOffManager implements KafkaConsumerBac
 		container.pausePartition(topicPartition);
 		this.backOffHandler.onNextBackOff(container, topicPartition, backOffTime);
 		throw new KafkaBackoffException(String.format("Partition %s from topic %s is not ready for consumption, " +
-				"backing off for approx. %s millis.", topicPartition.partition(),
-				topicPartition.topic(), backOffTime),
-				topicPartition, context.getListenerId(), context.getDueTimestamp());
+"backing off for approx. %s millis.", topicPartition.partition(),
+topicPartition.topic(), backOffTime),
+	topicPartition, context.getListenerId(), context.getDueTimestamp());
 	}
 
 	private MessageListenerContainer getListenerContainerFromContext(Context context) {

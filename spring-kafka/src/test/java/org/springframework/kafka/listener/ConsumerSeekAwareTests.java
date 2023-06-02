@@ -50,7 +50,7 @@ public class ConsumerSeekAwareTests {
 		var exec1 = Executors.newSingleThreadExecutor();
 		var exec2 = Executors.newSingleThreadExecutor();
 		var cb1 = mock(ConsumerSeekCallback.class);
-		var cb2  = mock(ConsumerSeekCallback.class);
+		var cb2 = mock(ConsumerSeekCallback.class);
 		var first = new AtomicBoolean(true);
 		var map1 = new LinkedHashMap<>(Map.of(new TopicPartition("foo", 0), 0L, new TopicPartition("foo", 1), 0L));
 		var map2 = new LinkedHashMap<>(Map.of(new TopicPartition("foo", 2), 0L, new TopicPartition("foo", 3), 0L));

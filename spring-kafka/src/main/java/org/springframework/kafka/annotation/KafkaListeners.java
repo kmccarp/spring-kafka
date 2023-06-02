@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  *
  * @see KafkaListener
  */
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE })
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface KafkaListeners {

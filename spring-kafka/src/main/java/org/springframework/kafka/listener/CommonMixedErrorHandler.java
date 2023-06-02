@@ -69,7 +69,7 @@ public class CommonMixedErrorHandler implements CommonErrorHandler {
 
 	@Override
 	public void handleOtherException(Exception thrownException, Consumer<?, ?> consumer,
-			MessageListenerContainer container, boolean batchListener) {
+MessageListenerContainer container, boolean batchListener) {
 		if (batchListener) {
 			this.batchErrorHandler.handleOtherException(thrownException, consumer, container, batchListener);
 		}
@@ -80,21 +80,21 @@ public class CommonMixedErrorHandler implements CommonErrorHandler {
 
 	@Override
 	public boolean handleOne(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		return this.recordErrorHandler.handleOne(thrownException, record, consumer, container);
 	}
 
 	@Override
 	public void handleRemaining(Exception thrownException, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		this.recordErrorHandler.handleRemaining(thrownException, records, consumer, container);
 	}
 
 	@Override
 	public void handleBatch(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener) {
+MessageListenerContainer container, Runnable invokeListener) {
 
 		this.batchErrorHandler.handleBatch(thrownException, data, consumer, container, invokeListener);
 	}

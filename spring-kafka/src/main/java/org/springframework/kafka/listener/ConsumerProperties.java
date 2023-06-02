@@ -161,8 +161,8 @@ public class ConsumerProperties {
 	@Nullable
 	public String[] getTopics() {
 		return this.topics != null
-				? Arrays.copyOf(this.topics, this.topics.length)
-				: null;
+	? Arrays.copyOf(this.topics, this.topics.length)
+	: null;
 	}
 
 	/**
@@ -182,8 +182,8 @@ public class ConsumerProperties {
 	@Nullable
 	public TopicPartitionOffset[] getTopicPartitions() {
 		return this.topicPartitions != null
-				? Arrays.copyOf(this.topicPartitions, this.topicPartitions.length)
-				: null;
+	? Arrays.copyOf(this.topicPartitions, this.topicPartitions.length)
+	: null;
 	}
 
 	/**
@@ -504,34 +504,34 @@ public class ConsumerProperties {
 	@Override
 	public String toString() {
 		return "ConsumerProperties ["
-				+ renderProperties()
-				+ "]";
+	+ renderProperties()
+	+ "]";
 	}
 
 	protected final String renderProperties() {
 		return renderTopics()
-				+ "\n pollTimeout=" + this.pollTimeout
-				+ (this.groupId != null ? "\n groupId=" + this.groupId : "")
-				+ (StringUtils.hasText(this.clientId) ? "\n clientId=" + this.clientId : "")
-				+ (this.consumerRebalanceListener != null
-						? "\n consumerRebalanceListener=" + this.consumerRebalanceListener
-						: "")
-				+ (this.commitCallback != null ? "\n commitCallback=" + this.commitCallback : "")
-				+ (this.offsetAndMetadataProvider != null ? "\n offsetAndMetadataProvider=" + this.offsetAndMetadataProvider : "")
-				+ "\n syncCommits=" + this.syncCommits
-				+ (this.syncCommitTimeout != null ? "\n syncCommitTimeout=" + this.syncCommitTimeout : "")
-				+ (this.kafkaConsumerProperties.size() > 0 ? "\n properties=" + this.kafkaConsumerProperties : "")
-				+ "\n authExceptionRetryInterval=" + this.authExceptionRetryInterval
-				+ "\n commitRetries=" + this.commitRetries
-				+ "\n fixTxOffsets" + this.fixTxOffsets;
+	+ "\n pollTimeout=" + this.pollTimeout
+	+ (this.groupId != null ? "\n groupId=" + this.groupId : "")
+	+ (StringUtils.hasText(this.clientId) ? "\n clientId=" + this.clientId : "")
+	+ (this.consumerRebalanceListener != null
+	? "\n consumerRebalanceListener=" + this.consumerRebalanceListener
+	: "")
+	+ (this.commitCallback != null ? "\n commitCallback=" + this.commitCallback : "")
+	+ (this.offsetAndMetadataProvider != null ? "\n offsetAndMetadataProvider=" + this.offsetAndMetadataProvider : "")
+	+ "\n syncCommits=" + this.syncCommits
+	+ (this.syncCommitTimeout != null ? "\n syncCommitTimeout=" + this.syncCommitTimeout : "")
+	+ (this.kafkaConsumerProperties.size() > 0 ? "\n properties=" + this.kafkaConsumerProperties : "")
+	+ "\n authExceptionRetryInterval=" + this.authExceptionRetryInterval
+	+ "\n commitRetries=" + this.commitRetries
+	+ "\n fixTxOffsets" + this.fixTxOffsets;
 	}
 
 	private String renderTopics() {
 		return (this.topics != null ? "\n topics=" + Arrays.toString(this.topics) : "")
-				+ (this.topicPattern != null ? "\n topicPattern=" + this.topicPattern : "")
-				+ (this.topicPartitions != null
-						? "\n topicPartitions=" + Arrays.toString(this.topicPartitions)
-						: "");
+	+ (this.topicPattern != null ? "\n topicPattern=" + this.topicPattern : "")
+	+ (this.topicPartitions != null
+	? "\n topicPartitions=" + Arrays.toString(this.topicPartitions)
+	: "");
 	}
 
 }

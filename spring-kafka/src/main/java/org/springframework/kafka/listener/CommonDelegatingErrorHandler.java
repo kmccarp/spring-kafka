@@ -76,8 +76,8 @@ public class CommonDelegatingErrorHandler implements CommonErrorHandler {
 
 	private void updateClassifier(Map<Class<? extends Throwable>, CommonErrorHandler> delegates) {
 		Map<Class<? extends Throwable>, Boolean> classifications = delegates.keySet().stream()
-			.map(commonErrorHandler -> Map.entry(commonErrorHandler, true))
-			.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+	.map(commonErrorHandler -> Map.entry(commonErrorHandler, true))
+	.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		this.classifier = new BinaryExceptionClassifier(classifications);
 	}
 
@@ -136,17 +136,17 @@ public class CommonDelegatingErrorHandler implements CommonErrorHandler {
 		boolean seeksAfterHandling = this.defaultErrorHandler.seeksAfterHandling();
 		this.delegates.values().forEach(handler -> {
 			Assert.isTrue(remainingRecords == handler.remainingRecords(),
-					"All delegates must return the same value when calling 'remainingRecords()'");
+		"All delegates must return the same value when calling 'remainingRecords()'");
 			Assert.isTrue(ackAfterHandle == handler.isAckAfterHandle(),
-					"All delegates must return the same value when calling 'isAckAfterHandle()'");
+		"All delegates must return the same value when calling 'isAckAfterHandle()'");
 			Assert.isTrue(seeksAfterHandling == handler.seeksAfterHandling(),
-					"All delegates must return the same value when calling 'seeksAfterHandling()'");
+		"All delegates must return the same value when calling 'seeksAfterHandling()'");
 		});
 	}
 
 	@Override
 	public void handleRemaining(Exception thrownException, List<ConsumerRecord<?, ?>> records,
-			Consumer<?, ?> consumer, MessageListenerContainer container) {
+Consumer<?, ?> consumer, MessageListenerContainer container) {
 
 		CommonErrorHandler handler = findDelegate(thrownException);
 		if (handler != null) {
@@ -159,7 +159,7 @@ public class CommonDelegatingErrorHandler implements CommonErrorHandler {
 
 	@Override
 	public void handleBatch(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener) {
+MessageListenerContainer container, Runnable invokeListener) {
 
 		CommonErrorHandler handler = findDelegate(thrownException);
 		if (handler != null) {
@@ -172,7 +172,7 @@ public class CommonDelegatingErrorHandler implements CommonErrorHandler {
 
 	@Override
 	public void handleOtherException(Exception thrownException, Consumer<?, ?> consumer,
-			MessageListenerContainer container, boolean batchListener) {
+MessageListenerContainer container, boolean batchListener) {
 
 		CommonErrorHandler handler = findDelegate(thrownException);
 		if (handler != null) {

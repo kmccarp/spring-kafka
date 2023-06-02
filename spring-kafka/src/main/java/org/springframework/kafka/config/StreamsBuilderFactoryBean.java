@@ -57,8 +57,7 @@ import org.springframework.util.Assert;
  *
  * @since 1.1.4
  */
-public class StreamsBuilderFactoryBean extends AbstractFactoryBean<StreamsBuilder>
-		implements SmartLifecycle, BeanNameAware {
+public class StreamsBuilderFactoryBean extends AbstractFactoryBean<StreamsBuilder>implements SmartLifecycle, BeanNameAware {
 
 	/**
 	 * The default {@link Duration} of {@code 10 seconds} for close timeout.
@@ -302,7 +301,7 @@ public class StreamsBuilderFactoryBean extends AbstractFactoryBean<StreamsBuilde
 	protected synchronized StreamsBuilder createInstance() {
 		if (this.autoStartup) {
 			Assert.state(this.properties != null,
-					"streams configuration properties must not be null");
+		"streams configuration properties must not be null");
 		}
 		StreamsBuilder builder = new StreamsBuilder();
 		this.infrastructureCustomizer.configureBuilder(builder);
@@ -327,7 +326,7 @@ public class StreamsBuilderFactoryBean extends AbstractFactoryBean<StreamsBuilde
 		if (!this.running) {
 			try {
 				Assert.state(this.properties != null,
-						"streams configuration properties must not be null");
+			"streams configuration properties must not be null");
 				Topology topol = getObject().build(this.properties); // NOSONAR: getObject() cannot return null
 				this.infrastructureCustomizer.configureTopology(topol);
 				this.topology = topol;

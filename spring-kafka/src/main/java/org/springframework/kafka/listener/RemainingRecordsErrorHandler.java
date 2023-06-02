@@ -53,7 +53,7 @@ public interface RemainingRecordsErrorHandler extends ConsumerAwareErrorHandler 
 
 	@Override
 	default void handle(Exception thrownException, @Nullable List<ConsumerRecord<?, ?>> records,
-			Consumer<?, ?> consumer, MessageListenerContainer container) {
+Consumer<?, ?> consumer, MessageListenerContainer container) {
 
 		handle(thrownException, records, consumer);
 	}

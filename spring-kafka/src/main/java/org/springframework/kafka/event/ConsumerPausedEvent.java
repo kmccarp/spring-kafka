@@ -57,7 +57,7 @@ public class ConsumerPausedEvent extends KafkaEvent {
 	 * @since 2.8.9
 	 */
 	public ConsumerPausedEvent(Object source, Object container, Collection<TopicPartition> partitions,
-			String reason) {
+String reason) {
 
 		super(source, container);
 		this.partitions = partitions;

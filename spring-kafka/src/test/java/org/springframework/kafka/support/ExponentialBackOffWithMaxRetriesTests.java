@@ -46,7 +46,7 @@ public class ExponentialBackOffWithMaxRetriesTests {
 		BackOffExecution boEx = bo.start();
 		IntStream.range(0, 11).forEach(i -> delays.add(boEx.nextBackOff()));
 		assertThat(delays).containsExactly(1_000L, 2_000L, 4_000L, 8_000L, 10_000L, 10_000L, 10_000L, 10_000L, 10_000L,
-				10_000L, -1L);
+	10_000L, -1L);
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class ExponentialBackOffWithMaxRetriesTests {
 		BackOffExecution boEx = bo.start();
 		IntStream.range(0, 11).forEach(i -> delays.add(boEx.nextBackOff()));
 		assertThat(delays).containsExactly(2_000L, 3_000L, 4_500L, 6_750L, 10_125L, 15_187L, 22_780L, 30_000L, 30_000L,
-				30_000L, -1L);
+	30_000L, -1L);
 	}
 
 }

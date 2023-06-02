@@ -79,10 +79,10 @@ public interface CommonErrorHandler extends DeliveryAttemptAware {
 	 * @param batchListener true if the listener is a batch listener.
 	 */
 	default void handleOtherException(Exception thrownException, Consumer<?, ?> consumer,
-			MessageListenerContainer container, boolean batchListener) {
+MessageListenerContainer container, boolean batchListener) {
 
 		LogFactory.getLog(getClass()).error("'handleOtherException' is not implemented by this handler",
-				thrownException);
+	thrownException);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public interface CommonErrorHandler extends DeliveryAttemptAware {
 	 */
 	@Deprecated(since = "2.9", forRemoval = true) // in 3.1
 	default void handleRecord(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		LogFactory.getLog(getClass()).error("'handleRecord' is not implemented by this handler", thrownException);
 	}
@@ -118,7 +118,7 @@ public interface CommonErrorHandler extends DeliveryAttemptAware {
 	 */
 	@SuppressWarnings("deprecation")
 	default boolean handleOne(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		try {
 			handleRecord(thrownException, record, consumer, container);
@@ -141,7 +141,7 @@ public interface CommonErrorHandler extends DeliveryAttemptAware {
 	 * @see #remainingRecords()
 	 */
 	default void handleRemaining(Exception thrownException, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		LogFactory.getLog(getClass()).error("'handleRemaining' is not implemented by this handler", thrownException);
 	}
@@ -157,7 +157,7 @@ public interface CommonErrorHandler extends DeliveryAttemptAware {
 	 * @param invokeListener a callback to re-invoke the listener.
 	 */
 	default void handleBatch(Exception thrownException, ConsumerRecords<?, ?> data,
-			Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener) {
+Consumer<?, ?> consumer, MessageListenerContainer container, Runnable invokeListener) {
 
 		LogFactory.getLog(getClass()).error("'handleBatch' is not implemented by this handler", thrownException);
 	}
@@ -177,8 +177,8 @@ public interface CommonErrorHandler extends DeliveryAttemptAware {
 	 * @since 2.9
 	 */
 	default <K, V> ConsumerRecords<K, V> handleBatchAndReturnRemaining(Exception thrownException,
-			ConsumerRecords<?, ?> data, Consumer<?, ?> consumer, MessageListenerContainer container,
-			Runnable invokeListener) {
+ConsumerRecords<?, ?> data, Consumer<?, ?> consumer, MessageListenerContainer container,
+Runnable invokeListener) {
 
 		handleBatch(thrownException, data, consumer, container, invokeListener);
 		return ConsumerRecords.empty();
@@ -222,7 +222,7 @@ public interface CommonErrorHandler extends DeliveryAttemptAware {
 	 * @since 2.8.9
 	 */
 	default void onPartitionsAssigned(Consumer<?, ?> consumer, Collection<TopicPartition> partitions,
-			Runnable publishPause) {
+Runnable publishPause) {
 	}
 
 }

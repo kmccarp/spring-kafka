@@ -88,12 +88,12 @@ public class ContainerGroup implements Lifecycle {
 	 */
 	public Collection<String> getListenerIds() {
 		return this.containers.stream()
-				.map(container -> container.getListenerId())
-				.map(id -> {
-					Assert.state(id != null, "Containers must have listener ids to be used here");
-					return id;
-				})
-				.collect(Collectors.toList());
+	.map(container -> container.getListenerId())
+	.map(id -> {
+		Assert.state(id != null, "Containers must have listener ids to be used here");
+		return id;
+	})
+	.collect(Collectors.toList());
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class ContainerGroup implements Lifecycle {
 	 */
 	public boolean allStopped() {
 		return this.containers.stream()
-				.allMatch(container -> !container.isRunning());
+	.allMatch(container -> !container.isRunning());
 	}
 
 	/**

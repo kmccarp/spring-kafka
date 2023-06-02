@@ -65,13 +65,13 @@ class FailedRecordTracker implements RecoveryStrategy {
 	private boolean resetStateOnExceptionChange = true;
 
 	FailedRecordTracker(@Nullable BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer, BackOff backOff,
-			LogAccessor logger) {
+LogAccessor logger) {
 
 		this(recoverer, backOff, null, logger);
 	}
 
 	FailedRecordTracker(@Nullable BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer, BackOff backOff,
-			@Nullable BackOffHandler backOffHandler, LogAccessor logger) {
+@Nullable BackOffHandler backOffHandler, LogAccessor logger) {
 
 		Assert.notNull(backOff, "'backOff' cannot be null");
 		if (recoverer == null) {
@@ -82,10 +82,10 @@ class FailedRecordTracker implements RecoveryStrategy {
 					failedRecord = map.get(new TopicPartition(rec.topic(), rec.partition()));
 				}
 				logger.error(thr, "Backoff "
-						+ (failedRecord == null
-								? "none"
-								: failedRecord.getBackOffExecution())
-						+ " exhausted for " + KafkaUtils.format(rec));
+			+ (failedRecord == null
+			? "none"
+			: failedRecord.getBackOffExecution())
+			+ " exhausted for " + KafkaUtils.format(rec));
 			};
 		}
 		else {
@@ -165,8 +165,8 @@ class FailedRecordTracker implements RecoveryStrategy {
 
 	@Override
 	public boolean recovered(ConsumerRecord<?, ?> record, Exception exception,
-			@Nullable MessageListenerContainer container,
-			@Nullable Consumer<?, ?> consumer) throws InterruptedException {
+@Nullable MessageListenerContainer container,
+@Nullable Consumer<?, ?> consumer) throws InterruptedException {
 
 		if (this.noRetries) {
 			attemptRecovery(record, exception, null, consumer);
@@ -180,7 +180,7 @@ class FailedRecordTracker implements RecoveryStrategy {
 		TopicPartition topicPartition = new TopicPartition(record.topic(), record.partition());
 		FailedRecord failedRecord = getFailedRecordInstance(record, exception, map, topicPartition);
 		this.retryListeners.forEach(rl ->
-				rl.failedDelivery(record, exception, failedRecord.getDeliveryAttempts().get()));
+	rl.failedDelivery(record, exception, failedRecord.getDeliveryAttempts().get()));
 		long nextBackOff = failedRecord.getBackOffExecution().nextBackOff();
 		if (nextBackOff != BackOffExecution.STOP) {
 			this.backOffHandler.onNextBackOff(container, exception, nextBackOff);
@@ -197,13 +197,13 @@ class FailedRecordTracker implements RecoveryStrategy {
 	}
 
 	private FailedRecord getFailedRecordInstance(ConsumerRecord<?, ?> record, Exception exception,
-			Map<TopicPartition, FailedRecord> map, TopicPartition topicPartition) {
+Map<TopicPartition, FailedRecord> map, TopicPartition topicPartition) {
 
 		Exception realException = ErrorHandlingUtils.findRootCause(exception);
 		FailedRecord failedRecord = map.get(topicPartition);
 		if (failedRecord == null || failedRecord.getOffset() != record.offset()
-				|| (this.resetStateOnExceptionChange
-						&& !realException.getClass().isInstance(failedRecord.getLastException()))) {
+	|| (this.resetStateOnExceptionChange
+	&& !realException.getClass().isInstance(failedRecord.getLastException()))) {
 
 			failedRecord = new FailedRecord(record.offset(), determineBackOff(record, realException).start());
 			map.put(topicPartition, failedRecord);
@@ -224,7 +224,7 @@ class FailedRecordTracker implements RecoveryStrategy {
 	}
 
 	private void attemptRecovery(ConsumerRecord<?, ?> record, Exception exception, @Nullable TopicPartition tp,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 
 		try {
 			this.recoverer.accept(record, consumer, exception);

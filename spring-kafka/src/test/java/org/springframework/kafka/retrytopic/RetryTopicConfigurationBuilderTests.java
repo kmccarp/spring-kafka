@@ -61,7 +61,7 @@ class RetryTopicConfigurationBuilderTests {
 		// then
 		assertThat(configuration.hasConfigurationForTopics(topicNames)).isFalse();
 		assertThat(KafkaTestUtils.getPropertyValue(builder, "topicCreationConfiguration.replicationFactor"))
-				.isEqualTo((short) -1);
+	.isEqualTo((short) -1);
 	}
 
 	@Test
@@ -134,7 +134,7 @@ class RetryTopicConfigurationBuilderTests {
 
 		// then
 		DestinationTopic destinationTopic = new DestinationTopic("",
-				configuration.getDestinationTopicProperties().get(0));
+	configuration.getDestinationTopicProperties().get(0));
 		assertThat(destinationTopic.shouldRetryOn(0, new IllegalArgumentException())).isTrue();
 		assertThat(destinationTopic.shouldRetryOn(0, new IllegalStateException())).isFalse();
 	}
@@ -150,7 +150,7 @@ class RetryTopicConfigurationBuilderTests {
 
 		// then
 		DestinationTopic destinationTopic = new DestinationTopic("",
-				configuration.getDestinationTopicProperties().get(0));
+	configuration.getDestinationTopicProperties().get(0));
 		assertThat(destinationTopic.shouldRetryOn(0, new IllegalArgumentException())).isFalse();
 		assertThat(destinationTopic.shouldRetryOn(0, new IllegalStateException())).isTrue();
 	}
@@ -162,9 +162,9 @@ class RetryTopicConfigurationBuilderTests {
 		String factoryName = "factoryName";
 		RetryTopicConfigurationBuilder builder = new RetryTopicConfigurationBuilder();
 		RetryTopicConfiguration configuration = builder
-				.listenerFactory(containerFactory)
-				.listenerFactory(factoryName)
-				.create(kafkaOperations);
+	.listenerFactory(containerFactory)
+	.listenerFactory(factoryName)
+	.create(kafkaOperations);
 
 		ListenerContainerFactoryResolver.Configuration config = configuration.forContainerFactoryResolver();
 		Object factoryInstance = ReflectionTestUtils.getField(config, "factoryFromRetryTopicConfiguration");
@@ -181,8 +181,8 @@ class RetryTopicConfigurationBuilderTests {
 		// setup
 		RetryTopicConfigurationBuilder builder = new RetryTopicConfigurationBuilder();
 		RetryTopicConfiguration configuration = builder
-				.doNotAutoCreateRetryTopics()
-				.create(kafkaOperations);
+	.doNotAutoCreateRetryTopics()
+	.create(kafkaOperations);
 
 		RetryTopicConfiguration.TopicCreation config = configuration.forKafkaTopicAutoCreation();
 		assertThat(config.shouldCreateTopics()).isFalse();

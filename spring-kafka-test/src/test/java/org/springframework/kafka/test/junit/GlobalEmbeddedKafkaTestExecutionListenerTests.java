@@ -74,10 +74,9 @@ public class GlobalEmbeddedKafkaTestExecutionListenerTests {
 	@Test
 	void testGlobalEmbeddedKafkaTestExecutionListener() {
 		var discoveryRequest =
-				LauncherDiscoveryRequestBuilder.request()
-						.selectors(DiscoverySelectors.selectClass(TestClass1.class),
-								DiscoverySelectors.selectClass(TestClass2.class))
-						.build();
+	LauncherDiscoveryRequestBuilder.request()
+.selectors(DiscoverySelectors.selectClass(TestClass1.class),DiscoverySelectors.selectClass(TestClass2.class))
+.build();
 
 		var summaryGeneratingListener = new SummaryGeneratingListener();
 		LauncherFactory.create().execute(discoveryRequest, summaryGeneratingListener);
@@ -107,13 +106,12 @@ public class GlobalEmbeddedKafkaTestExecutionListenerTests {
 		}
 
 		System.setProperty(GlobalEmbeddedKafkaTestExecutionListener.BROKER_PROPERTIES_LOCATION_PROPERTY_NAME,
-				"file:" + propertiesFile.getAbsolutePath());
+	"file:" + propertiesFile.getAbsolutePath());
 
 		var discoveryRequest =
-				LauncherDiscoveryRequestBuilder.request()
-						.selectors(DiscoverySelectors.selectClass(TestClass1.class),
-								DiscoverySelectors.selectClass(TestClass2.class))
-						.build();
+	LauncherDiscoveryRequestBuilder.request()
+.selectors(DiscoverySelectors.selectClass(TestClass1.class),DiscoverySelectors.selectClass(TestClass2.class))
+.build();
 
 		var summaryGeneratingListener = new SummaryGeneratingListener();
 		LauncherFactory.create().execute(discoveryRequest, summaryGeneratingListener);
@@ -132,19 +130,19 @@ public class GlobalEmbeddedKafkaTestExecutionListenerTests {
 	}
 
 	@EnabledIfSystemProperty(named = GlobalEmbeddedKafkaTestExecutionListener.LISTENER_ENABLED_PROPERTY_NAME,
-			matches = "true")
+matches = "true")
 	static class TestClass1 {
 
 		@Test
 		void testDescribeTopic() throws ExecutionException, InterruptedException, TimeoutException {
 			Map<String, Object> adminConfigs =
-					Map.of(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG,
-							System.getProperty("spring.kafka.bootstrap-servers"));
+		Map.of(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG,
+	System.getProperty("spring.kafka.bootstrap-servers"));
 			try (var admin = AdminClient.create(adminConfigs)) {
 				var topicsMap =
-						admin.describeTopics(Set.of("topic1", "topic2"))
-								.allTopicNames()
-								.get(10, TimeUnit.SECONDS);
+			admin.describeTopics(Set.of("topic1", "topic2"))
+		.allTopicNames()
+		.get(10, TimeUnit.SECONDS);
 
 				assertThat(topicsMap).containsOnlyKeys("topic1", "topic2");
 			}
@@ -153,14 +151,14 @@ public class GlobalEmbeddedKafkaTestExecutionListenerTests {
 	}
 
 	@EnabledIfSystemProperty(named = GlobalEmbeddedKafkaTestExecutionListener.LISTENER_ENABLED_PROPERTY_NAME,
-			matches = "true")
+matches = "true")
 	static class TestClass2 {
 
 		@Test
 		void testCannotAutoCreateTopic() throws ExecutionException, InterruptedException, TimeoutException {
 			Map<String, Object> producerConfigs = new HashMap<>();
 			producerConfigs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-					System.getProperty("spring.kafka.bootstrap-servers"));
+		System.getProperty("spring.kafka.bootstrap-servers"));
 			producerConfigs.put(ProducerConfig.RETRIES_CONFIG, 1);
 			producerConfigs.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 1);
 			producerConfigs.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 1000);
@@ -168,8 +166,8 @@ public class GlobalEmbeddedKafkaTestExecutionListenerTests {
 			StringSerializer serializer = new StringSerializer();
 			try (var kafkaProducer = new KafkaProducer<>(producerConfigs, serializer, serializer)) {
 				var recordMetadata =
-						kafkaProducer.send(new ProducerRecord<>("nonExistingTopic", "testValue"))
-								.get(10, TimeUnit.SECONDS);
+			kafkaProducer.send(new ProducerRecord<>("nonExistingTopic", "testValue"))
+		.get(10, TimeUnit.SECONDS);
 
 				assertThat(recordMetadata).isNotNull();
 			}

@@ -119,8 +119,8 @@ public class MappingJacksonParameterizedConverter extends MappingJackson2Message
 			Headers nativeHeaders = message.getHeaders().get(KafkaHeaders.NATIVE_HEADERS, Headers.class);
 			if (nativeHeaders != null) {
 				javaType = this.typeMapper.getTypePrecedence().equals(TypePrecedence.INFERRED)
-						? TypeFactory.defaultInstance().constructType(type)
-						: this.typeMapper.toJavaType(nativeHeaders);
+			? TypeFactory.defaultInstance().constructType(type)
+			: this.typeMapper.toJavaType(nativeHeaders);
 			}
 		}
 		if (javaType == null) { // no headers

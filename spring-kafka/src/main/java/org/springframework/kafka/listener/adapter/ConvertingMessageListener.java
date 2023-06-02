@@ -140,17 +140,17 @@ public class ConvertingMessageListener<V> implements DelegatingMessageListener<M
 	@SuppressWarnings("unchecked")
 	private static ConsumerRecord rebuildConsumerRecord(ConsumerRecord receivedRecord, Object convertedPayload) {
 		return new ConsumerRecord(
-			receivedRecord.topic(),
-			receivedRecord.partition(),
-			receivedRecord.offset(),
-			receivedRecord.timestamp(),
-			receivedRecord.timestampType(),
-			receivedRecord.serializedKeySize(),
-			receivedRecord.serializedValueSize(),
-			receivedRecord.key(),
-			convertedPayload,
-			receivedRecord.headers(),
-			receivedRecord.leaderEpoch()
+	receivedRecord.topic(),
+	receivedRecord.partition(),
+	receivedRecord.offset(),
+	receivedRecord.timestamp(),
+	receivedRecord.timestampType(),
+	receivedRecord.serializedKeySize(),
+	receivedRecord.serializedValueSize(),
+	receivedRecord.key(),
+	convertedPayload,
+	receivedRecord.headers(),
+	receivedRecord.leaderEpoch()
 		);
 	}
 

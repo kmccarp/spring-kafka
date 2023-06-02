@@ -38,7 +38,7 @@ import org.springframework.util.Assert;
 @SuppressWarnings("deprecation")
 class ErrorHandlerAdapter implements CommonErrorHandler {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private static final ConsumerRecords EMPTY_BATCH = new ConsumerRecords(Collections.emptyMap());
 
 	private final ErrorHandler errorHandler;
@@ -112,23 +112,24 @@ class ErrorHandlerAdapter implements CommonErrorHandler {
 		return ((DeliveryAttemptAware) this.errorHandler).deliveryAttempt(topicPartitionOffset);
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({"unchecked"})
 	@Override
 	public void handleOtherException(Exception thrownException, Consumer<?, ?> consumer,
-			MessageListenerContainer container, boolean batchListener) {
+MessageListenerContainer container, boolean batchListener) {
 
 		if (this.errorHandler != null) {
 			this.errorHandler.handle(thrownException, Collections.emptyList(), consumer, container);
 		}
 		else {
-			this.batchErrorHandler.handle(thrownException, EMPTY_BATCH, consumer, container, () -> { });
+			this.batchErrorHandler.handle(thrownException, EMPTY_BATCH, consumer, container, () -> {
+			});
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void handleRecord(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		if (this.errorHandler != null) {
 			this.errorHandler.handle(thrownException, record, consumer);
@@ -140,7 +141,7 @@ class ErrorHandlerAdapter implements CommonErrorHandler {
 
 	@Override
 	public void handleRemaining(Exception thrownException, List<ConsumerRecord<?, ?>> records, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 
 		if (this.errorHandler != null) {
 			this.errorHandler.handle(thrownException, records, consumer, container);
@@ -152,7 +153,7 @@ class ErrorHandlerAdapter implements CommonErrorHandler {
 
 	@Override
 	public void handleBatch(Exception thrownException, ConsumerRecords<?, ?> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container, Runnable invokeListener) {
+MessageListenerContainer container, Runnable invokeListener) {
 
 		if (this.batchErrorHandler != null) {
 			this.batchErrorHandler.handle(thrownException, data, consumer, container, invokeListener);
@@ -164,11 +165,11 @@ class ErrorHandlerAdapter implements CommonErrorHandler {
 
 	@Override
 	public void onPartitionsAssigned(Consumer<?, ?> consumer, Collection<TopicPartition> partitions,
-			Runnable publishPause) {
+Runnable publishPause) {
 
 		if (this.batchErrorHandler instanceof FallbackBatchErrorHandler) {
 			((FallbackBatchErrorHandler) this.batchErrorHandler).onPartitionsAssigned(consumer, partitions,
-					publishPause);
+		publishPause);
 		}
 	}
 

@@ -93,7 +93,7 @@ public class DelegatingDeserializer implements Deserializer<Object> {
 				}
 				else {
 					throw new IllegalStateException(configKey
-							+ " map entries must be Serializers or class names, not " + value.getClass());
+				+ " map entries must be Serializers or class names, not " + value.getClass());
 				}
 			});
 		}
@@ -107,12 +107,12 @@ public class DelegatingDeserializer implements Deserializer<Object> {
 
 	private String configKey() {
 		return this.forKeys
-				? DelegatingSerializer.KEY_SERIALIZATION_SELECTOR_CONFIG
-				: DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR_CONFIG;
+	? DelegatingSerializer.KEY_SERIALIZATION_SELECTOR_CONFIG
+	: DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR_CONFIG;
 	}
 
 	protected static Map<String, Deserializer<?>> createDelegates(String mappings, Map<String, ?> configs,
-			boolean isKey) {
+boolean isKey) {
 
 		Map<String, Deserializer<?>> delegateMap = new HashMap<>();
 		String[] array = StringUtils.commaDelimitedListToStringArray(mappings);
@@ -125,7 +125,7 @@ public class DelegatingDeserializer implements Deserializer<Object> {
 	}
 
 	protected static void createInstanceAndConfigure(Map<String, ?> configs, boolean isKey,
-			Map<String, Deserializer<?>> delegateMap, String selector, String className) {
+Map<String, Deserializer<?>> delegateMap, String selector, String className) {
 
 		try {
 			Class<?> clazz = ClassUtils.forName(className.trim(), ClassUtils.getDefaultClassLoader());
@@ -137,7 +137,7 @@ public class DelegatingDeserializer implements Deserializer<Object> {
 	}
 
 	protected static void instantiateAndConfigure(Map<String, ?> configs, boolean isKey,
-			Map<String, Deserializer<?>> delegateMap, String selector, Class<?> clazz) {
+Map<String, Deserializer<?>> delegateMap, String selector, Class<?> clazz) {
 
 		try {
 			Deserializer<?> delegate = (Deserializer<?>) clazz.getDeclaredConstructor().newInstance();
@@ -189,8 +189,8 @@ public class DelegatingDeserializer implements Deserializer<Object> {
 
 	private String selectorKey() {
 		return this.forKeys
-				? DelegatingSerializer.KEY_SERIALIZATION_SELECTOR
-				: DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR;
+	? DelegatingSerializer.KEY_SERIALIZATION_SELECTOR
+	: DelegatingSerializer.VALUE_SERIALIZATION_SELECTOR;
 	}
 
 	/*

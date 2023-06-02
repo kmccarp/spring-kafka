@@ -41,7 +41,7 @@ public class ConsumerResumedEvent extends KafkaEvent {
 	 * @since 2.2.1
 	 */
 	public ConsumerResumedEvent(Object source, Object container,
-			Collection<TopicPartition> partitions) {
+Collection<TopicPartition> partitions) {
 		super(source, container);
 		this.partitions = partitions;
 	}

@@ -68,8 +68,8 @@ public class RoutingKafkaTemplate extends KafkaTemplate<Object, Object> {
 		});
 		this.factoryMatchers = new LinkedHashMap<>(factories);
 		Optional<Boolean> transactional = factories.values().stream()
-			.map(fact -> fact.transactionCapable())
-			.findFirst();
+	.map(fact -> fact.transactionCapable())
+	.findFirst();
 		Assert.isTrue(!transactional.isPresent() || !transactional.get(), "Transactional factories are not supported");
 	}
 
@@ -104,7 +104,7 @@ public class RoutingKafkaTemplate extends KafkaTemplate<Object, Object> {
 
 	@Override
 	public void sendOffsetsToTransaction(Map<TopicPartition, OffsetAndMetadata> offsets,
-			ConsumerGroupMetadata groupMetadata) {
+ConsumerGroupMetadata groupMetadata) {
 
 		throw new UnsupportedOperationException(THIS_METHOD_IS_NOT_SUPPORTED);
 	}

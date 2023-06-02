@@ -61,14 +61,14 @@ public class AsyncAckAfterHandleTests {
 	void testAckAfterHandlerAsync(@Autowired
 	Config config, @Autowired
 	KafkaTemplate<Integer, String> template)
-			throws InterruptedException {
+throws InterruptedException {
 
 		for (int i = 0; i < 6; i++) {
 			template.send("asaah", 0, null, "message contents");
 		}
 		assertThat(config.latch.await(10, TimeUnit.SECONDS))
-				.describedAs("CountDownLatch.count=%d", config.latch.getCount())
-				.isTrue();
+	.describedAs("CountDownLatch.count=%d", config.latch.getCount())
+	.isTrue();
 	}
 
 	@Configuration
@@ -79,12 +79,12 @@ public class AsyncAckAfterHandleTests {
 
 		@KafkaListener(id = "asaah.id", topics = "asaah")
 		public void onTestTopic(final ConsumerRecord<byte[], byte[]> record,
-				final Acknowledgment acknowledgment) {
+	final Acknowledgment acknowledgment) {
 			accept(record, acknowledgment);
 		}
 
 		private void accept(final ConsumerRecord<byte[], byte[]> record,
-				final Acknowledgment acknowledgment) {
+	final Acknowledgment acknowledgment) {
 			if (record.offset() == 1) {
 				throw new RuntimeException("Exception for error handler");
 			}
@@ -96,7 +96,7 @@ public class AsyncAckAfterHandleTests {
 
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<Integer, String> kafkaListenerContainerFactory(
-				ConsumerFactory<Integer, String> consumerFactory) {
+	ConsumerFactory<Integer, String> consumerFactory) {
 
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(consumerFactory);
@@ -113,7 +113,7 @@ public class AsyncAckAfterHandleTests {
 			Map<String, Object> props = KafkaTestUtils.consumerProps("asaac.grp", "false", broker);
 			props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 3);
 			return new DefaultKafkaConsumerFactory<>(
-					props);
+		props);
 		}
 
 		@Bean
@@ -132,7 +132,7 @@ public class AsyncAckAfterHandleTests {
 
 			@Override
 			public boolean handleOne(Exception thrownException, ConsumerRecord<?, ?> record, Consumer<?, ?> consumer,
-					MessageListenerContainer container) {
+		MessageListenerContainer container) {
 				Config.this.latch.countDown();
 				return true;
 			}

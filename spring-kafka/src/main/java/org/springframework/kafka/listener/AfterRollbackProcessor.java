@@ -61,7 +61,7 @@ public interface AfterRollbackProcessor<K, V> {
 	 * @see #isProcessInTransaction()
 	 */
 	void process(List<ConsumerRecord<K, V>> records, Consumer<K, V> consumer,
-			MessageListenerContainer container, Exception exception, boolean recoverable, EOSMode eosMode);
+MessageListenerContainer container, Exception exception, boolean recoverable, EOSMode eosMode);
 
 	/**
 	 * Optional method to clear thread state; will be called just before a consumer

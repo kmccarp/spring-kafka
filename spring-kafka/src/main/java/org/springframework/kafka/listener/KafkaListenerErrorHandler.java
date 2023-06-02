@@ -57,7 +57,7 @@ public interface KafkaListenerErrorHandler {
 	 * {@code @SendTo} annotation.
 	 */
 	default Object handleError(Message<?> message, ListenerExecutionFailedException exception,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 
 		return handleError(message, exception);
 	}
@@ -73,7 +73,7 @@ public interface KafkaListenerErrorHandler {
 	 * {@code @SendTo} annotation.
 	 */
 	default Object handleError(Message<?> message, ListenerExecutionFailedException exception,
-			Consumer<?, ?> consumer, @Nullable Acknowledgment ack) {
+Consumer<?, ?> consumer, @Nullable Acknowledgment ack) {
 
 		return handleError(message, exception, consumer);
 	}

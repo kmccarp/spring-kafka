@@ -73,7 +73,7 @@ import org.springframework.util.backoff.FixedBackOff;
  * @since 2.2
  *
  */
-@EmbeddedKafka(topics = {SeekToCurrentRecovererTests.topic1, SeekToCurrentRecovererTests.topic1DLT })
+@EmbeddedKafka(topics = {SeekToCurrentRecovererTests.topic1, SeekToCurrentRecovererTests.topic1DLT})
 public class SeekToCurrentRecovererTests {
 
 	public static final String topic1 = "seekTopic1";
@@ -92,7 +92,7 @@ public class SeekToCurrentRecovererTests {
 		Map<String, Object> props = KafkaTestUtils.consumerProps("seekTestMaxFailures", "false", embeddedKafka);
 		props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
 		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(props, null,
-				new ErrorHandlingDeserializer<>(new JsonDeserializer<>(String.class)));
+	new ErrorHandlingDeserializer<>(new JsonDeserializer<>(String.class)));
 		ContainerProperties containerProps = new ContainerProperties(topic1);
 		containerProps.setPollTimeout(10_000);
 
@@ -102,7 +102,7 @@ public class SeekToCurrentRecovererTests {
 		Serializer<?> byteArraySerializer = new ByteArraySerializer();
 		@SuppressWarnings("unchecked")
 		DefaultKafkaProducerFactory<Object, Object> dltPf =
-				new DefaultKafkaProducerFactory<Object, Object>(senderProps, null, (Serializer<Object>) byteArraySerializer);
+	new DefaultKafkaProducerFactory<Object, Object>(senderProps, null, (Serializer<Object>) byteArraySerializer);
 		final CountDownLatch latch = new CountDownLatch(1);
 		AtomicReference<String> data = new AtomicReference<>();
 		containerProps.setMessageListener((MessageListener<Integer, String>) message -> {
@@ -114,7 +114,7 @@ public class SeekToCurrentRecovererTests {
 		});
 
 		KafkaMessageListenerContainer<Integer, String> container =
-				new KafkaMessageListenerContainer<>(cf, containerProps);
+	new KafkaMessageListenerContainer<>(cf, containerProps);
 		container.setBeanName("testSeekMaxFailures");
 		final CountDownLatch recoverLatch = new CountDownLatch(1);
 		final AtomicReference<String> failedGroupId = new AtomicReference<>();
@@ -122,19 +122,19 @@ public class SeekToCurrentRecovererTests {
 		templates.put(String.class, template);
 		templates.put(byte[].class, new KafkaTemplate<>(dltPf));
 		DeadLetterPublishingRecoverer recoverer =
-				new DeadLetterPublishingRecoverer(templates,
-						(r, e) -> new TopicPartition(topic1DLT, r.partition())) {
+	new DeadLetterPublishingRecoverer(templates,
+(r, e) -> new TopicPartition(topic1DLT, r.partition())) {
 
-			@Override
-			public void accept(ConsumerRecord<?, ?> record, @Nullable Consumer<?, ?> consumer, Exception exception) {
-				super.accept(record, consumer, exception);
-				if (exception instanceof ListenerExecutionFailedException) {
-					failedGroupId.set(((ListenerExecutionFailedException) exception).getGroupId());
-				}
-				recoverLatch.countDown();
+		@Override
+		public void accept(ConsumerRecord<?, ?> record, @Nullable Consumer<?, ?> consumer, Exception exception) {
+			super.accept(record, consumer, exception);
+			if (exception instanceof ListenerExecutionFailedException) {
+				failedGroupId.set(((ListenerExecutionFailedException) exception).getGroupId());
 			}
+			recoverLatch.countDown();
+		}
 
-		};
+	};
 		DefaultErrorHandler errorHandler = spy(new DefaultErrorHandler(recoverer, new FixedBackOff(0L, 2)));
 		container.setCommonErrorHandler(errorHandler);
 		final CountDownLatch stopLatch = new CountDownLatch(1);
@@ -181,11 +181,11 @@ public class SeekToCurrentRecovererTests {
 		records.add(new ConsumerRecord<>("foo", 0, 1, null, "bar"));
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() ->
-				eh.handleRemaining(new RuntimeException(), records, consumer, null));
-		verify(consumer).seek(new TopicPartition("foo", 0),  0L);
+	eh.handleRemaining(new RuntimeException(), records, consumer, null));
+		verify(consumer).seek(new TopicPartition("foo", 0), 0L);
 		verifyNoMoreInteractions(consumer);
 		eh.handleRemaining(new RuntimeException(), records, consumer, null);
-		verify(consumer).seek(new TopicPartition("foo", 0),  1L);
+		verify(consumer).seek(new TopicPartition("foo", 0), 1L);
 		verifyNoMoreInteractions(consumer);
 		verify(recoverer).accept(eq(records.get(0)), any());
 	}
@@ -228,25 +228,25 @@ public class SeekToCurrentRecovererTests {
 		records.add(new ConsumerRecord<>("foo", 0, 1, null, "bar"));
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(
-				() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
-		verify(consumer).seek(new TopicPartition("foo", 0),  0L);
+	() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
+		verify(consumer).seek(new TopicPartition("foo", 0), 0L);
 		verifyNoMoreInteractions(consumer);
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(
-				() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
-		verify(consumer, times(2)).seek(new TopicPartition("foo", 0),  0L);
+	() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
+		verify(consumer, times(2)).seek(new TopicPartition("foo", 0), 0L);
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(
-				() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
-		verify(consumer, times(3)).seek(new TopicPartition("foo", 0),  0L);
+	() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
+		verify(consumer, times(3)).seek(new TopicPartition("foo", 0), 0L);
 		eh.handleRemaining(new RuntimeException(), records, consumer, null);
-		verify(consumer, times(3)).seek(new TopicPartition("foo", 0),  0L);
-		verify(consumer).seek(new TopicPartition("foo", 0),  1L);
+		verify(consumer, times(3)).seek(new TopicPartition("foo", 0), 0L);
+		verify(consumer).seek(new TopicPartition("foo", 0), 1L);
 		verifyNoMoreInteractions(consumer);
 		verify(recoverer, times(2)).accept(eq(records.get(0)), any());
 		assertThat(failedDeliveryAttempt.get()).isEqualTo(2);
 		assertThat(recoveryFailureEx.get())
-				.isInstanceOf(RuntimeException.class)
-				.extracting(ex -> ex.getMessage())
-				.isEqualTo("recovery failed");
+	.isInstanceOf(RuntimeException.class)
+	.extracting(ex -> ex.getMessage())
+	.isEqualTo("recovery failed");
 		assertThat(isRecovered.get()).isTrue();
 	}
 
@@ -268,15 +268,15 @@ public class SeekToCurrentRecovererTests {
 		records.add(new ConsumerRecord<>("foo", 0, 1, null, "bar"));
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(
-				() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
-		verify(consumer).seek(new TopicPartition("foo", 0),  0L);
+	() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
+		verify(consumer).seek(new TopicPartition("foo", 0), 0L);
 		verifyNoMoreInteractions(consumer);
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(
-				() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
-		verify(consumer, times(2)).seek(new TopicPartition("foo", 0),  0L);
+	() -> eh.handleRemaining(new RuntimeException(), records, consumer, null));
+		verify(consumer, times(2)).seek(new TopicPartition("foo", 0), 0L);
 		eh.handleRemaining(new RuntimeException(), records, consumer, null); // immediate re-attempt recovery
-		verify(consumer, times(2)).seek(new TopicPartition("foo", 0),  0L);
-		verify(consumer).seek(new TopicPartition("foo", 0),  1L);
+		verify(consumer, times(2)).seek(new TopicPartition("foo", 0), 0L);
+		verify(consumer).seek(new TopicPartition("foo", 0), 1L);
 		verifyNoMoreInteractions(consumer);
 		verify(recoverer, times(2)).accept(eq(records.get(0)), any());
 	}
@@ -305,26 +305,27 @@ public class SeekToCurrentRecovererTests {
 		properties.setAckMode(AckMode.MANUAL_IMMEDIATE);
 		properties.setSyncCommits(syncCommits);
 		properties.setSyncCommitTimeout(Duration.ofSeconds(42));
-		OffsetCommitCallback commitCallback = (offsets, ex) -> { };
+		OffsetCommitCallback commitCallback = (offsets, ex) -> {
+		};
 		properties.setCommitCallback(commitCallback);
 		given(container.getContainerProperties()).willReturn(properties);
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() ->
-			eh.handleRemaining(new RuntimeException(), records, consumer, container));
-		verify(consumer).seek(new TopicPartition("foo", 0),  0L);
-		verify(consumer).seek(new TopicPartition("foo", 1),  0L);
+	eh.handleRemaining(new RuntimeException(), records, consumer, container));
+		verify(consumer).seek(new TopicPartition("foo", 0), 0L);
+		verify(consumer).seek(new TopicPartition("foo", 1), 0L);
 		verifyNoMoreInteractions(consumer);
 		eh.handleRemaining(new RuntimeException(), records, consumer, container);
-		verify(consumer, times(2)).seek(new TopicPartition("foo", 1),  0L);
+		verify(consumer, times(2)).seek(new TopicPartition("foo", 1), 0L);
 		if (syncCommits) {
 			verify(consumer)
-					.commitSync(Collections.singletonMap(new TopicPartition("foo", 0), new OffsetAndMetadata(1L)),
-							Duration.ofSeconds(42));
+		.commitSync(Collections.singletonMap(new TopicPartition("foo", 0), new OffsetAndMetadata(1L)),
+	Duration.ofSeconds(42));
 		}
 		else {
 			verify(consumer)
-					.commitAsync(
-							Collections.singletonMap(new TopicPartition("foo", 0), new OffsetAndMetadata(1L)),
-							commitCallback);
+		.commitAsync(
+	Collections.singletonMap(new TopicPartition("foo", 0), new OffsetAndMetadata(1L)),
+	commitCallback);
 		}
 		verifyNoMoreInteractions(consumer);
 		verify(recoverer).accept(eq(records.get(0)), any());
@@ -341,9 +342,9 @@ public class SeekToCurrentRecovererTests {
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		for (int i = 0; i < 20; i++) {
 			assertThatExceptionOfType(KafkaException.class).isThrownBy(() ->
-				eh.handleRemaining(new RuntimeException(), records, consumer, null));
+		eh.handleRemaining(new RuntimeException(), records, consumer, null));
 		}
-		verify(consumer, times(20)).seek(new TopicPartition("foo", 0),  0L);
+		verify(consumer, times(20)).seek(new TopicPartition("foo", 0), 0L);
 		verifyNoMoreInteractions(consumer);
 		verify(recoverer, never()).accept(any(), any());
 	}

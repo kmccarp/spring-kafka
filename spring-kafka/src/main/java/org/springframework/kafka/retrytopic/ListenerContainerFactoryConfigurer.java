@@ -81,8 +81,8 @@ public class ListenerContainerFactoryConfigurer {
 	private final Clock clock;
 
 	public ListenerContainerFactoryConfigurer(KafkaConsumerBackoffManager kafkaConsumerBackoffManager,
-									DeadLetterPublishingRecovererFactory deadLetterPublishingRecovererFactory,
-									Clock clock) {
+DeadLetterPublishingRecovererFactory deadLetterPublishingRecovererFactory,
+Clock clock) {
 		this.kafkaConsumerBackoffManager = kafkaConsumerBackoffManager;
 		this.deadLetterPublishingRecovererFactory = deadLetterPublishingRecovererFactory;
 		this.clock = clock;
@@ -95,7 +95,7 @@ public class ListenerContainerFactoryConfigurer {
 	 * @return the decorated factory instance.
 	 */
 	public KafkaListenerContainerFactory<?> decorateFactory(ConcurrentKafkaListenerContainerFactory<?, ?> factory,
-															Configuration configuration) {
+Configuration configuration) {
 		return new RetryTopicListenerContainerFactoryDecorator(factory, configuration, true);
 	}
 
@@ -107,7 +107,7 @@ public class ListenerContainerFactoryConfigurer {
 	 * @return the decorated factory instance.
 	 */
 	public KafkaListenerContainerFactory<?> decorateFactoryWithoutSettingContainerProperties(
-			ConcurrentKafkaListenerContainerFactory<?, ?> factory, Configuration configuration) {
+ConcurrentKafkaListenerContainerFactory<?, ?> factory, Configuration configuration) {
 		return new RetryTopicListenerContainerFactoryDecorator(factory, configuration, false);
 	}
 
@@ -123,9 +123,9 @@ public class ListenerContainerFactoryConfigurer {
 	public void setBlockingRetriesBackOff(BackOff blockingBackOff) {
 		Assert.notNull(blockingBackOff, "The provided BackOff cannot be null");
 		Assert.state(this.providedBlockingBackOff == null, () ->
-				"Blocking retries back off has already been set. Current: "
-						+ this.providedBlockingBackOff
-						+ " You provided: " + blockingBackOff);
+	"Blocking retries back off has already been set. Current: "
++ this.providedBlockingBackOff
++ " You provided: " + blockingBackOff);
 		this.providedBlockingBackOff = blockingBackOff;
 	}
 
@@ -141,9 +141,9 @@ public class ListenerContainerFactoryConfigurer {
 		Assert.notNull(exceptionTypes, "The exception types cannot be null");
 		Assert.noNullElements(exceptionTypes, "The exception types cannot have null elements");
 		Assert.state(this.blockingExceptionTypes == null,
-				() -> "Blocking retryable exceptions have already been set."
-						+  "Current ones: " + Arrays.toString(this.blockingExceptionTypes)
-						+ " You provided: " + Arrays.toString(exceptionTypes));
+	() -> "Blocking retryable exceptions have already been set."
++  "Current ones: " + Arrays.toString(this.blockingExceptionTypes)
++ " You provided: " + Arrays.toString(exceptionTypes));
 		this.blockingExceptionTypes = Arrays.copyOf(exceptionTypes, exceptionTypes.length);
 	}
 
@@ -167,7 +167,7 @@ public class ListenerContainerFactoryConfigurer {
 	}
 
 	protected CommonErrorHandler createErrorHandler(DeadLetterPublishingRecoverer deadLetterPublishingRecoverer,
-												Configuration configuration) {
+Configuration configuration) {
 		DefaultErrorHandler errorHandler = createDefaultErrorHandlerInstance(deadLetterPublishingRecoverer);
 		errorHandler.defaultFalse(this.retainStandardFatal);
 		errorHandler.setCommitRecovered(true);
@@ -181,17 +181,17 @@ public class ListenerContainerFactoryConfigurer {
 
 	protected DefaultErrorHandler createDefaultErrorHandlerInstance(DeadLetterPublishingRecoverer deadLetterPublishingRecoverer) {
 		return this.providedBlockingBackOff != null
-				? new DefaultErrorHandler(deadLetterPublishingRecoverer, this.providedBlockingBackOff)
-				: new DefaultErrorHandler(deadLetterPublishingRecoverer);
+	? new DefaultErrorHandler(deadLetterPublishingRecoverer, this.providedBlockingBackOff)
+	: new DefaultErrorHandler(deadLetterPublishingRecoverer);
 	}
 
 	protected void setupBackoffAwareMessageListenerAdapter(ConcurrentMessageListenerContainer<?, ?> container,
-														Configuration configuration, boolean isSetContainerProperties) {
+Configuration configuration, boolean isSetContainerProperties) {
 		MessageListener<?, ?> listener = checkAndCast(container.getContainerProperties()
-				.getMessageListener(), MessageListener.class);
+	.getMessageListener(), MessageListener.class);
 
 		container.setupMessageListener(new KafkaBackoffAwareMessageListenerAdapter<>(listener,
-				this.kafkaConsumerBackoffManager, container.getListenerId(), this.clock)); // NOSONAR
+	this.kafkaConsumerBackoffManager, container.getListenerId(), this.clock)); // NOSONAR
 
 		this.containerCustomizer.accept(container);
 	}
@@ -199,13 +199,13 @@ public class ListenerContainerFactoryConfigurer {
 	@SuppressWarnings("unchecked")
 	private <T> T checkAndCast(Object obj, Class<T> clazz) {
 		Assert.isAssignable(clazz, obj.getClass(),
-				() -> String.format("The provided class %s is not assignable from %s",
-						obj.getClass().getSimpleName(), clazz.getSimpleName()));
+	() -> String.format("The provided class %s is not assignable from %s",
+obj.getClass().getSimpleName(), clazz.getSimpleName()));
 		return (T) obj;
 	}
 
 	private class RetryTopicListenerContainerFactoryDecorator
-			implements KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<?, ?>> {
+implements KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<?, ?>> {
 
 		private final ConcurrentKafkaListenerContainerFactory<?, ?> delegate;
 
@@ -214,7 +214,7 @@ public class ListenerContainerFactoryConfigurer {
 		private final boolean isSetContainerProperties;
 
 		RetryTopicListenerContainerFactoryDecorator(ConcurrentKafkaListenerContainerFactory<?, ?> delegate,
-				Configuration configuration, boolean isSetContainerProperties) {
+	Configuration configuration, boolean isSetContainerProperties) {
 
 			this.delegate = delegate;
 			this.configuration = configuration;
@@ -227,19 +227,19 @@ public class ListenerContainerFactoryConfigurer {
 		}
 
 		private ConcurrentMessageListenerContainer<?, ?> decorate(
-				ConcurrentMessageListenerContainer<?, ?> listenerContainer) {
+	ConcurrentMessageListenerContainer<?, ?> listenerContainer) {
 
 			String mainListenerId = listenerContainer.getMainListenerId();
 			if (mainListenerId == null) {
 				mainListenerId = listenerContainer.getListenerId();
 			}
 			listenerContainer
-					.setCommonErrorHandler(createErrorHandler(
-							ListenerContainerFactoryConfigurer.this.deadLetterPublishingRecovererFactory
-									.create(mainListenerId),
-							this.configuration));
+		.setCommonErrorHandler(createErrorHandler(
+	ListenerContainerFactoryConfigurer.this.deadLetterPublishingRecovererFactory
+.create(mainListenerId),
+	this.configuration));
 			setupBackoffAwareMessageListenerAdapter(listenerContainer, this.configuration,
-					this.isSetContainerProperties);
+		this.isSetContainerProperties);
 			return listenerContainer;
 		}
 

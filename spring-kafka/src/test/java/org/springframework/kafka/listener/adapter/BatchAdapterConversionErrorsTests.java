@@ -61,21 +61,21 @@ public class BatchAdapterConversionErrorsTests {
 	@Test
 	void testNullInList(@Autowired KafkaListenerEndpointRegistry registry, @Autowired Listener listener) {
 		BatchMessagingMessageListenerAdapter<String, String> adapter =
-				(BatchMessagingMessageListenerAdapter<String, String>) registry
-					.getListenerContainer("foo").getContainerProperties().getMessageListener();
+	(BatchMessagingMessageListenerAdapter<String, String>) registry
+.getListenerContainer("foo").getContainerProperties().getMessageListener();
 		ConsumerRecord<String, String> junkRecord = new ConsumerRecord<>("foo", 0, 0L, null, "JUNK");
 		assertThatExceptionOfType(ListenerExecutionFailedException.class).isThrownBy(() ->
-				adapter.onMessage(List.of(
-						new ConsumerRecord<>("foo", 0, 0L, null, "{\"bar\":\"baz\"}"),
-						junkRecord,
-						new ConsumerRecord<>("foo", 0, 0L, null, "{\"bar\":\"qux\"}")), null, null))
-				.withCauseExactlyInstanceOf(BatchListenerFailedException.class)
-				.extracting(t -> t.getCause())
-				.extracting("index")
-				.isEqualTo(1);
+	adapter.onMessage(List.of(
+new ConsumerRecord<>("foo", 0, 0L, null, "{\"bar\":\"baz\"}"),
+junkRecord,
+new ConsumerRecord<>("foo", 0, 0L, null, "{\"bar\":\"qux\"}")), null, null))
+	.withCauseExactlyInstanceOf(BatchListenerFailedException.class)
+	.extracting(t -> t.getCause())
+	.extracting("index")
+	.isEqualTo(1);
 		assertThat(listener.values).containsExactly(new Foo("baz"), null, new Foo("qux"));
 		DeserializationException vDeserEx = ListenerUtils.getExceptionFromHeader(junkRecord,
-				SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER, null);
+	SerializationUtils.VALUE_DESERIALIZER_EXCEPTION_HEADER, null);
 		assertThat(vDeserEx).isNotNull();
 		assertThat(vDeserEx.getData()).isEqualTo("JUNK".getBytes());
 	}
@@ -86,7 +86,7 @@ public class BatchAdapterConversionErrorsTests {
 
 		@KafkaListener(id = "foo", topics = "foo", autoStartup = "false")
 		public void listen(List<Foo> list,
-				@Header(KafkaHeaders.CONVERSION_FAILURES) List<ConversionException> conversionFailures) {
+	@Header(KafkaHeaders.CONVERSION_FAILURES) List<ConversionException> conversionFailures) {
 
 			this.values.addAll(list);
 			for (int i = 0; i < list.size(); i++) {
@@ -153,14 +153,14 @@ public class BatchAdapterConversionErrorsTests {
 			return new Listener();
 		}
 
-		@SuppressWarnings({ "rawtypes" })
+		@SuppressWarnings({"rawtypes"})
 		@Bean
 		public ConsumerFactory consumerFactory() {
 			ConsumerFactory consumerFactory = mock(ConsumerFactory.class);
 			return consumerFactory;
 		}
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({"rawtypes", "unchecked"})
 		@Bean
 		public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
 			ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();

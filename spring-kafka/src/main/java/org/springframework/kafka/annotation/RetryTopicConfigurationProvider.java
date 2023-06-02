@@ -73,8 +73,8 @@ public class RetryTopicConfigurationProvider {
 	 */
 	public RetryTopicConfigurationProvider(BeanFactory beanFactory) {
 		this(beanFactory, new StandardBeanExpressionResolver(), beanFactory instanceof ConfigurableBeanFactory
-				? new BeanExpressionContext((ConfigurableBeanFactory) beanFactory, null)
-				: null); // NOSONAR
+	? new BeanExpressionContext((ConfigurableBeanFactory) beanFactory, null)
+	: null); // NOSONAR
 	}
 
 	/**
@@ -84,22 +84,23 @@ public class RetryTopicConfigurationProvider {
 	 * @param expressionContext the bean expression context.
 	 */
 	public RetryTopicConfigurationProvider(BeanFactory beanFactory, BeanExpressionResolver resolver,
-			BeanExpressionContext expressionContext) {
+BeanExpressionContext expressionContext) {
 
 		this.beanFactory = beanFactory;
 		this.resolver = resolver;
 		this.expressionContext = expressionContext;
 	}
+
 	public RetryTopicConfiguration findRetryConfigurationFor(String[] topics, Method method, Object bean) {
 		RetryableTopic annotation = MergedAnnotations.from(method, SearchStrategy.TYPE_HIERARCHY,
-					RepeatableContainers.none())
-				.get(RetryableTopic.class)
-				.synthesize(MergedAnnotation::isPresent)
-				.orElse(null);
+	RepeatableContainers.none())
+	.get(RetryableTopic.class)
+	.synthesize(MergedAnnotation::isPresent)
+	.orElse(null);
 		return annotation != null
-				? new RetryableTopicAnnotationProcessor(this.beanFactory, this.resolver, this.expressionContext)
-						.processAnnotation(topics, method, annotation, bean)
-				: maybeGetFromContext(topics);
+	? new RetryableTopicAnnotationProcessor(this.beanFactory, this.resolver, this.expressionContext)
+	.processAnnotation(topics, method, annotation, bean)
+	: maybeGetFromContext(topics);
 	}
 
 	private RetryTopicConfiguration maybeGetFromContext(String[] topics) {
@@ -109,12 +110,12 @@ public class RetryTopicConfigurationProvider {
 		}
 
 		Map<String, RetryTopicConfiguration> retryTopicProcessors = ((ListableBeanFactory) this.beanFactory)
-				.getBeansOfType(RetryTopicConfiguration.class);
+	.getBeansOfType(RetryTopicConfiguration.class);
 		return retryTopicProcessors
-				.values()
-				.stream()
-				.filter(topicConfiguration -> topicConfiguration.hasConfigurationForTopics(topics))
-				.findFirst()
-				.orElse(null);
+	.values()
+	.stream()
+	.filter(topicConfiguration -> topicConfiguration.hasConfigurationForTopics(topics))
+	.findFirst()
+	.orElse(null);
 	}
 }

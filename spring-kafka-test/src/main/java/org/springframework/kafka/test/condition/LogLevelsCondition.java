@@ -48,8 +48,7 @@ import org.springframework.kafka.test.utils.JUnitUtils.LevelsContainer;
  * @since 2.2
  *
  */
-public class LogLevelsCondition
-		implements ExecutionCondition, BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
+public class LogLevelsConditionimplements ExecutionCondition, BeforeEachCallback, AfterEachCallback, BeforeAllCallback, AfterAllCallback {
 
 	private static final LogAccessor LOGGER = new LogAccessor(LogFactory.getLog(LogLevelsCondition.class));
 
@@ -58,7 +57,7 @@ public class LogLevelsCondition
 	private static final String STORE_CONTAINER_KEY = "logLevelsContainer";
 
 	private static final ConditionEvaluationResult ENABLED =
-			ConditionEvaluationResult.enabled("@LogLevels always enabled");
+ConditionEvaluationResult.enabled("@LogLevels always enabled");
 
 	private final Map<String, Boolean> loggedMethods = new ConcurrentHashMap<>();
 
@@ -66,7 +65,7 @@ public class LogLevelsCondition
 	public ConditionEvaluationResult evaluateExecutionCondition(ExtensionContext context) {
 		Optional<AnnotatedElement> element = context.getElement();
 		MergedAnnotations annotations = MergedAnnotations.from(element.get(),
-				MergedAnnotations.SearchStrategy.TYPE_HIERARCHY);
+	MergedAnnotations.SearchStrategy.TYPE_HIERARCHY);
 		MergedAnnotation<LogLevels> mergedAnnotation = annotations.get(LogLevels.class);
 		if (mergedAnnotation.isPresent()) {
 			LogLevels loglevels = mergedAnnotation.synthesize();
@@ -82,9 +81,9 @@ public class LogLevelsCondition
 		LogLevels logLevels = store.get(STORE_ANNOTATION_KEY, LogLevels.class);
 		if (logLevels != null) {
 			store.put(STORE_CONTAINER_KEY, JUnitUtils.adjustLogLevels(context.getDisplayName(),
-					Arrays.asList((logLevels.classes())),
-					Arrays.asList(logLevels.categories()),
-					Level.toLevel(logLevels.level())));
+		Arrays.asList((logLevels.classes())),
+		Arrays.asList(logLevels.categories()),
+		Level.toLevel(logLevels.level())));
 		}
 	}
 
@@ -95,15 +94,15 @@ public class LogLevelsCondition
 		if (logLevels != null) { // Method level annotation
 			if (store.get(STORE_CONTAINER_KEY) == null) {
 				store.put(STORE_CONTAINER_KEY, JUnitUtils.adjustLogLevels(context.getDisplayName(),
-						Arrays.asList((logLevels.classes())),
-						Arrays.asList(logLevels.categories()),
-						Level.toLevel(logLevels.level())));
+			Arrays.asList((logLevels.classes())),
+			Arrays.asList(logLevels.categories()),
+			Level.toLevel(logLevels.level())));
 			}
 		}
 		else {
 			Optional<Method> testMethod = context.getTestMethod();
 			if (testMethod.isPresent()
-					&& this.loggedMethods.putIfAbsent(testMethod.get().getName(), Boolean.TRUE) == null) {
+		&& this.loggedMethods.putIfAbsent(testMethod.get().getName(), Boolean.TRUE) == null) {
 				LOGGER.info(() -> "+++++++++++++++++++++++++++++ Begin " + testMethod.get().getName());
 			}
 		}

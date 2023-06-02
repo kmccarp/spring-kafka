@@ -65,8 +65,7 @@ import org.springframework.util.Assert;
  * @author Gary Russell
  */
 @SuppressWarnings("serial")
-public class KafkaTransactionManager<K, V> extends AbstractPlatformTransactionManager
-		implements KafkaAwareTransactionManager<K, V> {
+public class KafkaTransactionManager<K, V> extends AbstractPlatformTransactionManagerimplements KafkaAwareTransactionManager<K, V> {
 
 	private static final String UNCHECKED = "unchecked";
 
@@ -123,7 +122,7 @@ public class KafkaTransactionManager<K, V> extends AbstractPlatformTransactionMa
 	protected Object doGetTransaction() {
 		KafkaTransactionObject<K, V> txObject = new KafkaTransactionObject<K, V>();
 		txObject.setResourceHolder((KafkaResourceHolder<K, V>) TransactionSynchronizationManager
-				.getResource(getProducerFactory()));
+	.getResource(getProducerFactory()));
 		return txObject;
 	}
 
@@ -144,7 +143,7 @@ public class KafkaTransactionManager<K, V> extends AbstractPlatformTransactionMa
 		KafkaResourceHolder<K, V> resourceHolder = null;
 		try {
 			resourceHolder = ProducerFactoryUtils.getTransactionalResourceHolder(getProducerFactory(),
-					this.transactionIdPrefix, this.closeTimeout);
+		this.transactionIdPrefix, this.closeTimeout);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Created Kafka transaction on producer [" + resourceHolder.getProducer() + "]");
 			}

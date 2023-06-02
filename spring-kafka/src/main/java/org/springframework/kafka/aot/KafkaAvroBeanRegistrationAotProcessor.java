@@ -83,8 +83,8 @@ public class KafkaAvroBeanRegistrationAotProcessor implements BeanRegistrationAo
 			return (generationContext, beanRegistrationCode) -> {
 				ReflectionHints reflectionHints = generationContext.getRuntimeHints().reflection();
 				avroTypes.forEach(type -> reflectionHints.registerType(type,
-						builder -> builder.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS,
-								MemberCategory.INVOKE_PUBLIC_METHODS)));
+			builder -> builder.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS,
+		MemberCategory.INVOKE_PUBLIC_METHODS)));
 			};
 		}
 		return null;
@@ -129,8 +129,8 @@ public class KafkaAvroBeanRegistrationAotProcessor implements BeanRegistrationAo
 		if (paramType instanceof ParameterizedType) {
 			Type rawType = ((ParameterizedType) paramType).getRawType();
 			return (rawType.equals(List.class))
-					|| rawType.getTypeName().equals(CONSUMER_RECORD_CLASS_NAME)
-					|| rawType.getTypeName().equals(CONSUMER_RECORDS_CLASS_NAME);
+		|| rawType.getTypeName().equals(CONSUMER_RECORD_CLASS_NAME)
+		|| rawType.getTypeName().equals(CONSUMER_RECORDS_CLASS_NAME);
 		}
 		return false;
 	}

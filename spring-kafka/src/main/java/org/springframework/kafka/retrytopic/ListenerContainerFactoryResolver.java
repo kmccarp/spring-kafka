@@ -59,55 +59,55 @@ public class ListenerContainerFactoryResolver {
 		this.retryEndpointCache = new Cache();
 
 		this.mainEndpointResolvers = Arrays.asList(
-				this.mainEndpointCache::fromCache,
-				(fromKafkaListenerAnnotation, configuration) -> fromKafkaListenerAnnotation,
-				(fromKLAnnotation, configuration) -> configuration.factoryFromRetryTopicConfiguration,
-				(fromKLAnnotation, configuration) -> fromBeanName(configuration.listenerContainerFactoryName),
-				(fromKLAnnotation, configuration) ->
-						fromBeanName("internalRetryTopicListenerContainerFactory"),
-				(fromKLAnnotation, configuration) ->
-						fromBeanName(RetryTopicBeanNames.DEFAULT_LISTENER_CONTAINER_FACTORY_BEAN_NAME));
+	this.mainEndpointCache::fromCache,
+	(fromKafkaListenerAnnotation, configuration) -> fromKafkaListenerAnnotation,
+	(fromKLAnnotation, configuration) -> configuration.factoryFromRetryTopicConfiguration,
+	(fromKLAnnotation, configuration) -> fromBeanName(configuration.listenerContainerFactoryName),
+	(fromKLAnnotation, configuration) ->
+fromBeanName("internalRetryTopicListenerContainerFactory"),
+	(fromKLAnnotation, configuration) ->
+fromBeanName(RetryTopicBeanNames.DEFAULT_LISTENER_CONTAINER_FACTORY_BEAN_NAME));
 
 		this.retryEndpointResolvers = Arrays.asList(
-				this.retryEndpointCache::fromCache,
-				(fromKLAnnotation, configuration) -> configuration.factoryFromRetryTopicConfiguration,
-				(fromKLAnnotation, configuration) -> fromBeanName(configuration.listenerContainerFactoryName),
-				(fromKLAnnotation, configuration) -> fromKLAnnotation,
-				(fromKLAnnotation, configuration) ->
-						fromBeanName("internalRetryTopicListenerContainerFactory"),
-				(fromKLAnnotation, configuration) ->
-						fromBeanName(RetryTopicBeanNames.DEFAULT_LISTENER_CONTAINER_FACTORY_BEAN_NAME));
+	this.retryEndpointCache::fromCache,
+	(fromKLAnnotation, configuration) -> configuration.factoryFromRetryTopicConfiguration,
+	(fromKLAnnotation, configuration) -> fromBeanName(configuration.listenerContainerFactoryName),
+	(fromKLAnnotation, configuration) -> fromKLAnnotation,
+	(fromKLAnnotation, configuration) ->
+fromBeanName("internalRetryTopicListenerContainerFactory"),
+	(fromKLAnnotation, configuration) ->
+fromBeanName(RetryTopicBeanNames.DEFAULT_LISTENER_CONTAINER_FACTORY_BEAN_NAME));
 	}
 
 	ConcurrentKafkaListenerContainerFactory<?, ?> resolveFactoryForMainEndpoint(
-			@Nullable KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotationInstance,
-			String defaultContainerFactoryBeanName, Configuration config) {
+@Nullable KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotationInstance,
+String defaultContainerFactoryBeanName, Configuration config) {
 
 		KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotation =
-				getFactoryFromKLA(factoryFromKafkaListenerAnnotationInstance, defaultContainerFactoryBeanName);
+	getFactoryFromKLA(factoryFromKafkaListenerAnnotationInstance, defaultContainerFactoryBeanName);
 		ConcurrentKafkaListenerContainerFactory<?, ?> resolvedFactory = resolveFactory(this.mainEndpointResolvers,
-				factoryFromKafkaListenerAnnotation, config);
+	factoryFromKafkaListenerAnnotation, config);
 		return this.mainEndpointCache.addIfAbsent(factoryFromKafkaListenerAnnotation, config, resolvedFactory); // NOSONAR
 	}
 
 	ConcurrentKafkaListenerContainerFactory<?, ?> resolveFactoryForRetryEndpoint(
-			@Nullable KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotationInstance,
-			String defaultContainerFactoryBeanName, Configuration config) {
+@Nullable KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotationInstance,
+String defaultContainerFactoryBeanName, Configuration config) {
 
 		KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotation =
-				getFactoryFromKLA(factoryFromKafkaListenerAnnotationInstance, defaultContainerFactoryBeanName);
+	getFactoryFromKLA(factoryFromKafkaListenerAnnotationInstance, defaultContainerFactoryBeanName);
 		ConcurrentKafkaListenerContainerFactory<?, ?> resolvedFactory = resolveFactory(this.retryEndpointResolvers,
-				factoryFromKafkaListenerAnnotation, config);
+	factoryFromKafkaListenerAnnotation, config);
 		return this.retryEndpointCache.addIfAbsent(factoryFromKafkaListenerAnnotation, config, resolvedFactory); // NOSONAR
 	}
 
 	@Nullable
 	private KafkaListenerContainerFactory<?> getFactoryFromKLA(
-			@Nullable KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotationInstance,
-			String defaultContainerFactoryBeanName) {
+@Nullable KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotationInstance,
+String defaultContainerFactoryBeanName) {
 
 		KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotation =
-				factoryFromKafkaListenerAnnotationInstance;
+	factoryFromKafkaListenerAnnotationInstance;
 		if (factoryFromKafkaListenerAnnotation == null) {
 			factoryFromKafkaListenerAnnotation = fromBeanName(defaultContainerFactoryBeanName);
 		}
@@ -115,40 +115,40 @@ public class ListenerContainerFactoryResolver {
 	}
 
 	private ConcurrentKafkaListenerContainerFactory<?, ?> resolveFactory(List<FactoryResolver> factoryResolvers,
-			@Nullable KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotation,
-			Configuration config) {
+@Nullable KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotation,
+Configuration config) {
 
 		ConcurrentKafkaListenerContainerFactory<?, ?> verifiedFactoryFromKafkaListenerAnnotation = verifyClass(
-				factoryFromKafkaListenerAnnotation);
+	factoryFromKafkaListenerAnnotation);
 		return factoryResolvers
-				.stream()
-				.map(resolver -> Optional.ofNullable(
-						resolver.resolveFactory(verifiedFactoryFromKafkaListenerAnnotation, config)))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("Could not resolve a viable " +
-						"ConcurrentKafkaListenerContainerFactory to configure the retry topic. " +
-						"Try creating a bean with name " +
-						RetryTopicBeanNames.DEFAULT_LISTENER_CONTAINER_FACTORY_BEAN_NAME));
+	.stream()
+	.map(resolver -> Optional.ofNullable(
+resolver.resolveFactory(verifiedFactoryFromKafkaListenerAnnotation, config)))
+	.filter(Optional::isPresent)
+	.map(Optional::get)
+	.findFirst()
+	.orElseThrow(() -> new IllegalArgumentException("Could not resolve a viable " +
+"ConcurrentKafkaListenerContainerFactory to configure the retry topic. " +
+"Try creating a bean with name " +
+RetryTopicBeanNames.DEFAULT_LISTENER_CONTAINER_FACTORY_BEAN_NAME));
 	}
 
 	@Nullable
 	private ConcurrentKafkaListenerContainerFactory<?, ?> verifyClass(
-			@Nullable KafkaListenerContainerFactory<?> fromKafkaListenerAnnotationFactory) {
+@Nullable KafkaListenerContainerFactory<?> fromKafkaListenerAnnotationFactory) {
 
 		return fromKafkaListenerAnnotationFactory != null
-				&& ConcurrentKafkaListenerContainerFactory.class.isAssignableFrom(fromKafkaListenerAnnotationFactory.getClass())
-				? (ConcurrentKafkaListenerContainerFactory<?, ?>) fromKafkaListenerAnnotationFactory
-				: null;
+	&& ConcurrentKafkaListenerContainerFactory.class.isAssignableFrom(fromKafkaListenerAnnotationFactory.getClass())
+	? (ConcurrentKafkaListenerContainerFactory<?, ?>) fromKafkaListenerAnnotationFactory
+	: null;
 	}
 
 	@Nullable
 	private ConcurrentKafkaListenerContainerFactory<?, ?> fromBeanName(String factoryBeanName) {
 		try {
 			return StringUtils.hasText(factoryBeanName)
-					? this.beanFactory.getBean(factoryBeanName, ConcurrentKafkaListenerContainerFactory.class)
-					: null;
+		? this.beanFactory.getBean(factoryBeanName, ConcurrentKafkaListenerContainerFactory.class)
+		: null;
 		}
 		catch (NoSuchBeanDefinitionException ex) {
 			return null;
@@ -157,7 +157,7 @@ public class ListenerContainerFactoryResolver {
 
 	private interface FactoryResolver {
 		ConcurrentKafkaListenerContainerFactory<?, ?> resolveFactory(ConcurrentKafkaListenerContainerFactory<?, ?> candidate,
-																	Configuration configuration);
+	Configuration configuration);
 	}
 
 	static class Configuration {
@@ -167,7 +167,7 @@ public class ListenerContainerFactoryResolver {
 		private final String listenerContainerFactoryName;
 
 		Configuration(ConcurrentKafkaListenerContainerFactory<?, ?> factoryFromRetryTopicConfiguration,
-					String listenerContainerFactoryName) {
+	String listenerContainerFactoryName) {
 			this.factoryFromRetryTopicConfiguration = factoryFromRetryTopicConfiguration;
 			this.listenerContainerFactoryName = listenerContainerFactoryName;
 		}
@@ -182,7 +182,7 @@ public class ListenerContainerFactoryResolver {
 			}
 			Configuration that = (Configuration) o;
 			return Objects.equals(this.factoryFromRetryTopicConfiguration, that.factoryFromRetryTopicConfiguration)
-					&& Objects.equals(this.listenerContainerFactoryName, that.listenerContainerFactoryName);
+		&& Objects.equals(this.listenerContainerFactoryName, that.listenerContainerFactoryName);
 		}
 
 		@Override
@@ -201,8 +201,8 @@ public class ListenerContainerFactoryResolver {
 		}
 
 		ConcurrentKafkaListenerContainerFactory<?, ?> addIfAbsent(KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotation,
-																Configuration config,
-																ConcurrentKafkaListenerContainerFactory<?, ?> resolvedFactory) {
+	Configuration config,
+	ConcurrentKafkaListenerContainerFactory<?, ?> resolvedFactory) {
 			synchronized (this.cacheMap) {
 				Key key = cacheKey(factoryFromKafkaListenerAnnotation, config);
 				if (!this.cacheMap.containsKey(key)) {
@@ -213,7 +213,7 @@ public class ListenerContainerFactoryResolver {
 		}
 
 		ConcurrentKafkaListenerContainerFactory<?, ?> fromCache(KafkaListenerContainerFactory<?> factoryFromKafkaListenerAnnotation,
-																Configuration config) {
+	Configuration config) {
 			synchronized (this.cacheMap) {
 				return this.cacheMap.get(cacheKey(factoryFromKafkaListenerAnnotation, config));
 			}
@@ -244,7 +244,7 @@ public class ListenerContainerFactoryResolver {
 				}
 				Key key = (Key) o;
 				return Objects.equals(this.factoryFromKafkaListenerAnnotation, key.factoryFromKafkaListenerAnnotation)
-						&& Objects.equals(this.config, key.config);
+			&& Objects.equals(this.config, key.config);
 			}
 
 			@Override

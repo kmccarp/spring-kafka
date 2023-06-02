@@ -63,19 +63,19 @@ class EmbeddedKafkaContextCustomizer implements ContextCustomizer {
 		ConfigurableEnvironment environment = context.getEnvironment();
 
 		String[] topics =
-				Arrays.stream(this.embeddedKafka.topics())
-						.map(environment::resolvePlaceholders)
-						.toArray(String[]::new);
+	Arrays.stream(this.embeddedKafka.topics())
+.map(environment::resolvePlaceholders)
+.toArray(String[]::new);
 
 		int[] ports = setupPorts();
 		EmbeddedKafkaBroker embeddedKafkaBroker = new EmbeddedKafkaBroker(this.embeddedKafka.count(),
-					this.embeddedKafka.controlledShutdown(),
-					this.embeddedKafka.partitions(),
-					topics)
-				.kafkaPorts(ports)
-				.zkPort(this.embeddedKafka.zookeeperPort())
-				.zkConnectionTimeout(this.embeddedKafka.zkConnectionTimeout())
-				.zkSessionTimeout(this.embeddedKafka.zkSessionTimeout());
+	this.embeddedKafka.controlledShutdown(),
+	this.embeddedKafka.partitions(),
+	topics)
+	.kafkaPorts(ports)
+	.zkPort(this.embeddedKafka.zookeeperPort())
+	.zkConnectionTimeout(this.embeddedKafka.zkConnectionTimeout())
+	.zkSessionTimeout(this.embeddedKafka.zkSessionTimeout());
 
 		Properties properties = new Properties();
 
@@ -96,7 +96,7 @@ class EmbeddedKafkaContextCustomizer implements ContextCustomizer {
 			Resource propertiesResource = context.getResource(propertiesLocation);
 			if (!propertiesResource.exists()) {
 				throw new IllegalStateException(
-						"Failed to load broker properties from [" + propertiesResource + "]: resource does not exist.");
+			"Failed to load broker properties from [" + propertiesResource + "]: resource does not exist.");
 			}
 			try (InputStream in = propertiesResource.getInputStream()) {
 				Properties p = new Properties();

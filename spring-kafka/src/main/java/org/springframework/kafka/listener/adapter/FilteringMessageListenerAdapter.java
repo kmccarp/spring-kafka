@@ -34,9 +34,7 @@ import org.springframework.lang.Nullable;
  * @author Gary Russell
  *
  */
-public class FilteringMessageListenerAdapter<K, V>
-		extends AbstractFilteringMessageListener<K, V, MessageListener<K, V>>
-		implements AcknowledgingConsumerAwareMessageListener<K, V> {
+public class FilteringMessageListenerAdapter<K, V>extends AbstractFilteringMessageListener<K, V, MessageListener<K, V>>implements AcknowledgingConsumerAwareMessageListener<K, V> {
 
 	private final boolean ackDiscarded;
 
@@ -46,7 +44,7 @@ public class FilteringMessageListenerAdapter<K, V>
 	 * @param recordFilterStrategy the filter.
 	 */
 	public FilteringMessageListenerAdapter(MessageListener<K, V> delegate,
-			RecordFilterStrategy<K, V> recordFilterStrategy) {
+RecordFilterStrategy<K, V> recordFilterStrategy) {
 		super(delegate, recordFilterStrategy);
 		this.ackDiscarded = false;
 	}
@@ -59,14 +57,14 @@ public class FilteringMessageListenerAdapter<K, V>
 	 * listener is configured for manual acks.
 	 */
 	public FilteringMessageListenerAdapter(MessageListener<K, V> delegate,
-			RecordFilterStrategy<K, V> recordFilterStrategy, boolean ackDiscarded) {
+RecordFilterStrategy<K, V> recordFilterStrategy, boolean ackDiscarded) {
 		super(delegate, recordFilterStrategy);
 		this.ackDiscarded = ackDiscarded;
 	}
 
 	@Override
 	public void onMessage(ConsumerRecord<K, V> consumerRecord, @Nullable Acknowledgment acknowledgment,
-			Consumer<?, ?> consumer) {
+Consumer<?, ?> consumer) {
 
 		if (!filter(consumerRecord)) {
 			switch (this.delegateType) {

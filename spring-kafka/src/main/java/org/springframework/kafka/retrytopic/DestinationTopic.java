@@ -57,7 +57,7 @@ public class DestinationTopic {
 
 	public boolean isAlwaysRetryOnDltFailure() {
 		return DltStrategy.ALWAYS_RETRY_ON_ERROR
-				.equals(this.properties.dltStrategy);
+	.equals(this.properties.dltStrategy);
 	}
 
 	public boolean isDltTopic() {
@@ -103,9 +103,9 @@ public class DestinationTopic {
 	@Override
 	public String toString() {
 		return "DestinationTopic{" +
-				"destinationName='" + this.destinationName + '\'' +
-				", properties=" + this.properties +
-				'}';
+	"destinationName='" + this.destinationName + '\'' +
+	", properties=" + this.properties +
+	'}';
 	}
 
 	@Override
@@ -166,13 +166,13 @@ public class DestinationTopic {
 		 * @param timeout the timeout.
 		 */
 		public Properties(long delayMs, String suffix, Type type,
-						int maxAttempts, int numPartitions,
-						DltStrategy dltStrategy,
-						KafkaOperations<?, ?> kafkaOperations,
-						BiPredicate<Integer, Throwable> shouldRetryOn, long timeout) {
+	int maxAttempts, int numPartitions,
+	DltStrategy dltStrategy,
+	KafkaOperations<?, ?> kafkaOperations,
+	BiPredicate<Integer, Throwable> shouldRetryOn, long timeout) {
 
 			this(delayMs, suffix, type, maxAttempts, numPartitions, dltStrategy, kafkaOperations, shouldRetryOn,
-					timeout, null);
+		timeout, null);
 		}
 
 		/**
@@ -184,8 +184,8 @@ public class DestinationTopic {
 		 */
 		public Properties(Properties sourceProperties, String suffix, Type type) {
 			this(sourceProperties.delayMs, suffix, type, sourceProperties.maxAttempts, sourceProperties.numPartitions,
-					sourceProperties.dltStrategy, sourceProperties.kafkaOperations, sourceProperties.shouldRetryOn,
-					sourceProperties.timeout, null);
+		sourceProperties.dltStrategy, sourceProperties.kafkaOperations, sourceProperties.shouldRetryOn,
+		sourceProperties.timeout, null);
 		}
 
 		/**
@@ -203,10 +203,10 @@ public class DestinationTopic {
 		 * @since 2.8
 		 */
 		public Properties(long delayMs, String suffix, Type type,
-				int maxAttempts, int numPartitions,
-				DltStrategy dltStrategy,
-				KafkaOperations<?, ?> kafkaOperations,
-				BiPredicate<Integer, Throwable> shouldRetryOn, long timeout, @Nullable Boolean autoStartDltHandler) {
+	int maxAttempts, int numPartitions,
+	DltStrategy dltStrategy,
+	KafkaOperations<?, ?> kafkaOperations,
+	BiPredicate<Integer, Throwable> shouldRetryOn, long timeout, @Nullable Boolean autoStartDltHandler) {
 
 			this.delayMs = delayMs;
 			this.suffix = suffix;
@@ -226,7 +226,7 @@ public class DestinationTopic {
 
 		public boolean isRetryTopic() {
 			return Type.RETRY.equals(this.type) || Type.SINGLE_TOPIC_RETRY.equals(this.type)
-					|| Type.REUSABLE_RETRY_TOPIC.equals(this.type);
+		|| Type.REUSABLE_RETRY_TOPIC.equals(this.type);
 		}
 
 		public String suffix() {
@@ -262,33 +262,33 @@ public class DestinationTopic {
 			}
 			Properties that = (Properties) o;
 			return this.delayMs == that.delayMs
-					&& this.maxAttempts == that.maxAttempts
-					&& this.numPartitions == that.numPartitions
-					&& this.suffix.equals(that.suffix)
-					&& this.type == that.type
-					&& this.dltStrategy == that.dltStrategy
-					&& this.kafkaOperations.equals(that.kafkaOperations);
+		&& this.maxAttempts == that.maxAttempts
+		&& this.numPartitions == that.numPartitions
+		&& this.suffix.equals(that.suffix)
+		&& this.type == that.type
+		&& this.dltStrategy == that.dltStrategy
+		&& this.kafkaOperations.equals(that.kafkaOperations);
 		}
 
 		@Override
 		public int hashCode() {
 			return Objects.hash(this.delayMs, this.suffix, this.type, this.maxAttempts, this.numPartitions,
-					this.dltStrategy, this.kafkaOperations);
+		this.dltStrategy, this.kafkaOperations);
 		}
 
 		@Override
 		public String toString() {
 			return "Properties{" +
-					"delayMs=" + this.delayMs +
-					", suffix='" + this.suffix + '\'' +
-					", type=" + this.type +
-					", maxAttempts=" + this.maxAttempts +
-					", numPartitions=" + this.numPartitions +
-					", dltStrategy=" + this.dltStrategy +
-					", kafkaOperations=" + this.kafkaOperations +
-					", shouldRetryOn=" + this.shouldRetryOn +
-					", timeout=" + this.timeout +
-					'}';
+		"delayMs=" + this.delayMs +
+		", suffix='" + this.suffix + '\'' +
+		", type=" + this.type +
+		", maxAttempts=" + this.maxAttempts +
+		", numPartitions=" + this.numPartitions +
+		", dltStrategy=" + this.dltStrategy +
+		", kafkaOperations=" + this.kafkaOperations +
+		", shouldRetryOn=" + this.shouldRetryOn +
+		", timeout=" + this.timeout +
+		'}';
 		}
 
 		public boolean isMainEndpoint() {

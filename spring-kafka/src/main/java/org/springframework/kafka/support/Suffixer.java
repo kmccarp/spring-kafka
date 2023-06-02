@@ -44,8 +44,8 @@ public class Suffixer {
 			return source;
 		}
 		return source != null && StringUtils.hasText(source) // Only suffix if there's text
-				? source.concat(this.suffix)
-				: source;
+	? source.concat(this.suffix)
+	: source;
 	}
 
 	public Collection<String> maybeAddTo(Collection<String> sources) {
@@ -53,8 +53,8 @@ public class Suffixer {
 			return sources;
 		}
 		return sources
-				.stream()
-				.map(source -> maybeAddTo(source))
-				.collect(Collectors.toList());
+	.stream()
+	.map(source -> maybeAddTo(source))
+	.collect(Collectors.toList());
 	}
 }

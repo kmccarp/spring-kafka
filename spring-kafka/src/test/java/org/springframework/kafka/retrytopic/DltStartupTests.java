@@ -125,45 +125,45 @@ public class DltStartupTests {
 		@Bean
 		RetryTopicConfiguration rtc1(KafkaOperations<Integer, String> template) {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.maxAttempts(1)
-					.includeTopic("DltStartupTests.1")
-					.create(template);
+		.newInstance()
+		.maxAttempts(1)
+		.includeTopic("DltStartupTests.1")
+		.create(template);
 		}
 
 		@Bean
 		RetryTopicConfiguration rtc2(KafkaOperations<Integer, String> template) {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.maxAttempts(1)
-					.includeTopic("DltStartupTests.2")
-					.autoStartDltHandler(false) // override factory for DLT container
-					.create(template);
+		.newInstance()
+		.maxAttempts(1)
+		.includeTopic("DltStartupTests.2")
+		.autoStartDltHandler(false) // override factory for DLT container
+		.create(template);
 		}
 
 		@Bean
 		RetryTopicConfiguration rtc3(KafkaOperations<Integer, String> template) {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.maxAttempts(1)
-					.includeTopic("DltStartupTests.3")
-					.create(template);
+		.newInstance()
+		.maxAttempts(1)
+		.includeTopic("DltStartupTests.3")
+		.create(template);
 		}
 
 		@Bean
 		RetryTopicConfiguration rtc4(KafkaOperations<Integer, String> template) {
 			return RetryTopicConfigurationBuilder
-					.newInstance()
-					.maxAttempts(1)
-					.includeTopic("DltStartupTests.4")
-					.autoStartDltHandler(true) // override factory for DLT container
-					.create(template);
+		.newInstance()
+		.maxAttempts(1)
+		.includeTopic("DltStartupTests.4")
+		.autoStartDltHandler(true) // override factory for DLT container
+		.create(template);
 		}
 
 		@Bean
 		ConcurrentKafkaListenerContainerFactory<Integer, String> cf1(ConsumerFactory<Integer, String> cf) {
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(cf);
 			return factory;
 		}
@@ -171,7 +171,7 @@ public class DltStartupTests {
 		@Bean
 		ConcurrentKafkaListenerContainerFactory<Integer, String> cf2(ConsumerFactory<Integer, String> cf) {
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(cf);
 			factory.setAutoStartup(false);
 			return factory;

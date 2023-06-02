@@ -38,66 +38,67 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 @SpringBootApplication
 public class Application {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
-    @Bean
-    ApplicationRunner runner(ConcurrentKafkaListenerContainerFactory<String, String> factory) {
-        return args -> {
-            createContainer(factory, "topic1", "group1");
-        };
-    }
+	@Bean
+	ApplicationRunner runner(ConcurrentKafkaListenerContainerFactory<String, String> factory) {
+		return args -> {
+			createContainer(factory, "topic1", "group1");
+		};
+	}
 
-    @Bean
-    public ApplicationRunner runner1(ApplicationContext applicationContext) {
-        return args -> {
+	@Bean
+	public ApplicationRunner runner1(ApplicationContext applicationContext) {
+		return args -> {
 // tag::getBeans[]
 
-applicationContext.getBean(MyPojo.class, "one", "topic2");
-applicationContext.getBean(MyPojo.class, "two", "topic3");
+			applicationContext.getBean(MyPojo.class, "one", "topic2");
+			applicationContext.getBean(MyPojo.class, "two", "topic3");
 // end::getBeans[]
-        };
-    }
+		};
+	}
 
 
 // tag::create[]
 
-private ConcurrentMessageListenerContainer<String, String> createContainer(
-        ConcurrentKafkaListenerContainerFactory<String, String> factory, String topic, String group) {
+	private ConcurrentMessageListenerContainer<String, String> createContainer(
+ConcurrentKafkaListenerContainerFactory<String, String> factory, String topic, String group) {
 
-    ConcurrentMessageListenerContainer<String, String> container = factory.createContainer(topic);
-    container.getContainerProperties().setMessageListener(new MyListener());
-    container.getContainerProperties().setGroupId(group);
-    container.setBeanName(group);
-    container.start();
-    return container;
-}
+		ConcurrentMessageListenerContainer<String, String> container = factory.createContainer(topic);
+		container.getContainerProperties().setMessageListener(new MyListener());
+		container.getContainerProperties().setGroupId(group);
+		container.setBeanName(group);
+		container.start();
+		return container;
+	}
+
 // end::create[]
-@Bean
-public KafkaAdmin.NewTopics topics() {
-    return new KafkaAdmin.NewTopics(
-            TopicBuilder.name("topic1")
-                    .partitions(10)
-                    .replicas(1)
-                    .build(),
-            TopicBuilder.name("topic2")
-                    .partitions(10)
-                    .replicas(1)
-                    .build(),
-            TopicBuilder.name("topic3")
-                    .partitions(10)
-                    .replicas(1)
-                    .build());
-}
+	@Bean
+	public KafkaAdmin.NewTopics topics() {
+		return new KafkaAdmin.NewTopics(
+	TopicBuilder.name("topic1")
+.partitions(10)
+.replicas(1)
+.build(),
+	TopicBuilder.name("topic2")
+.partitions(10)
+.replicas(1)
+.build(),
+	TopicBuilder.name("topic3")
+.partitions(10)
+.replicas(1)
+.build());
+	}
 
 // tag::pojoBean[]
 
-@Bean
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-MyPojo pojo(String id, String topic) {
-	return new MyPojo(id, topic);
-}
+	@Bean
+	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+	MyPojo pojo(String id, String topic) {
+		return new MyPojo(id, topic);
+	}
 //end::pojoBean[]
 
 }

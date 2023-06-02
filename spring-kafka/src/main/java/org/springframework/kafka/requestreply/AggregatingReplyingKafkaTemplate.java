@@ -53,9 +53,7 @@ import org.springframework.util.Assert;
  * @since 2.3
  *
  */
-public class AggregatingReplyingKafkaTemplate<K, V, R>
-		extends ReplyingKafkaTemplate<K, V, Collection<ConsumerRecord<K, R>>>
-		implements BatchConsumerAwareMessageListener<K, Collection<ConsumerRecord<K, R>>> {
+public class AggregatingReplyingKafkaTemplate<K, V, R>extends ReplyingKafkaTemplate<K, V, Collection<ConsumerRecord<K, R>>>implements BatchConsumerAwareMessageListener<K, Collection<ConsumerRecord<K, R>>> {
 
 	/**
 	 * Pseudo topic name for the "outer" {@link ConsumerRecord} that has the aggregated
@@ -93,14 +91,14 @@ public class AggregatingReplyingKafkaTemplate<K, V, R>
 	 * @since 2.3.5
 	 */
 	public AggregatingReplyingKafkaTemplate(ProducerFactory<K, V> producerFactory,
-			GenericMessageListenerContainer<K, Collection<ConsumerRecord<K, R>>> replyContainer,
-			BiPredicate<List<ConsumerRecord<K, R>>, Boolean> releaseStrategy) {
+GenericMessageListenerContainer<K, Collection<ConsumerRecord<K, R>>> replyContainer,
+BiPredicate<List<ConsumerRecord<K, R>>, Boolean> releaseStrategy) {
 
 		super(producerFactory, replyContainer);
 		Assert.notNull(releaseStrategy, "'releaseStrategy' cannot be null");
 		AckMode ackMode = replyContainer.getContainerProperties().getAckMode();
 		Assert.isTrue(ackMode.equals(AckMode.MANUAL) || ackMode.equals(AckMode.MANUAL_IMMEDIATE),
-				"The reply container must have a MANUAL or MANUAL_IMMEDIATE AckMode");
+	"The reply container must have a MANUAL or MANUAL_IMMEDIATE AckMode");
 		this.releaseStrategy = releaseStrategy;
 	}
 
@@ -129,26 +127,26 @@ public class AggregatingReplyingKafkaTemplate<K, V, R>
 			Header correlation = record.headers().lastHeader(correlationHeaderName);
 			if (correlation == null) {
 				this.logger.error(() -> "No correlationId found in reply: " + KafkaUtils.format(record)
-						+ " - to use request/reply semantics, the responding server must return the correlation id "
-						+ " in the '" + correlationHeaderName + "' header");
+			+ " - to use request/reply semantics, the responding server must return the correlation id "
+			+ " in the '" + correlationHeaderName + "' header");
 			}
 			else {
 				Object correlationId = isBinaryCorrelation()
-						? new CorrelationKey(correlation.value())
-						: new String(correlation.value(), StandardCharsets.UTF_8);
+			? new CorrelationKey(correlation.value())
+			: new String(correlation.value(), StandardCharsets.UTF_8);
 				synchronized (this) {
 					if (isPending(correlationId)) {
 						List<ConsumerRecord<K, R>> list = addToCollection(record, correlationId).stream()
-								.map(RecordHolder::getRecord)
-								.collect(Collectors.toList());
+					.map(RecordHolder::getRecord)
+					.collect(Collectors.toList());
 						if (this.releaseStrategy.test(list, false)) {
 							ConsumerRecord<K, Collection<ConsumerRecord<K, R>>> done =
-									new ConsumerRecord<>(AGGREGATED_RESULTS_TOPIC, 0, 0L, null, list);
+						new ConsumerRecord<>(AGGREGATED_RESULTS_TOPIC, 0, 0L, null, list);
 							done.headers()
-									.add(new RecordHeader(correlationHeaderName,
-											isBinaryCorrelation()
-													? ((CorrelationKey) correlationId).getCorrelationId()
-													: ((String) correlationId).getBytes(StandardCharsets.UTF_8)));
+						.add(new RecordHeader(correlationHeaderName,
+					isBinaryCorrelation()
+				? ((CorrelationKey) correlationId).getCorrelationId()
+				: ((String) correlationId).getBytes(StandardCharsets.UTF_8)));
 							this.pending.remove(correlationId);
 							checkOffsetsAndCommitIfNecessary(list, consumer);
 							completed.add(done);
@@ -167,13 +165,13 @@ public class AggregatingReplyingKafkaTemplate<K, V, R>
 
 	@Override
 	protected synchronized boolean handleTimeout(Object correlationId,
-			RequestReplyFuture<K, V, Collection<ConsumerRecord<K, R>>> future) {
+RequestReplyFuture<K, V, Collection<ConsumerRecord<K, R>>> future) {
 
 		Set<RecordHolder<K, R>> removed = this.pending.remove(correlationId);
 		if (removed != null && this.returnPartialOnTimeout) {
 			List<ConsumerRecord<K, R>> list = removed.stream()
-					.map(RecordHolder::getRecord)
-					.collect(Collectors.toList());
+		.map(RecordHolder::getRecord)
+		.collect(Collectors.toList());
 			if (this.releaseStrategy.test(list, true)) {
 				future.complete(new ConsumerRecord<>(PARTIAL_RESULTS_AFTER_TIMEOUT_TOPIC, 0, 0L, null, list));
 				return true;
@@ -184,18 +182,18 @@ public class AggregatingReplyingKafkaTemplate<K, V, R>
 
 	private void checkOffsetsAndCommitIfNecessary(List<ConsumerRecord<K, R>> list, Consumer<?, ?> consumer) {
 		list.forEach(record -> this.offsets.compute(
-				new TopicPartition(record.topic(), record.partition()),
-				(k, v) -> v == null ? record.offset() + 1 : Math.max(v, record.offset() + 1)));
+	new TopicPartition(record.topic(), record.partition()),
+	(k, v) -> v == null ? record.offset() + 1 : Math.max(v, record.offset() + 1)));
 		if (this.pending.isEmpty() && !this.offsets.isEmpty()) {
 			consumer.commitSync(this.offsets.entrySet().stream()
-							.collect(Collectors.toMap(Map.Entry::getKey,
-									entry -> new OffsetAndMetadata(entry.getValue()))),
-					this.commitTimeout);
+	.collect(Collectors.toMap(Map.Entry::getKey,
+entry -> new OffsetAndMetadata(entry.getValue()))),
+		this.commitTimeout);
 			this.offsets.clear();
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private Set<RecordHolder<K, R>> addToCollection(ConsumerRecord record, Object correlationId) {
 		Set<RecordHolder<K, R>> set = this.pending.computeIfAbsent(correlationId, id -> new LinkedHashSet<>());
 		set.add(new RecordHolder<>(record));
@@ -219,9 +217,9 @@ public class AggregatingReplyingKafkaTemplate<K, V, R>
 			final int prime = 31;
 			int result = 1;
 			result = prime * result
-					+ this.record.topic().hashCode()
-					+ this.record.partition()
-					+ (int) this.record.offset();
+		+ this.record.topic().hashCode()
+		+ this.record.partition()
+		+ (int) this.record.offset();
 			return result;
 		}
 
@@ -245,8 +243,8 @@ public class AggregatingReplyingKafkaTemplate<K, V, R>
 			}
 			else {
 				return this.record.topic().equals(other.record.topic())
-						&& this.record.partition() == other.record.partition()
-						&& this.record.offset() == other.record.offset();
+			&& this.record.partition() == other.record.partition()
+			&& this.record.offset() == other.record.offset();
 			}
 
 			return false;

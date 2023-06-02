@@ -147,9 +147,9 @@ public class ErrorHandlingDeserializer<T> implements Deserializer<T> {
 				Object value = configs.get(configKey);
 				Class<?> clazz = value instanceof Class ? (Class<?>) value : ClassUtils.forName((String) value, null);
 				Assert.isTrue(Function.class.isAssignableFrom(clazz), "'function' must be a 'Function ', not a "
-						+ clazz.getName());
+			+ clazz.getName());
 				this.failedDeserializationFunction = (Function<FailedDeserializationInfo, T>)
-						clazz.getDeclaredConstructor().newInstance();
+			clazz.getDeclaredConstructor().newInstance();
 			}
 			catch (Exception e) {
 				throw new IllegalStateException(e);
@@ -187,7 +187,7 @@ public class ErrorHandlingDeserializer<T> implements Deserializer<T> {
 	private T recoverFromSupplier(String topic, Headers headers, byte[] data, Exception exception) {
 		if (this.failedDeserializationFunction != null) {
 			FailedDeserializationInfo failedDeserializationInfo =
-					new FailedDeserializationInfo(topic, headers, data, this.isForKey, exception);
+		new FailedDeserializationInfo(topic, headers, data, this.isForKey, exception);
 			return this.failedDeserializationFunction.apply(failedDeserializationInfo);
 		}
 		else {

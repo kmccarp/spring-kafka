@@ -46,7 +46,7 @@ public interface ConsumerAwareErrorHandler extends ErrorHandler {
 
 	@Override
 	default void handle(Exception thrownException, @Nullable List<ConsumerRecord<?, ?>> data, Consumer<?, ?> consumer,
-			MessageListenerContainer container) {
+MessageListenerContainer container) {
 		handle(thrownException, null, consumer);
 	}
 

@@ -29,8 +29,7 @@ import org.apache.kafka.common.serialization.Serializer;
  * @since 2.8
  *
  */
-public class DelegatingByTopicSerializer extends DelegatingByTopicSerialization<Serializer<?>>
-		implements Serializer<Object> {
+public class DelegatingByTopicSerializer extends DelegatingByTopicSerialization<Serializer<?>>implements Serializer<Object> {
 
 	/**
 	 * Construct an instance that will be configured in {@link #configure(Map, boolean)}

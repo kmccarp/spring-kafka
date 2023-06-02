@@ -83,17 +83,17 @@ import io.micrometer.tracing.test.simple.SimpleTracer;
  *
  */
 @SpringJUnitConfig
-@EmbeddedKafka(topics = { "observation.testT1", "observation.testT2", "ObservationTests.testT3" })
+@EmbeddedKafka(topics = {"observation.testT1", "observation.testT2", "ObservationTests.testT3"})
 @DirtiesContext
 public class ObservationTests {
 
 	@Test
 	void endToEnd(@Autowired Listener listener, @Autowired KafkaTemplate<Integer, String> template,
-			@Autowired SimpleTracer tracer, @Autowired KafkaListenerEndpointRegistry rler,
-			@Autowired MeterRegistry meterRegistry, @Autowired EmbeddedKafkaBroker broker,
-			@Autowired KafkaListenerEndpointRegistry endpointRegistry, @Autowired KafkaAdmin admin,
-			@Autowired KafkaTemplate<Integer, String> customTemplate, @Autowired Config config)
-					throws InterruptedException, ExecutionException, TimeoutException {
+@Autowired SimpleTracer tracer, @Autowired KafkaListenerEndpointRegistry rler,
+@Autowired MeterRegistry meterRegistry, @Autowired EmbeddedKafkaBroker broker,
+@Autowired KafkaListenerEndpointRegistry endpointRegistry, @Autowired KafkaAdmin admin,
+@Autowired KafkaTemplate<Integer, String> customTemplate, @Autowired Config config)
+throws InterruptedException, ExecutionException, TimeoutException {
 
 		template.send("observation.testT1", "test").get(10, TimeUnit.SECONDS);
 		assertThat(listener.latch1.await(10, TimeUnit.SECONDS)).isTrue();
@@ -110,8 +110,8 @@ public class ObservationTests {
 		await().until(() -> spans.peekFirst().getTags().size() == 3);
 		span = spans.poll();
 		assertThat(span.getTags())
-				.containsAllEntriesOf(
-						Map.of("spring.kafka.listener.id", "obs1-0", "foo", "some foo value", "bar", "some bar value"));
+	.containsAllEntriesOf(
+Map.of("spring.kafka.listener.id", "obs1-0", "foo", "some foo value", "bar", "some bar value"));
 		assertThat(span.getName()).isEqualTo("observation.testT1 receive");
 		assertThat(span.getRemoteServiceName()).startsWith("Apache Kafka: ");
 		await().until(() -> spans.peekFirst().getTags().size() == 1);
@@ -121,8 +121,8 @@ public class ObservationTests {
 		await().until(() -> spans.peekFirst().getTags().size() == 3);
 		span = spans.poll();
 		assertThat(span.getTags())
-				.containsAllEntriesOf(
-						Map.of("spring.kafka.listener.id", "obs2-0", "foo", "some foo value", "bar", "some bar value"));
+	.containsAllEntriesOf(
+Map.of("spring.kafka.listener.id", "obs2-0", "foo", "some foo value", "bar", "some bar value"));
 		assertThat(span.getName()).isEqualTo("observation.testT2 receive");
 		template.setObservationConvention(new DefaultKafkaTemplateObservationConvention() {
 
@@ -133,14 +133,14 @@ public class ObservationTests {
 
 		});
 		rler.getListenerContainer("obs1").getContainerProperties().setObservationConvention(
-				new DefaultKafkaListenerObservationConvention() {
+	new DefaultKafkaListenerObservationConvention() {
 
-					@Override
-					public KeyValues getLowCardinalityKeyValues(KafkaRecordReceiverContext context) {
-						return super.getLowCardinalityKeyValues(context).and("baz", "qux");
-					}
+		@Override
+		public KeyValues getLowCardinalityKeyValues(KafkaRecordReceiverContext context) {
+			return super.getLowCardinalityKeyValues(context).and("baz", "qux");
+		}
 
-				});
+	});
 		rler.getListenerContainer("obs1").stop();
 		rler.getListenerContainer("obs1").start();
 		template.send("observation.testT1", "test").get(10, TimeUnit.SECONDS);
@@ -157,8 +157,8 @@ public class ObservationTests {
 		await().until(() -> spans.peekFirst().getTags().size() == 4);
 		span = spans.poll();
 		assertThat(span.getTags())
-				.containsAllEntriesOf(Map.of("spring.kafka.listener.id", "obs1-0", "foo", "some foo value", "bar",
-						"some bar value", "baz", "qux"));
+	.containsAllEntriesOf(Map.of("spring.kafka.listener.id", "obs1-0", "foo", "some foo value", "bar",
+"some bar value", "baz", "qux"));
 		assertThat(span.getName()).isEqualTo("observation.testT1 receive");
 		await().until(() -> spans.peekFirst().getTags().size() == 2);
 		span = spans.poll();
@@ -168,49 +168,48 @@ public class ObservationTests {
 		await().until(() -> spans.peekFirst().getTags().size() == 3);
 		span = spans.poll();
 		assertThat(span.getTags())
-				.containsAllEntriesOf(
-						Map.of("spring.kafka.listener.id", "obs2-0", "foo", "some foo value", "bar", "some bar value"));
+	.containsAllEntriesOf(
+Map.of("spring.kafka.listener.id", "obs2-0", "foo", "some foo value", "bar", "some bar value"));
 		assertThat(span.getTags()).doesNotContainEntry("baz", "qux");
 		assertThat(span.getName()).isEqualTo("observation.testT2 receive");
 		MeterRegistryAssert.assertThat(meterRegistry)
-				.hasTimerWithNameAndTags("spring.kafka.template",
-						KeyValues.of("spring.kafka.template.name", "template"))
-				.hasTimerWithNameAndTags("spring.kafka.template",
-						KeyValues.of("spring.kafka.template.name", "template", "foo", "bar"))
-				.hasTimerWithNameAndTags("spring.kafka.listener", KeyValues.of("spring.kafka.listener.id", "obs1-0"))
-				.hasTimerWithNameAndTags("spring.kafka.listener",
-						KeyValues.of("spring.kafka.listener.id", "obs1-0", "baz", "qux"))
-				.hasTimerWithNameAndTags("spring.kafka.listener", KeyValues.of("spring.kafka.listener.id", "obs2-0"));
+	.hasTimerWithNameAndTags("spring.kafka.template",
+KeyValues.of("spring.kafka.template.name", "template"))
+	.hasTimerWithNameAndTags("spring.kafka.template",
+KeyValues.of("spring.kafka.template.name", "template", "foo", "bar"))
+	.hasTimerWithNameAndTags("spring.kafka.listener", KeyValues.of("spring.kafka.listener.id", "obs1-0"))
+	.hasTimerWithNameAndTags("spring.kafka.listener",
+KeyValues.of("spring.kafka.listener.id", "obs1-0", "baz", "qux"))
+	.hasTimerWithNameAndTags("spring.kafka.listener", KeyValues.of("spring.kafka.listener.id", "obs2-0"));
 		assertThat(admin.getConfigurationProperties())
-				.containsEntry(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, broker.getBrokersAsString());
+	.containsEntry(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, broker.getBrokersAsString());
 		// producer factory broker different to admin
 		KafkaAdmin pAdmin = KafkaTestUtils.getPropertyValue(template, "kafkaAdmin", KafkaAdmin.class);
 		assertThat(pAdmin.getOperationTimeout()).isEqualTo(admin.getOperationTimeout());
 		assertThat(pAdmin.getConfigurationProperties())
-				.containsEntry(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG,
-						broker.getBrokersAsString() + "," + broker.getBrokersAsString());
+	.containsEntry(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG,
+broker.getBrokersAsString() + "," + broker.getBrokersAsString());
 		// custom admin
 		assertThat(customTemplate.getKafkaAdmin()).isSameAs(config.mockAdmin);
 
 		// consumer factory broker different to admin
 		Object container = KafkaTestUtils
-				.getPropertyValue(endpointRegistry.getListenerContainer("obs1"), "containers", List.class).get(0);
+	.getPropertyValue(endpointRegistry.getListenerContainer("obs1"), "containers", List.class).get(0);
 		KafkaAdmin cAdmin = KafkaTestUtils.getPropertyValue(container, "listenerConsumer.kafkaAdmin", KafkaAdmin.class);
 		assertThat(cAdmin.getOperationTimeout()).isEqualTo(admin.getOperationTimeout());
 		assertThat(cAdmin.getConfigurationProperties())
-				.containsEntry(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG,
-						broker.getBrokersAsString() + "," + broker.getBrokersAsString() + ","
-								+ broker.getBrokersAsString());
+	.containsEntry(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG,
+broker.getBrokersAsString() + "," + broker.getBrokersAsString() + ","+ broker.getBrokersAsString());
 		// broker override in annotation
 		container = KafkaTestUtils
-				.getPropertyValue(endpointRegistry.getListenerContainer("obs2"), "containers", List.class).get(0);
+	.getPropertyValue(endpointRegistry.getListenerContainer("obs2"), "containers", List.class).get(0);
 		cAdmin = KafkaTestUtils.getPropertyValue(container, "listenerConsumer.kafkaAdmin", KafkaAdmin.class);
 		assertThat(cAdmin.getOperationTimeout()).isEqualTo(admin.getOperationTimeout());
 		assertThat(cAdmin.getConfigurationProperties())
-				.containsEntry(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, broker.getBrokersAsString());
+	.containsEntry(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, broker.getBrokersAsString());
 		// custom admin
 		container = KafkaTestUtils
-				.getPropertyValue(endpointRegistry.getListenerContainer("obs3"), "containers", List.class).get(0);
+	.getPropertyValue(endpointRegistry.getListenerContainer("obs3"), "containers", List.class).get(0);
 		cAdmin = KafkaTestUtils.getPropertyValue(container, "listenerConsumer.kafkaAdmin", KafkaAdmin.class);
 		assertThat(cAdmin).isSameAs(config.mockAdmin);
 	}
@@ -224,7 +223,7 @@ public class ObservationTests {
 		@Bean
 		KafkaAdmin admin(EmbeddedKafkaBroker broker) {
 			KafkaAdmin admin = new KafkaAdmin(
-					Map.of(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, broker.getBrokersAsString()));
+		Map.of(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, broker.getBrokersAsString()));
 			admin.setOperationTimeout(42);
 			return admin;
 		}
@@ -232,16 +231,16 @@ public class ObservationTests {
 		@Bean
 		ProducerFactory<Integer, String> producerFactory(EmbeddedKafkaBroker broker) {
 			Map<String, Object> producerProps = KafkaTestUtils.producerProps(broker);
-			producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,  broker.getBrokersAsString() + ","
-					+ broker.getBrokersAsString());
+			producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, broker.getBrokersAsString() + ","
+		+ broker.getBrokersAsString());
 			return new DefaultKafkaProducerFactory<>(producerProps);
 		}
 
 		@Bean
 		ConsumerFactory<Integer, String> consumerFactory(EmbeddedKafkaBroker broker) {
 			Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("obs", "false", broker);
-			consumerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,  broker.getBrokersAsString() + ","
-					+ broker.getBrokersAsString() + "," + broker.getBrokersAsString());
+			consumerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, broker.getBrokersAsString() + ","
+		+ broker.getBrokersAsString() + "," + broker.getBrokersAsString());
 			return new DefaultKafkaConsumerFactory<>(consumerProps);
 		}
 
@@ -262,10 +261,10 @@ public class ObservationTests {
 
 		@Bean
 		ConcurrentKafkaListenerContainerFactory<Integer, String> kafkaListenerContainerFactory(
-				ConsumerFactory<Integer, String> cf) {
+	ConsumerFactory<Integer, String> cf) {
 
 			ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-					new ConcurrentKafkaListenerContainerFactory<>();
+		new ConcurrentKafkaListenerContainerFactory<>();
 			factory.setConsumerFactory(cf);
 			factory.getContainerProperties().setObservationEnabled(true);
 			factory.setContainerCustomizer(container -> {
@@ -290,15 +289,15 @@ public class ObservationTests {
 		ObservationRegistry observationRegistry(Tracer tracer, Propagator propagator, MeterRegistry meterRegistry) {
 			TestObservationRegistry observationRegistry = TestObservationRegistry.create();
 			observationRegistry.observationConfig().observationHandler(
-					// Composite will pick the first matching handler
-					new ObservationHandler.FirstMatchingCompositeObservationHandler(
-							// This is responsible for creating a child span on the sender side
-							new PropagatingSenderTracingObservationHandler<>(tracer, propagator),
-							// This is responsible for creating a span on the receiver side
-							new PropagatingReceiverTracingObservationHandler<>(tracer, propagator),
-							// This is responsible for creating a default span
-							new DefaultTracingObservationHandler(tracer)))
-					.observationHandler(new DefaultMeterObservationHandler(meterRegistry));
+		// Composite will pick the first matching handler
+		new ObservationHandler.FirstMatchingCompositeObservationHandler(
+	// This is responsible for creating a child span on the sender side
+	new PropagatingSenderTracingObservationHandler<>(tracer, propagator),
+	// This is responsible for creating a span on the receiver side
+	new PropagatingReceiverTracingObservationHandler<>(tracer, propagator),
+	// This is responsible for creating a default span
+	new DefaultTracingObservationHandler(tracer)))
+		.observationHandler(new DefaultMeterObservationHandler(meterRegistry));
 			return observationRegistry;
 		}
 
@@ -358,7 +357,7 @@ public class ObservationTests {
 		}
 
 		@KafkaListener(id = "obs2", topics = "observation.testT2",
-				properties = ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG + ":" + "#{@embeddedKafka.brokersAsString}")
+	properties = ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG + ":" + "#{@embeddedKafka.brokersAsString}")
 		void listen2(ConsumerRecord<?, ?> in) {
 			this.record = in;
 			this.latch1.countDown();

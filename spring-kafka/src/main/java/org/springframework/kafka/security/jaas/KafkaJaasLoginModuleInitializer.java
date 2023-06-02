@@ -93,7 +93,7 @@ public class KafkaJaasLoginModuleInitializer implements SmartInitializingSinglet
 	private String loginModule = "com.sun.security.auth.module.Krb5LoginModule";
 
 	private AppConfigurationEntry.LoginModuleControlFlag controlFlag =
-			AppConfigurationEntry.LoginModuleControlFlag.REQUIRED;
+AppConfigurationEntry.LoginModuleControlFlag.REQUIRED;
 
 	public KafkaJaasLoginModuleInitializer() throws IOException {
 		// we ignore the system property if it wasn't originally set at launch
@@ -129,11 +129,11 @@ public class KafkaJaasLoginModuleInitializer implements SmartInitializingSinglet
 		if (this.ignoreJavaLoginConfigParamSystemProperty) {
 			Map<String, AppConfigurationEntry[]> configurationEntries = new HashMap<>();
 			AppConfigurationEntry kafkaClientConfigurationEntry = new AppConfigurationEntry(
-					this.loginModule,
-					this.controlFlag,
-					this.options);
+		this.loginModule,
+		this.controlFlag,
+		this.options);
 			configurationEntries.put(KAFKA_CLIENT_CONTEXT_NAME,
-					new AppConfigurationEntry[] { kafkaClientConfigurationEntry });
+		new AppConfigurationEntry[]{kafkaClientConfigurationEntry});
 			Configuration.setConfiguration(new InternalConfiguration(configurationEntries));
 			// Workaround for a 0.9 client issue where even if the Configuration is
 			// set
@@ -141,7 +141,7 @@ public class KafkaJaasLoginModuleInitializer implements SmartInitializingSinglet
 			// Since the Configuration already exists, this will be ignored.
 			if (this.placeholderJaasConfiguration != null) {
 				System.setProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM,
-						this.placeholderJaasConfiguration.getAbsolutePath());
+			this.placeholderJaasConfiguration.getAbsolutePath());
 			}
 		}
 	}

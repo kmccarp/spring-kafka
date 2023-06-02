@@ -110,7 +110,8 @@ public class FailedRecordTrackerTests {
 		BackOff bo2 = mock(BackOff.class);
 		BackOffExecution be2 = mock(BackOffExecution.class);
 		given(bo2.start()).willReturn(be2);
-		FailedRecordTracker tracker = new FailedRecordTracker((rec, ex) -> { }, bo1, mock(LogAccessor.class));
+		FailedRecordTracker tracker = new FailedRecordTracker((rec, ex) -> {
+		}, bo1, mock(LogAccessor.class));
 		tracker.setBackOffFunction((record, ex) -> {
 			if (record.topic().equals("foo")) {
 				return bo2;
@@ -121,17 +122,17 @@ public class FailedRecordTrackerTests {
 		});
 		@SuppressWarnings("unchecked")
 		ThreadLocal<Map<TopicPartition, Object>> failures = (ThreadLocal<Map<TopicPartition, Object>>) KafkaTestUtils
-				.getPropertyValue(tracker, "failures");
+	.getPropertyValue(tracker, "failures");
 		ConsumerRecord<?, ?> record1 = new ConsumerRecord<>("foo", 0, 0L, "bar", "baz");
 		tracker.skip(record1, new RuntimeException());
 		assertThat(KafkaTestUtils.getPropertyValue(failures.get()
-					.get(new TopicPartition("foo", 0)), "backOffExecution"))
-				.isSameAs(be2);
+	.get(new TopicPartition("foo", 0)), "backOffExecution"))
+	.isSameAs(be2);
 		ConsumerRecord<?, ?> record2 = new ConsumerRecord<>("bar", 0, 0L, "bar", "baz");
 		tracker.skip(record2, new RuntimeException());
 		assertThat(KafkaTestUtils.getPropertyValue(failures.get()
-					.get(new TopicPartition("bar", 0)), "backOffExecution"))
-				.isSameAs(be1);
+	.get(new TopicPartition("bar", 0)), "backOffExecution"))
+	.isSameAs(be1);
 	}
 
 	@Test
@@ -151,7 +152,8 @@ public class FailedRecordTrackerTests {
 		BackOff bo2 = mock(BackOff.class);
 		BackOffExecution be2 = mock(BackOffExecution.class);
 		given(bo2.start()).willReturn(be2);
-		FailedRecordTracker tracker = new FailedRecordTracker((rec, ex) -> { }, bo1, mock(LogAccessor.class));
+		FailedRecordTracker tracker = new FailedRecordTracker((rec, ex) -> {
+		}, bo1, mock(LogAccessor.class));
 		tracker.setBackOffFunction((record, ex) -> {
 			if (ex instanceof IllegalStateException) {
 				return bo1;
@@ -163,12 +165,12 @@ public class FailedRecordTrackerTests {
 		tracker.setResetStateOnExceptionChange(reset);
 		@SuppressWarnings("unchecked")
 		ThreadLocal<Map<TopicPartition, Object>> failures = (ThreadLocal<Map<TopicPartition, Object>>) KafkaTestUtils
-				.getPropertyValue(tracker, "failures");
+	.getPropertyValue(tracker, "failures");
 		ConsumerRecord<?, ?> record1 = new ConsumerRecord<>("foo", 0, 0L, "bar", "baz");
 		tracker.skip(record1, new IllegalStateException());
 		assertThat(KafkaTestUtils.getPropertyValue(failures.get()
-				.get(new TopicPartition("foo", 0)), "backOffExecution"))
-			.isSameAs(be1);
+	.get(new TopicPartition("foo", 0)), "backOffExecution"))
+	.isSameAs(be1);
 		TopicPartitionOffset tpo = new TopicPartitionOffset("foo", 0, 0L);
 		assertThat(tracker.deliveryAttempt(tpo)).isEqualTo(2);
 		tracker.skip(record1, new ListenerExecutionFailedException("test", new IllegalStateException()));
@@ -177,21 +179,22 @@ public class FailedRecordTrackerTests {
 		if (reset) {
 			assertThat(tracker.deliveryAttempt(tpo)).isEqualTo(2);
 			assertThat(KafkaTestUtils.getPropertyValue(failures.get()
-					.get(new TopicPartition("foo", 0)), "backOffExecution"))
-				.isSameAs(be2);
+		.get(new TopicPartition("foo", 0)), "backOffExecution"))
+		.isSameAs(be2);
 		}
 		else {
 			assertThat(tracker.deliveryAttempt(tpo)).isEqualTo(4);
 			assertThat(KafkaTestUtils.getPropertyValue(failures.get()
-					.get(new TopicPartition("foo", 0)), "backOffExecution"))
-				.isSameAs(be1);
+		.get(new TopicPartition("foo", 0)), "backOffExecution"))
+		.isSameAs(be1);
 		}
 	}
 
 	@Test
 	void exceptionChangesWithTimestampedException() throws InterruptedException {
 		FixedBackOff bo1 = new FixedBackOff(0L, 5L);
-		FailedRecordTracker tracker = new FailedRecordTracker((rec, ex) -> { }, bo1, mock(LogAccessor.class));
+		FailedRecordTracker tracker = new FailedRecordTracker((rec, ex) -> {
+		}, bo1, mock(LogAccessor.class));
 		AtomicReference<Exception> captured = new AtomicReference<>();
 		tracker.setBackOffFunction((record, ex) -> {
 			captured.set(ex);
@@ -204,14 +207,14 @@ public class FailedRecordTrackerTests {
 		});
 		IllegalStateException ise = new IllegalStateException();
 		Exception ex = new ListenerExecutionFailedException("", new TimestampedException(
-				new ListenerExecutionFailedException("", ise)));
+	new ListenerExecutionFailedException("", ise)));
 		ConsumerRecord<?, ?> record = mock(ConsumerRecord.class);
 		Consumer<?, ?> consumer = mock(Consumer.class);
 		assertThat(tracker.recovered(record, ex, mock(MessageListenerContainer.class), consumer)).isFalse();
 		assertThat(captured.get()).isSameAs(ise);
 		IllegalArgumentException iae = new IllegalArgumentException();
 		ex = new ListenerExecutionFailedException("", new TimestampedException(
-				new ListenerExecutionFailedException("", iae)));
+	new ListenerExecutionFailedException("", iae)));
 		assertThat(tracker.recovered(record, ex, mock(MessageListenerContainer.class), consumer)).isTrue();
 		assertThat(captured.get()).isSameAs(iae);
 	}

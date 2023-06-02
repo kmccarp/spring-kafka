@@ -31,8 +31,7 @@ public final class JacksonPresent {
 	private static final ClassLoader classLoader = ClassUtils.getDefaultClassLoader();  // NOSONAR
 
 	private static final boolean jackson2Present = // NOSONAR
-			ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", classLoader) &&
-					ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", classLoader);
+ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", classLoader) &&ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", classLoader);
 
 	public static boolean isJackson2Present() {
 		return jackson2Present;

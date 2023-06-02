@@ -107,7 +107,7 @@ import org.springframework.messaging.support.MessageBuilder;
  * @author Soby Chacko
  * @author Gurps Bassi
  */
-@EmbeddedKafka(topics = { KafkaTemplateTests.INT_KEY_TOPIC, KafkaTemplateTests.STRING_KEY_TOPIC })
+@EmbeddedKafka(topics = {KafkaTemplateTests.INT_KEY_TOPIC, KafkaTemplateTests.STRING_KEY_TOPIC})
 public class KafkaTemplateTests {
 
 	public static final String INT_KEY_TOPIC = "intKeyTopic";
@@ -137,7 +137,7 @@ public class KafkaTemplateTests {
 	public static void setUp() {
 		embeddedKafka = EmbeddedKafkaCondition.getBroker();
 		Map<String, Object> consumerProps = KafkaTestUtils
-				.consumerProps("KafkaTemplatetests" + UUID.randomUUID(), "false", embeddedKafka);
+	.consumerProps("KafkaTemplatetests" + UUID.randomUUID(), "false", embeddedKafka);
 		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(consumerProps);
 		consumer = cf.createConsumer();
 		embeddedKafka.consumeFromAnEmbeddedTopic(consumer, INT_KEY_TOPIC);
@@ -166,9 +166,9 @@ public class KafkaTemplateTests {
 		template.setDefaultTopic(INT_KEY_TOPIC);
 
 		template.setConsumerFactory(
-				new DefaultKafkaConsumerFactory<>(KafkaTestUtils.consumerProps("xx", "false", embeddedKafka)));
+	new DefaultKafkaConsumerFactory<>(KafkaTestUtils.consumerProps("xx", "false", embeddedKafka)));
 		ConsumerRecords<Integer, String> initialRecords =
-				template.receive(Collections.singleton(new TopicPartitionOffset(INT_KEY_TOPIC, 1, 1L)));
+	template.receive(Collections.singleton(new TopicPartitionOffset(INT_KEY_TOPIC, 1, 1L)));
 		assertThat(initialRecords).isEmpty();
 
 		template.sendDefault("foo");
@@ -187,17 +187,17 @@ public class KafkaTemplateTests {
 		assertThat(received).has(allOf(keyValue(null, "qux"), partition(1)));
 
 		template.send(MessageBuilder.withPayload("fiz")
-				.setHeader(KafkaHeaders.TOPIC, INT_KEY_TOPIC)
-				.setHeader(KafkaHeaders.PARTITION, 0)
-				.setHeader(KafkaHeaders.KEY, 2)
-				.build());
+	.setHeader(KafkaHeaders.TOPIC, INT_KEY_TOPIC)
+	.setHeader(KafkaHeaders.PARTITION, 0)
+	.setHeader(KafkaHeaders.KEY, 2)
+	.build());
 		received = KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC);
 		assertThat(received).has(allOf(keyValue(2, "fiz"), partition(0)));
 
 		template.send(MessageBuilder.withPayload("buz")
-				.setHeader(KafkaHeaders.PARTITION, 1)
-				.setHeader(KafkaHeaders.KEY, 2)
-				.build());
+	.setHeader(KafkaHeaders.PARTITION, 1)
+	.setHeader(KafkaHeaders.KEY, 2)
+	.build());
 		received = KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC);
 		assertThat(received).has(allOf(keyValue(2, "buz"), partition(1)));
 
@@ -212,24 +212,24 @@ public class KafkaTemplateTests {
 
 		ConsumerRecord<Integer, String> receive = template.receive(INT_KEY_TOPIC, 1, received.offset());
 		assertThat(receive).has(allOf(keyValue(2, "buz"), partition(1)))
-				.extracting(ConsumerRecord::offset)
-				.isEqualTo(received.offset());
+	.extracting(ConsumerRecord::offset)
+	.isEqualTo(received.offset());
 		ConsumerRecords<Integer, String> records = template.receive(List.of(
-				new TopicPartitionOffset(INT_KEY_TOPIC, 1, 1L),
-				new TopicPartitionOffset(INT_KEY_TOPIC, 0, 1L),
-				new TopicPartitionOffset(INT_KEY_TOPIC, 0, 0L),
-				new TopicPartitionOffset(INT_KEY_TOPIC, 1, 0L)));
+	new TopicPartitionOffset(INT_KEY_TOPIC, 1, 1L),
+	new TopicPartitionOffset(INT_KEY_TOPIC, 0, 1L),
+	new TopicPartitionOffset(INT_KEY_TOPIC, 0, 0L),
+	new TopicPartitionOffset(INT_KEY_TOPIC, 1, 0L)));
 		assertThat(records.count()).isEqualTo(4);
 		Set<TopicPartition> partitions2 = records.partitions();
 		assertThat(partitions2).containsExactly(
-				new TopicPartition(INT_KEY_TOPIC, 1),
-				new TopicPartition(INT_KEY_TOPIC, 0));
+	new TopicPartition(INT_KEY_TOPIC, 1),
+	new TopicPartition(INT_KEY_TOPIC, 0));
 		assertThat(records.records(new TopicPartition(INT_KEY_TOPIC, 1)))
-				.extracting(ConsumerRecord::offset)
-				.containsExactly(1L, 0L);
+	.extracting(ConsumerRecord::offset)
+	.containsExactly(1L, 0L);
 		assertThat(records.records(new TopicPartition(INT_KEY_TOPIC, 0)))
-				.extracting(ConsumerRecord::offset)
-				.containsExactly(1L, 0L);
+	.extracting(ConsumerRecord::offset)
+	.containsExactly(1L, 0L);
 		pf.destroy();
 	}
 
@@ -268,11 +268,11 @@ public class KafkaTemplateTests {
 		KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 
 		Message<String> message1 = MessageBuilder.withPayload("foo-message")
-				.setHeader(KafkaHeaders.TOPIC, INT_KEY_TOPIC)
-				.setHeader(KafkaHeaders.PARTITION, 0)
-				.setHeader("foo", "bar")
-				.setHeader(KafkaHeaders.RECEIVED_TOPIC, "dummy")
-				.build();
+	.setHeader(KafkaHeaders.TOPIC, INT_KEY_TOPIC)
+	.setHeader(KafkaHeaders.PARTITION, 0)
+	.setHeader("foo", "bar")
+	.setHeader(KafkaHeaders.RECEIVED_TOPIC, "dummy")
+	.build();
 
 		template.send(message1);
 
@@ -289,11 +289,11 @@ public class KafkaTemplateTests {
 		assertThat(iterator.hasNext()).as("Expected no more headers").isFalse();
 
 		Message<String> message2 = MessageBuilder.withPayload("foo-message-2")
-				.setHeader(KafkaHeaders.TOPIC, INT_KEY_TOPIC)
-				.setHeader(KafkaHeaders.PARTITION, 0)
-				.setHeader(KafkaHeaders.TIMESTAMP, 1487694048615L)
-				.setHeader("foo", "bar")
-				.build();
+	.setHeader(KafkaHeaders.TOPIC, INT_KEY_TOPIC)
+	.setHeader(KafkaHeaders.PARTITION, 0)
+	.setHeader(KafkaHeaders.TIMESTAMP, 1487694048615L)
+	.setHeader("foo", "bar")
+	.build();
 
 		template.send(message2);
 
@@ -341,7 +341,7 @@ public class KafkaTemplateTests {
 
 			@Override
 			public void onError(ProducerRecord<Integer, String> producerRecord, RecordMetadata metadata,
-					Exception exception) {
+		Exception exception) {
 
 				assertThat(producerRecord).isNotNull();
 				assertThat(exception).isNotNull();
@@ -351,7 +351,7 @@ public class KafkaTemplateTests {
 		}
 		PL pl1 = new PL();
 		PL pl2 = new PL();
-		CompositeProducerListener<Integer, String> cpl = new CompositeProducerListener<>(new PL[]{ pl1, pl2 });
+		CompositeProducerListener<Integer, String> cpl = new CompositeProducerListener<>(new PL[]{pl1, pl2});
 		template.setProducerListener(cpl);
 		template.sendDefault("foo");
 		template.flush();
@@ -365,7 +365,7 @@ public class KafkaTemplateTests {
 		KafkaTestUtils.getSingleRecord(consumer, INT_KEY_TOPIC);
 		pf.destroy();
 		cpl.onError(records.get(0), new RecordMetadata(new TopicPartition(INT_KEY_TOPIC, -1), 0L, 0, 0L, 0, 0),
-				new RuntimeException("x"));
+	new RuntimeException("x"));
 		assertThat(onErrorDelegateCalls.get()).isEqualTo(2);
 	}
 
@@ -506,10 +506,10 @@ public class KafkaTemplateTests {
 		KafkaTemplate<String, String> templateWTX2 = new KafkaTemplate<>(template.getProducerFactory(), true, overrides);
 		// clone the factory again with empty properties
 		KafkaTemplate<String, String> templateWTX2_2 = new KafkaTemplate<>(templateWTX2.getProducerFactory(), true,
-				Collections.singletonMap("dummy", "dont use"));
+	Collections.singletonMap("dummy", "dont use"));
 		assertThat(template.getProducerFactory()).isOfAnyClassIn(DefaultKafkaProducerFactory.class);
 		assertThat(template.getProducerFactory().getConfigurationProperties()
-				.get(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG)).isEqualTo(StringSerializer.class);
+	.get(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG)).isEqualTo(StringSerializer.class);
 		assertThat(template.getProducerFactory().getPhysicalCloseTimeout()).isEqualTo(Duration.ofSeconds(6));
 		assertThat(template.getProducerFactory().isProducerPerThread()).isTrue();
 		assertThat(template.isTransactional()).isTrue();
@@ -534,12 +534,12 @@ public class KafkaTemplateTests {
 		Supplier<Serializer<String>> keySerializer = () -> null;
 		Supplier<Serializer<String>> valueSerializer = () -> null;
 		DefaultKafkaProducerFactory<String, String> pf =
-				new DefaultKafkaProducerFactory<>(senderProps, keySerializer, valueSerializer);
+	new DefaultKafkaProducerFactory<>(senderProps, keySerializer, valueSerializer);
 		Map<String, Object> overrides = new HashMap<>();
 		overrides.put(ProducerConfig.CLIENT_ID_CONFIG, "foo");
 		KafkaTemplate<String, String> template = new KafkaTemplate<>(pf, true, overrides);
 		assertThat(template.getProducerFactory().getConfigurationProperties()
-				.get(ProducerConfig.CLIENT_ID_CONFIG)).isEqualTo("foo");
+	.get(ProducerConfig.CLIENT_ID_CONFIG)).isEqualTo("foo");
 		assertThat(template.getProducerFactory().getKeySerializerSupplier()).isSameAs(keySerializer);
 		assertThat(template.getProducerFactory().getValueSerializerSupplier()).isSameAs(valueSerializer);
 	}
@@ -552,8 +552,8 @@ public class KafkaTemplateTests {
 		KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 
 		assertThatExceptionOfType(KafkaException.class).isThrownBy(() ->
-						template.send("missing.topic", "foo"))
-				.withCauseExactlyInstanceOf(TimeoutException.class);
+	template.send("missing.topic", "foo"))
+	.withCauseExactlyInstanceOf(TimeoutException.class);
 		pf.destroy();
 	}
 
@@ -599,7 +599,7 @@ public class KafkaTemplateTests {
 		ProducerInterceptor<Integer, String> producerInterceptor1 = Mockito.mock(ProducerInterceptor.class);
 		ProducerInterceptor<Integer, String> producerInterceptor2 = Mockito.mock(ProducerInterceptor.class);
 		CompositeProducerInterceptor<Integer, String> compositeProducerInterceptor =
-				new CompositeProducerInterceptor<>(producerInterceptor1, producerInterceptor2);
+	new CompositeProducerInterceptor<>(producerInterceptor1, producerInterceptor2);
 		template.setProducerInterceptor(compositeProducerInterceptor);
 
 		ProducerRecord<Integer, String> mockProducerRecord = Mockito.mock(ProducerRecord.class);
@@ -618,19 +618,19 @@ public class KafkaTemplateTests {
 
 	@ParameterizedTest(name = "{0} is invalid")
 	@NullSource
-	@ValueSource(longs =  -1)
+	@ValueSource(longs = -1)
 	void testReceiveWhenOffsetIsInvalid(Long offset) {
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
 		DefaultKafkaProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(senderProps);
 		KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf, true);
 
 		template.setConsumerFactory(
-				new DefaultKafkaConsumerFactory<>(KafkaTestUtils.consumerProps("xx", "false", embeddedKafka)));
+	new DefaultKafkaConsumerFactory<>(KafkaTestUtils.consumerProps("xx", "false", embeddedKafka)));
 		TopicPartitionOffset tpoWithNullOffset = new TopicPartitionOffset(INT_KEY_TOPIC, 1, offset);
 
 		assertThatExceptionOfType(KafkaException.class)
-				.isThrownBy(() -> template.receive(Collections.singleton(tpoWithNullOffset)))
-				.withMessage("Offset supplied in TopicPartitionOffset is invalid: " + tpoWithNullOffset);
+	.isThrownBy(() -> template.receive(Collections.singleton(tpoWithNullOffset)))
+	.withMessage("Offset supplied in TopicPartitionOffset is invalid: " + tpoWithNullOffset);
 	}
 
 

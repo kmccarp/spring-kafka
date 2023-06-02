@@ -72,8 +72,7 @@ import org.springframework.lang.Nullable;
  *
  * @since 1.3
  */
-public class KafkaAdmin extends KafkaResourceFactory
-		implements ApplicationContextAware, SmartInitializingSingleton, KafkaAdminOperations {
+public class KafkaAdmin extends KafkaResourceFactoryimplements ApplicationContextAware, SmartInitializingSingleton, KafkaAdminOperations {
 
 	/**
 	 * The default close timeout duration as 10 seconds.
@@ -212,7 +211,7 @@ public class KafkaAdmin extends KafkaResourceFactory
 				try {
 					synchronized (this) {
 						this.clusterId = adminClient.describeCluster().clusterId().get(this.operationTimeout,
-								TimeUnit.SECONDS);
+					TimeUnit.SECONDS);
 					}
 					addOrModifyTopicsIfNeeded(adminClient, newTopics);
 					return true;
@@ -243,15 +242,15 @@ public class KafkaAdmin extends KafkaResourceFactory
 	 */
 	private Collection<NewTopic> newTopics() {
 		Map<String, NewTopic> newTopicsMap = new HashMap<>(
-				this.applicationContext.getBeansOfType(NewTopic.class, false, false));
+	this.applicationContext.getBeansOfType(NewTopic.class, false, false));
 		Map<String, NewTopics> wrappers = this.applicationContext.getBeansOfType(NewTopics.class, false, false);
 		AtomicInteger count = new AtomicInteger();
 		wrappers.forEach((name, newTopics) -> {
 			newTopics.getNewTopics().forEach(nt -> newTopicsMap.put(name + "#" + count.getAndIncrement(), nt));
 		});
 		Map<String, NewTopic> topicsForRetry = newTopicsMap.entrySet().stream()
-				.filter(entry -> entry.getValue() instanceof TopicForRetryable)
-				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+	.filter(entry -> entry.getValue() instanceof TopicForRetryable)
+	.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		for (Entry<String, NewTopic> entry : topicsForRetry.entrySet()) {
 			Iterator<Entry<String, NewTopic>> iterator = newTopicsMap.entrySet().iterator();
 			boolean remove = false;
@@ -259,7 +258,7 @@ public class KafkaAdmin extends KafkaResourceFactory
 				Entry<String, NewTopic> nt = iterator.next();
 				// if we have a NewTopic and TopicForRetry with the same name, remove the latter
 				if (nt.getValue().name().equals(entry.getValue().name())
-						&& !(nt.getValue() instanceof TopicForRetryable)) {
+			&& !(nt.getValue() instanceof TopicForRetryable)) {
 
 					remove = true;
 					break;
@@ -326,12 +325,12 @@ public class KafkaAdmin extends KafkaResourceFactory
 			Map<String, NewTopic> topicNameToTopic = new HashMap<>();
 			topics.forEach(t -> topicNameToTopic.compute(t.name(), (k, v) -> t));
 			DescribeTopicsResult topicInfo = adminClient
-					.describeTopics(topics.stream()
-							.map(NewTopic::name)
-							.collect(Collectors.toList()));
+		.describeTopics(topics.stream()
+	.map(NewTopic::name)
+	.collect(Collectors.toList()));
 			List<NewTopic> topicsToAdd = new ArrayList<>();
 			Map<String, NewPartitions> topicsWithPartitionMismatches =
-					checkPartitions(topicNameToTopic, topicInfo, topicsToAdd);
+		checkPartitions(topicNameToTopic, topicInfo, topicsToAdd);
 			if (topicsToAdd.size() > 0) {
 				addTopics(adminClient, topicsToAdd);
 			}
@@ -342,7 +341,7 @@ public class KafkaAdmin extends KafkaResourceFactory
 				List<NewTopic> toCheck = new LinkedList<>(topics);
 				toCheck.removeAll(topicsToAdd);
 				Map<ConfigResource, List<ConfigEntry>> mismatchingConfigs =
-						checkTopicsForConfigMismatches(adminClient, toCheck);
+			checkTopicsForConfigMismatches(adminClient, toCheck);
 				if (!mismatchingConfigs.isEmpty()) {
 					adjustConfigMismatches(adminClient, topics, mismatchingConfigs);
 				}
@@ -351,22 +350,22 @@ public class KafkaAdmin extends KafkaResourceFactory
 	}
 
 	private Map<ConfigResource, List<ConfigEntry>> checkTopicsForConfigMismatches(
-			AdminClient adminClient, Collection<NewTopic> topics) {
+AdminClient adminClient, Collection<NewTopic> topics) {
 
 		List<ConfigResource> configResources = topics.stream()
-				.map(topic -> new ConfigResource(Type.TOPIC, topic.name()))
-				.collect(Collectors.toList());
+	.map(topic -> new ConfigResource(Type.TOPIC, topic.name()))
+	.collect(Collectors.toList());
 
 		DescribeConfigsResult describeConfigsResult = adminClient.describeConfigs(configResources);
 		try {
 			Map<ConfigResource, Config> topicsConfig = describeConfigsResult.all()
-					.get(this.operationTimeout, TimeUnit.SECONDS);
+		.get(this.operationTimeout, TimeUnit.SECONDS);
 
 			Map<ConfigResource, List<ConfigEntry>> configMismatches = new HashMap<>();
 			for (Map.Entry<ConfigResource, Config> topicConfig : topicsConfig.entrySet()) {
 				Optional<NewTopic> topicOptional = topics.stream()
-						.filter(p -> p.name().equals(topicConfig.getKey().name()))
-						.findFirst();
+			.filter(p -> p.name().equals(topicConfig.getKey().name()))
+			.findFirst();
 
 				List<ConfigEntry> configMismatchesEntries = new ArrayList<>();
 				if (topicOptional.isPresent() && topicOptional.get().configs() != null) {
@@ -393,27 +392,27 @@ public class KafkaAdmin extends KafkaResourceFactory
 	}
 
 	private void adjustConfigMismatches(AdminClient adminClient, Collection<NewTopic> topics,
-			Map<ConfigResource, List<ConfigEntry>> mismatchingConfigs) {
+Map<ConfigResource, List<ConfigEntry>> mismatchingConfigs) {
 		for (Map.Entry<ConfigResource, List<ConfigEntry>> mismatchingConfigsOfTopic : mismatchingConfigs.entrySet()) {
 			ConfigResource topicConfigResource = mismatchingConfigsOfTopic.getKey();
 
 			Optional<NewTopic> topicOptional = topics.stream().filter(p -> p.name().equals(topicConfigResource.name()))
-					.findFirst();
+		.findFirst();
 			if (topicOptional.isPresent()) {
 				for (ConfigEntry mismatchConfigEntry : mismatchingConfigsOfTopic.getValue()) {
 					List<AlterConfigOp> alterConfigOperations = new ArrayList<>();
 					Map<String, String> desiredConfigs = topicOptional.get().configs();
 					if (desiredConfigs.get(mismatchConfigEntry.name()) != null) {
 						alterConfigOperations.add(
-								new AlterConfigOp(
-										new ConfigEntry(mismatchConfigEntry.name(),
-												desiredConfigs.get(mismatchConfigEntry.name())),
-										OpType.SET));
+					new AlterConfigOp(
+				new ConfigEntry(mismatchConfigEntry.name(),
+			desiredConfigs.get(mismatchConfigEntry.name())),
+				OpType.SET));
 					}
 					if (alterConfigOperations.size() > 0) {
 						try {
 							AlterConfigsResult alterConfigsResult = adminClient
-									.incrementalAlterConfigs(Map.of(topicConfigResource, alterConfigOperations));
+						.incrementalAlterConfigs(Map.of(topicConfigResource, alterConfigOperations));
 							alterConfigsResult.all().get(this.operationTimeout, TimeUnit.SECONDS);
 						}
 						catch (InterruptedException ie) {
@@ -431,7 +430,7 @@ public class KafkaAdmin extends KafkaResourceFactory
 	}
 
 	private Map<String, NewPartitions> checkPartitions(Map<String, NewTopic> topicNameToTopic,
-			DescribeTopicsResult topicInfo, List<NewTopic> topicsToAdd) {
+DescribeTopicsResult topicInfo, List<NewTopic> topicsToAdd) {
 
 		Map<String, NewPartitions> topicsToModify = new HashMap<>();
 		topicInfo.topicNameValues().forEach((n, f) -> {
@@ -440,14 +439,14 @@ public class KafkaAdmin extends KafkaResourceFactory
 				TopicDescription topicDescription = f.get(this.operationTimeout, TimeUnit.SECONDS);
 				if (topic.numPartitions() >= 0 && topic.numPartitions() < topicDescription.partitions().size()) {
 					LOGGER.info(() -> String.format(
-						"Topic '%s' exists but has a different partition count: %d not %d", n,
-						topicDescription.partitions().size(), topic.numPartitions()));
+				"Topic '%s' exists but has a different partition count: %d not %d", n,
+				topicDescription.partitions().size(), topic.numPartitions()));
 				}
 				else if (topic.numPartitions() > topicDescription.partitions().size()) {
 					LOGGER.info(() -> String.format(
-						"Topic '%s' exists but has a different partition count: %d not %d, increasing "
-						+ "if the broker supports it", n,
-						topicDescription.partitions().size(), topic.numPartitions()));
+				"Topic '%s' exists but has a different partition count: %d not %d, increasing "
+			+ "if the broker supports it", n,
+				topicDescription.partitions().size(), topic.numPartitions()));
 					topicsToModify.put(n, NewPartitions.increaseTo(topic.numPartitions()));
 				}
 			}

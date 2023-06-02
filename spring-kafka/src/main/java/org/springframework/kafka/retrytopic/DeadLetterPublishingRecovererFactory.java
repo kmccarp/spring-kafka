@@ -58,7 +58,7 @@ import org.springframework.util.Assert;
 public class DeadLetterPublishingRecovererFactory {
 
 	private static final LogAccessor LOGGER =
-			new LogAccessor(LogFactory.getLog(DeadLetterPublishingRecovererFactory.class));
+new LogAccessor(LogFactory.getLog(DeadLetterPublishingRecovererFactory.class));
 
 	private final DestinationTopicResolver destinationTopicResolver;
 
@@ -66,7 +66,8 @@ public class DeadLetterPublishingRecovererFactory {
 
 	private final Set<Class<? extends Exception>> nonFatalExceptions = new HashSet<>();
 
-	private Consumer<DeadLetterPublishingRecoverer> recovererCustomizer = recoverer -> { };
+	private Consumer<DeadLetterPublishingRecoverer> recovererCustomizer = recoverer -> {
+	};
 
 	private BiFunction<ConsumerRecord<?, ?>, Exception, Headers> headersFunction;
 
@@ -176,32 +177,32 @@ public class DeadLetterPublishingRecovererFactory {
 	public DeadLetterPublishingRecoverer create(String mainListenerId) {
 		Assert.notNull(mainListenerId, "'listenerId' cannot be null");
 		DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(// NOSONAR anon. class size
-				templateResolver(mainListenerId), false, destinationResolver(mainListenerId)) {
+	templateResolver(mainListenerId), false, destinationResolver(mainListenerId)) {
 
 			@Override
 			protected DeadLetterPublishingRecoverer.HeaderNames getHeaderNames() {
 				return DeadLetterPublishingRecoverer.HeaderNames.Builder
-						.original()
-							.offsetHeader(KafkaHeaders.ORIGINAL_OFFSET)
-							.timestampHeader(KafkaHeaders.ORIGINAL_TIMESTAMP)
-							.timestampTypeHeader(KafkaHeaders.ORIGINAL_TIMESTAMP_TYPE)
-							.topicHeader(KafkaHeaders.ORIGINAL_TOPIC)
-							.partitionHeader(KafkaHeaders.ORIGINAL_PARTITION)
-							.consumerGroupHeader(KafkaHeaders.ORIGINAL_CONSUMER_GROUP)
-						.exception()
-							.keyExceptionFqcn(KafkaHeaders.KEY_EXCEPTION_FQCN)
-							.exceptionFqcn(KafkaHeaders.EXCEPTION_FQCN)
-							.exceptionCauseFqcn(KafkaHeaders.EXCEPTION_CAUSE_FQCN)
-							.keyExceptionMessage(KafkaHeaders.KEY_EXCEPTION_MESSAGE)
-							.exceptionMessage(KafkaHeaders.EXCEPTION_MESSAGE)
-							.keyExceptionStacktrace(KafkaHeaders.KEY_EXCEPTION_STACKTRACE)
-							.exceptionStacktrace(KafkaHeaders.EXCEPTION_STACKTRACE)
-						.build();
+			.original()
+			.offsetHeader(KafkaHeaders.ORIGINAL_OFFSET)
+			.timestampHeader(KafkaHeaders.ORIGINAL_TIMESTAMP)
+			.timestampTypeHeader(KafkaHeaders.ORIGINAL_TIMESTAMP_TYPE)
+			.topicHeader(KafkaHeaders.ORIGINAL_TOPIC)
+			.partitionHeader(KafkaHeaders.ORIGINAL_PARTITION)
+			.consumerGroupHeader(KafkaHeaders.ORIGINAL_CONSUMER_GROUP)
+			.exception()
+			.keyExceptionFqcn(KafkaHeaders.KEY_EXCEPTION_FQCN)
+			.exceptionFqcn(KafkaHeaders.EXCEPTION_FQCN)
+			.exceptionCauseFqcn(KafkaHeaders.EXCEPTION_CAUSE_FQCN)
+			.keyExceptionMessage(KafkaHeaders.KEY_EXCEPTION_MESSAGE)
+			.exceptionMessage(KafkaHeaders.EXCEPTION_MESSAGE)
+			.keyExceptionStacktrace(KafkaHeaders.KEY_EXCEPTION_STACKTRACE)
+			.exceptionStacktrace(KafkaHeaders.EXCEPTION_STACKTRACE)
+			.build();
 			}
 		};
 
 		recoverer.setHeadersFunction(
-				(consumerRecord, e) -> addHeaders(mainListenerId, consumerRecord, e, getAttempts(consumerRecord)));
+	(consumerRecord, e) -> addHeaders(mainListenerId, consumerRecord, e, getAttempts(consumerRecord)));
 		if (this.headersFunction != null) {
 			recoverer.addHeadersFunction(this.headersFunction);
 		}
@@ -217,8 +218,8 @@ public class DeadLetterPublishingRecovererFactory {
 
 	private Function<ProducerRecord<?, ?>, KafkaOperations<?, ?>> templateResolver(String mainListenerId) {
 		return outRecord -> this.destinationTopicResolver
-						.getDestinationTopicByName(mainListenerId, outRecord.topic())
-						.getKafkaOperations();
+	.getDestinationTopicByName(mainListenerId, outRecord.topic())
+	.getKafkaOperations();
 	}
 
 	public void setDeadLetterPublishingRecovererCustomizer(Consumer<DeadLetterPublishingRecoverer> customizer) {
@@ -232,38 +233,38 @@ public class DeadLetterPublishingRecovererFactory {
 			}
 
 			DestinationTopic nextDestination = this.destinationTopicResolver.resolveDestinationTopic(mainListenerId,
-					cr.topic(), getAttempts(cr), ex, getOriginalTimestampHeaderLong(cr));
+		cr.topic(), getAttempts(cr), ex, getOriginalTimestampHeaderLong(cr));
 
 			LOGGER.debug(() -> "Resolved topic: " + (nextDestination.isNoOpsTopic()
-					? "none"
-					: nextDestination.getDestinationName()));
+		? "none"
+		: nextDestination.getDestinationName()));
 
 			maybeLogListenerException(ex, cr, nextDestination);
 
 			return nextDestination.isNoOpsTopic()
-						? null
-						: resolveTopicPartition(cr, nextDestination);
+		? null
+		: resolveTopicPartition(cr, nextDestination);
 		};
 	}
 
 	private void maybeLogListenerException(Exception e, ConsumerRecord<?, ?> cr, DestinationTopic nextDestination) {
 		if (nextDestination.isDltTopic()
-				&& !ListenerExceptionLoggingStrategy.NEVER.equals(this.loggingStrategy)) {
+	&& !ListenerExceptionLoggingStrategy.NEVER.equals(this.loggingStrategy)) {
 			LOGGER.error(e, () -> getErrorMessage(cr) + " and won't be retried. "
-					+ "Sending to DLT with name " + nextDestination.getDestinationName() + ".");
+		+ "Sending to DLT with name " + nextDestination.getDestinationName() + ".");
 		}
 		else if (nextDestination.isNoOpsTopic()
-				&& !ListenerExceptionLoggingStrategy.NEVER.equals(this.loggingStrategy)) {
+	&& !ListenerExceptionLoggingStrategy.NEVER.equals(this.loggingStrategy)) {
 			LOGGER.error(e, () -> getErrorMessage(cr) + " and won't be retried. "
-					+ "No further action will be taken with this record.");
+		+ "No further action will be taken with this record.");
 		}
 		else if (ListenerExceptionLoggingStrategy.EACH_ATTEMPT.equals(this.loggingStrategy)) {
 			LOGGER.error(e, () -> getErrorMessage(cr) + ". "
-					+ "Sending to retry topic " + nextDestination.getDestinationName() + ".");
+		+ "Sending to retry topic " + nextDestination.getDestinationName() + ".");
 		}
 		else {
 			LOGGER.debug(e, () -> getErrorMessage(cr) + ". "
-					+ "Sending to retry topic " + nextDestination.getDestinationName() + ".");
+		+ "Sending to retry topic " + nextDestination.getDestinationName() + ".");
 		}
 	}
 
@@ -274,8 +275,8 @@ public class DeadLetterPublishingRecovererFactory {
 	private static String getRecordInfo(ConsumerRecord<?, ?> cr) {
 		Header originalTopicHeader = cr.headers().lastHeader(KafkaHeaders.ORIGINAL_TOPIC);
 		return String.format("topic = %s, partition = %s, offset = %s, main topic = %s",
-				cr.topic(), cr.partition(), cr.offset(),
-				originalTopicHeader != null ? new String(originalTopicHeader.value()) : cr.topic());
+	cr.topic(), cr.partition(), cr.offset(),
+	originalTopicHeader != null ? new String(originalTopicHeader.value()) : cr.topic());
 	}
 
 	/**
@@ -311,7 +312,7 @@ public class DeadLetterPublishingRecovererFactory {
 			}
 			else {
 				LOGGER.debug(() -> "Unexected size for " + RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS + " header: "
-						+ value.length);
+			+ value.length);
 			}
 		}
 		return 1;
@@ -322,76 +323,76 @@ public class DeadLetterPublishingRecovererFactory {
 		byte[] originalTimestampHeader = getOriginalTimestampHeaderBytes(consumerRecord);
 		if (!this.retainAllRetryHeaderValues) {
 			headers.add(new SingleRecordHeader(RetryTopicHeaders.DEFAULT_HEADER_ORIGINAL_TIMESTAMP,
-					originalTimestampHeader));
+		originalTimestampHeader));
 			headers.add(new SingleRecordHeader(RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS,
-					ByteBuffer.wrap(new byte[Integer.BYTES]).putInt(attempts + 1).array()));
+		ByteBuffer.wrap(new byte[Integer.BYTES]).putInt(attempts + 1).array()));
 			headers.add(new SingleRecordHeader(RetryTopicHeaders.DEFAULT_HEADER_BACKOFF_TIMESTAMP,
-					BigInteger
-							.valueOf(getNextExecutionTimestamp(mainListenerId, consumerRecord, e,
-									originalTimestampHeader))
-							.toByteArray()));
+		BigInteger
+	.valueOf(getNextExecutionTimestamp(mainListenerId, consumerRecord, e,
+originalTimestampHeader))
+	.toByteArray()));
 		}
 		else {
 			headers.add(RetryTopicHeaders.DEFAULT_HEADER_ORIGINAL_TIMESTAMP, originalTimestampHeader);
 			headers.add(RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS,
-					ByteBuffer.wrap(new byte[Integer.BYTES]).putInt(attempts + 1).array());
+		ByteBuffer.wrap(new byte[Integer.BYTES]).putInt(attempts + 1).array());
 			headers.add(RetryTopicHeaders.DEFAULT_HEADER_BACKOFF_TIMESTAMP,
-					BigInteger
-							.valueOf(getNextExecutionTimestamp(mainListenerId, consumerRecord, e,
-									originalTimestampHeader))
-							.toByteArray());
+		BigInteger
+	.valueOf(getNextExecutionTimestamp(mainListenerId, consumerRecord, e,
+originalTimestampHeader))
+	.toByteArray());
 		}
 		return headers;
 	}
 
 	private long getNextExecutionTimestamp(String mainListenerId, ConsumerRecord<?, ?> consumerRecord, Exception e,
-			byte[] originalTimestampHeader) {
+byte[] originalTimestampHeader) {
 
 		long originalTimestamp = new BigInteger(originalTimestampHeader).longValue();
 		long failureTimestamp = getFailureTimestamp(e);
 		long nextExecutionTimestamp = failureTimestamp + this.destinationTopicResolver
-				.resolveDestinationTopic(mainListenerId, consumerRecord.topic(), getAttempts(consumerRecord), e,
-						originalTimestamp)
-				.getDestinationDelay();
+	.resolveDestinationTopic(mainListenerId, consumerRecord.topic(), getAttempts(consumerRecord), e,
+originalTimestamp)
+	.getDestinationDelay();
 		LOGGER.debug(() -> String.format("FailureTimestamp: %s, Original timestamp: %s, nextExecutionTimestamp: %s",
-				failureTimestamp, originalTimestamp, nextExecutionTimestamp));
+	failureTimestamp, originalTimestamp, nextExecutionTimestamp));
 		return nextExecutionTimestamp;
 	}
 
 	private long getFailureTimestamp(Exception e) {
 		return e instanceof NestedRuntimeException && ((NestedRuntimeException) e).contains(TimestampedException.class)
-					? getTimestampedException(e).getTimestamp()
-					: Instant.now().toEpochMilli();
+	? getTimestampedException(e).getTimestamp()
+	: Instant.now().toEpochMilli();
 	}
 
 	private TimestampedException getTimestampedException(@Nullable Throwable e) {
 		if (e == null) {
 			throw new IllegalArgumentException("Provided exception does not contain a "
-					+ TimestampedException.class.getSimpleName() + " cause.");
+		+ TimestampedException.class.getSimpleName() + " cause.");
 		}
 		return e.getClass().isAssignableFrom(TimestampedException.class)
-				? (TimestampedException) e
-				: getTimestampedException(e.getCause());
+	? (TimestampedException) e
+	: getTimestampedException(e.getCause());
 	}
 
 	private byte[] getOriginalTimestampHeaderBytes(ConsumerRecord<?, ?> consumerRecord) {
 		Header currentOriginalTimestampHeader = getOriginaTimeStampHeader(consumerRecord);
 		return currentOriginalTimestampHeader != null
-				? currentOriginalTimestampHeader.value()
-				: BigInteger.valueOf(consumerRecord.timestamp()).toByteArray();
+	? currentOriginalTimestampHeader.value()
+	: BigInteger.valueOf(consumerRecord.timestamp()).toByteArray();
 	}
 
 	private long getOriginalTimestampHeaderLong(ConsumerRecord<?, ?> consumerRecord) {
 		Header currentOriginalTimestampHeader = getOriginaTimeStampHeader(consumerRecord);
 		return currentOriginalTimestampHeader != null
-				? new BigInteger(currentOriginalTimestampHeader.value()).longValue()
-				: consumerRecord.timestamp();
+	? new BigInteger(currentOriginalTimestampHeader.value()).longValue()
+	: consumerRecord.timestamp();
 	}
 
 	@Nullable
 	private Header getOriginaTimeStampHeader(ConsumerRecord<?, ?> consumerRecord) {
 		return consumerRecord.headers()
-					.lastHeader(RetryTopicHeaders.DEFAULT_HEADER_ORIGINAL_TIMESTAMP);
+	.lastHeader(RetryTopicHeaders.DEFAULT_HEADER_ORIGINAL_TIMESTAMP);
 	}
 
 	private enum ListenerExceptionLoggingStrategy {

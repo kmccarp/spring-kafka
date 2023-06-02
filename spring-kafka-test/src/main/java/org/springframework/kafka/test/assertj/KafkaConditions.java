@@ -106,8 +106,8 @@ public final class KafkaConditions {
 				return false;
 			}
 			return value.key() == null
-					? this.key == null
-					: value.key().equals(this.key);
+		? this.key == null
+		: value.key().equals(this.key);
 		}
 
 	}
@@ -127,8 +127,8 @@ public final class KafkaConditions {
 				return false;
 			}
 			return value.value() == null
-					? this.payload == null
-					: value.value().equals(this.payload);
+		? this.payload == null
+		: value.value().equals(this.payload);
 		}
 
 	}
@@ -167,7 +167,7 @@ public final class KafkaConditions {
 		@Override
 		public boolean matches(ConsumerRecord<?, ?> value) {
 			return value != null &&
-					(value.timestampType() == this.type && value.timestamp() == this.ts);
+		(value.timestampType() == this.type && value.timestamp() == this.ts);
 		}
 
 	}

@@ -34,7 +34,8 @@ class RetryTopicHeadersTests {
 
 	@Test
 	public void assertRetryTopicHeadersConstants() {
-		new RetryTopicHeaders() { }; // for coverage
+		new RetryTopicHeaders() {
+		}; // for coverage
 		assertThat(RetryTopicHeaders.DEFAULT_HEADER_BACKOFF_TIMESTAMP).isEqualTo(DEFAULT_HEADER_BACKOFF_TIMESTAMP);
 		assertThat(RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS).isEqualTo(DEFAULT_HEADER_ATTEMPTS);
 		assertThat(RetryTopicHeaders.DEFAULT_HEADER_ORIGINAL_TIMESTAMP).isEqualTo(DEFAULT_HEADER_ORIGINAL_TIMESTAMP);

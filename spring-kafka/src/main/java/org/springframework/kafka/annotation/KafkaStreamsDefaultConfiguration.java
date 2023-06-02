@@ -62,9 +62,9 @@ public class KafkaStreamsDefaultConfiguration {
 	 */
 	@Bean(name = DEFAULT_STREAMS_BUILDER_BEAN_NAME)
 	public StreamsBuilderFactoryBean defaultKafkaStreamsBuilder(
-			@Qualifier(DEFAULT_STREAMS_CONFIG_BEAN_NAME)
-					ObjectProvider<KafkaStreamsConfiguration> streamsConfigProvider,
-			ObjectProvider<StreamsBuilderFactoryBeanConfigurer> configurerProvider) {
+@Qualifier(DEFAULT_STREAMS_CONFIG_BEAN_NAME)
+ObjectProvider<KafkaStreamsConfiguration> streamsConfigProvider,
+ObjectProvider<StreamsBuilderFactoryBeanConfigurer> configurerProvider) {
 
 		KafkaStreamsConfiguration streamsConfig = streamsConfigProvider.getIfAvailable();
 		if (streamsConfig != null) {
@@ -74,10 +74,10 @@ public class KafkaStreamsDefaultConfiguration {
 		}
 		else {
 			throw new UnsatisfiedDependencyException(KafkaStreamsDefaultConfiguration.class.getName(),
-					DEFAULT_STREAMS_BUILDER_BEAN_NAME, "streamsConfig", "There is no '" +
-					DEFAULT_STREAMS_CONFIG_BEAN_NAME + "' " + KafkaStreamsConfiguration.class.getName() +
-					" bean in the application context.\n" +
-					"Consider declaring one or don't use @EnableKafkaStreams.");
+		DEFAULT_STREAMS_BUILDER_BEAN_NAME, "streamsConfig", "There is no '" +
+		DEFAULT_STREAMS_CONFIG_BEAN_NAME + "' " + KafkaStreamsConfiguration.class.getName() +
+		" bean in the application context.\n" +
+		"Consider declaring one or don't use @EnableKafkaStreams.");
 		}
 	}
 

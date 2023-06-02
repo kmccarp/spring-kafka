@@ -140,7 +140,7 @@ public class JsonSerializer<T> implements Serializer<T> {
 	public void setUseTypeMapperForKey(boolean isKey) {
 		if (!this.typeMapperExplicitlySet && getTypeMapper() instanceof AbstractJavaTypeMapper) {
 			((AbstractJavaTypeMapper) getTypeMapper())
-					.setUseForKey(isKey);
+		.setUseForKey(isKey);
 		}
 		this.setterCalled = true;
 	}
@@ -151,8 +151,8 @@ public class JsonSerializer<T> implements Serializer<T> {
 			return;
 		}
 		Assert.state(!this.setterCalled
-				|| (!configs.containsKey(ADD_TYPE_INFO_HEADERS) && !configs.containsKey(TYPE_MAPPINGS)),
-				"JsonSerializer must be configured with property setters, or via configuration properties; not both");
+	|| (!configs.containsKey(ADD_TYPE_INFO_HEADERS) && !configs.containsKey(TYPE_MAPPINGS)),
+	"JsonSerializer must be configured with property setters, or via configuration properties; not both");
 		setUseTypeMapperForKey(isKey);
 		if (configs.containsKey(ADD_TYPE_INFO_HEADERS)) {
 			Object config = configs.get(ADD_TYPE_INFO_HEADERS);
@@ -167,9 +167,9 @@ public class JsonSerializer<T> implements Serializer<T> {
 			}
 		}
 		if (configs.containsKey(TYPE_MAPPINGS) && !this.typeMapperExplicitlySet
-				&& this.typeMapper instanceof AbstractJavaTypeMapper) {
+	&& this.typeMapper instanceof AbstractJavaTypeMapper) {
 			((AbstractJavaTypeMapper) this.typeMapper)
-					.setIdClassMapping(createMappings((String) configs.get(TYPE_MAPPINGS)));
+		.setIdClassMapping(createMappings((String) configs.get(TYPE_MAPPINGS)));
 		}
 		this.configured = true;
 	}
@@ -182,7 +182,7 @@ public class JsonSerializer<T> implements Serializer<T> {
 			Assert.isTrue(split.length == 2, "Each comma-delimited mapping entry must have exactly one ':'");
 			try {
 				mappingsMap.put(split[0].trim(),
-						ClassUtils.forName(split[1].trim(), ClassUtils.getDefaultClassLoader()));
+			ClassUtils.forName(split[1].trim(), ClassUtils.getDefaultClassLoader()));
 			}
 			catch (ClassNotFoundException | LinkageError e) {
 				throw new IllegalArgumentException("Failed to load: " + split[1] + " for " + split[0], e);

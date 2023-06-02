@@ -49,8 +49,7 @@ import org.springframework.util.backoff.BackOffExecution;
  * @since 1.3.5
  *
  */
-public class DefaultAfterRollbackProcessor<K, V> extends FailedRecordProcessor
-		implements AfterRollbackProcessor<K, V> {
+public class DefaultAfterRollbackProcessor<K, V> extends FailedRecordProcessorimplements AfterRollbackProcessor<K, V> {
 
 	private final ThreadLocal<BackOffExecution> backOffs = new ThreadLocal<>(); // Intentionally not static
 
@@ -99,7 +98,7 @@ public class DefaultAfterRollbackProcessor<K, V> extends FailedRecordProcessor
 	 * @since 2.3
 	 */
 	public DefaultAfterRollbackProcessor(@Nullable BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer,
-			BackOff backOff) {
+BackOff backOff) {
 
 		this(recoverer, backOff, null, false);
 	}
@@ -116,7 +115,7 @@ public class DefaultAfterRollbackProcessor<K, V> extends FailedRecordProcessor
 	 */
 	public DefaultAfterRollbackProcessor(@Nullable
 	BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer,
-		BackOff backOff, @Nullable KafkaOperations<?, ?> kafkaOperations, boolean commitRecovered) {
+BackOff backOff, @Nullable KafkaOperations<?, ?> kafkaOperations, boolean commitRecovered) {
 
 		this(recoverer, backOff, null, kafkaOperations, commitRecovered);
 	}
@@ -133,8 +132,8 @@ public class DefaultAfterRollbackProcessor<K, V> extends FailedRecordProcessor
 	 * @since 2.9
 	 */
 	public DefaultAfterRollbackProcessor(@Nullable BiConsumer<ConsumerRecord<?, ?>, Exception> recoverer,
-			BackOff backOff, @Nullable BackOffHandler backOffHandler, @Nullable KafkaOperations<?, ?> kafkaOperations,
-			boolean commitRecovered) {
+BackOff backOff, @Nullable BackOffHandler backOffHandler, @Nullable KafkaOperations<?, ?> kafkaOperations,
+boolean commitRecovered) {
 
 		super(recoverer, backOff, backOffHandler);
 		this.kafkaTemplate = kafkaOperations;
@@ -145,22 +144,22 @@ public class DefaultAfterRollbackProcessor<K, V> extends FailedRecordProcessor
 
 	private void checkConfig() {
 		Assert.isTrue(!isCommitRecovered() || this.kafkaTemplate != null,
-				"A KafkaOperations is required when 'commitRecovered' is true");
+	"A KafkaOperations is required when 'commitRecovered' is true");
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	@SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
 	@Override
 	public void process(List<ConsumerRecord<K, V>> records, Consumer<K, V> consumer,
-			@Nullable MessageListenerContainer container, Exception exception, boolean recoverable, EOSMode eosMode) {
+@Nullable MessageListenerContainer container, Exception exception, boolean recoverable, EOSMode eosMode) {
 
 		if (SeekUtils.doSeeks((List) records, consumer, exception, recoverable,
-				getFailureTracker()::recovered, container, this.logger)
-					&& isCommitRecovered() && this.kafkaTemplate.isTransactional()) {
+	getFailureTracker()::recovered, container, this.logger)
+	&& isCommitRecovered() && this.kafkaTemplate.isTransactional()) {
 			ConsumerRecord<K, V> skipped = records.get(0);
 			this.kafkaTemplate.sendOffsetsToTransaction(
-					Collections.singletonMap(new TopicPartition(skipped.topic(), skipped.partition()),
-							createOffsetAndMetadata(container, skipped.offset() + 1)
-					), consumer.groupMetadata());
+		Collections.singletonMap(new TopicPartition(skipped.topic(), skipped.partition()),
+	createOffsetAndMetadata(container, skipped.offset() + 1)
+		), consumer.groupMetadata());
 		}
 
 		if (!recoverable && this.backOff != null) {

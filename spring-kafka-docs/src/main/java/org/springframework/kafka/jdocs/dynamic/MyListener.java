@@ -30,10 +30,10 @@ import org.springframework.kafka.listener.MessageListener;
 
 public class MyListener implements MessageListener<String, String> {
 
-    @Override
-    public void onMessage(ConsumerRecord<String, String> data) {
-        // ...
-    }
+	@Override
+	public void onMessage(ConsumerRecord<String, String> data) {
+		// ...
+	}
 
 }
 // end::listener[]

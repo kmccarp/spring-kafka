@@ -56,8 +56,8 @@ class ConvertingMessageListenerTests {
 
 		var delegateListener = (MessageListener<String, Long>) (data) -> assertThat(data.value()).isNotNull();
 		var convertingMessageListener = new ConvertingMessageListener<>(
-				delegateListener,
-				Long.class
+	delegateListener,
+	Long.class
 		);
 
 		convertingMessageListener.onMessage(consumerRecord, null, null);
@@ -74,23 +74,23 @@ class ConvertingMessageListenerTests {
 			assertThat(data.value().getA()).isEqualTo("foo");
 		};
 		var convertingMessageListener = new ConvertingMessageListener<>(
-				delegateListener,
-				ToBeConverted.class
+	delegateListener,
+	ToBeConverted.class
 		);
 		convertingMessageListener.setMessageConverter(new MappingJackson2MessageConverter());
 
 		convertingMessageListener.onMessage(consumerRecord, null, null);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void testMessageListenerIsInvokedOnlyOnce() {
 		var consumerRecord = new ConsumerRecord<>("foo", 0, 0, "key", 0);
 
 		var delegateListener = mock(AcknowledgingConsumerAwareMessageListener.class);
 		var convertingMessageListener = new ConvertingMessageListener<>(
-			delegateListener,
-			Long.class
+	delegateListener,
+	Long.class
 		);
 		convertingMessageListener.setMessageConverter(new MappingJackson2MessageConverter());
 
@@ -113,12 +113,12 @@ class ConvertingMessageListenerTests {
 			assertThat(data.value().getA()).isEqualTo("foo");
 		};
 		var convertingMessageListener = new ConvertingMessageListener<>(
-				delegateListener,
-				ToBeConverted.class
+	delegateListener,
+	ToBeConverted.class
 		);
 
 		assertThatThrownBy(
-			() -> convertingMessageListener.onMessage(consumerRecord, null, null)
+	() -> convertingMessageListener.onMessage(consumerRecord, null, null)
 		).isInstanceOf(MessageConversionException.class);
 	}
 
@@ -128,7 +128,8 @@ class ConvertingMessageListenerTests {
 		var header = new RecordHeader("headerKey", "headerValue".getBytes());
 		consumerRecord.headers().add(header);
 
-		var delegateListener = (MessageListener<String, Long>) (data) -> { };
+		var delegateListener = (MessageListener<String, Long>) (data) -> {
+		};
 		var messageConverter = new MessageConverter() {
 			@Override
 			public Object fromMessage(Message<?> message, Class<?> targetClass) {
@@ -144,8 +145,8 @@ class ConvertingMessageListenerTests {
 			}
 		};
 		var convertingMessageListener = new ConvertingMessageListener<>(
-			delegateListener,
-			Long.class
+	delegateListener,
+	Long.class
 		);
 		convertingMessageListener.setMessageConverter(messageConverter);
 		convertingMessageListener.setKafkaHeaderMapper(new SimpleKafkaHeaderMapper());
@@ -159,7 +160,8 @@ class ConvertingMessageListenerTests {
 		var header = new RecordHeader("headerKey", "headerValue".getBytes());
 		consumerRecord.headers().add(header);
 
-		var delegateListener = (MessageListener<String, Long>) (data) -> { };
+		var delegateListener = (MessageListener<String, Long>) (data) -> {
+		};
 		var messageConverter = new MessageConverter() {
 			@Override
 			public Object fromMessage(Message<?> message, Class<?> targetClass) {
@@ -174,8 +176,8 @@ class ConvertingMessageListenerTests {
 			}
 		};
 		var convertingMessageListener = new ConvertingMessageListener<>(
-			delegateListener,
-			Long.class
+	delegateListener,
+	Long.class
 		);
 		convertingMessageListener.setMessageConverter(messageConverter);
 

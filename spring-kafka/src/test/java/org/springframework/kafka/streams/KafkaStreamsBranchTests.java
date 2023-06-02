@@ -63,11 +63,10 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  */
 @SpringJUnitConfig
 @DirtiesContext
-@EmbeddedKafka(partitions = 1,
-		topics = {
+@EmbeddedKafka(partitions = 1,topics = {
 				KafkaStreamsBranchTests.TRUE_TOPIC,
 				KafkaStreamsBranchTests.FALSE_TOPIC,
-				KafkaStreamsBranchTests.TRUE_FALSE_INPUT_TOPIC })
+				KafkaStreamsBranchTests.TRUE_FALSE_INPUT_TOPIC})
 public class KafkaStreamsBranchTests {
 
 	public static final String TRUE_TOPIC = "true-output-topic";
@@ -112,11 +111,11 @@ public class KafkaStreamsBranchTests {
 
 	private Consumer<String, String> createConsumer() {
 		Map<String, Object> consumerProps =
-				KafkaTestUtils.consumerProps(UUID.randomUUID().toString(), "false", this.embeddedKafka);
+	KafkaTestUtils.consumerProps(UUID.randomUUID().toString(), "false", this.embeddedKafka);
 		consumerProps.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, 10000);
 
 		DefaultKafkaConsumerFactory<String, String> kafkaConsumerFactory =
-				new DefaultKafkaConsumerFactory<>(consumerProps, new StringDeserializer(), new StringDeserializer());
+	new DefaultKafkaConsumerFactory<>(consumerProps, new StringDeserializer(), new StringDeserializer());
 		return kafkaConsumerFactory.createConsumer();
 	}
 
@@ -157,12 +156,12 @@ public class KafkaStreamsBranchTests {
 		@Bean
 		public KStream<String, String> trueFalseStream(StreamsBuilder streamsBuilder) {
 			return new KafkaStreamBrancher<String, String>()
-					.branch((key, value) -> String.valueOf(true).equals(value),
-							ks -> ks.to(TRUE_TOPIC, Produced.with(Serdes.String(), Serdes.String())))
-					.branch((key, value) -> String.valueOf(false).equals(value),
-							ks -> ks.to(FALSE_TOPIC, Produced.with(Serdes.String(), Serdes.String())))
-					.onTopOf(streamsBuilder
-							.stream(TRUE_FALSE_INPUT_TOPIC, Consumed.with(Serdes.String(), Serdes.String())));
+		.branch((key, value) -> String.valueOf(true).equals(value),
+	ks -> ks.to(TRUE_TOPIC, Produced.with(Serdes.String(), Serdes.String())))
+		.branch((key, value) -> String.valueOf(false).equals(value),
+	ks -> ks.to(FALSE_TOPIC, Produced.with(Serdes.String(), Serdes.String())))
+		.onTopOf(streamsBuilder
+	.stream(TRUE_FALSE_INPUT_TOPIC, Consumed.with(Serdes.String(), Serdes.String())));
 		}
 
 	}

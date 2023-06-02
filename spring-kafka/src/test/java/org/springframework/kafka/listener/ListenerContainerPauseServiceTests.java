@@ -62,7 +62,7 @@ class ListenerContainerPauseServiceTests {
 	void testPausingAndResumingListener() throws InterruptedException {
 		long timeToBePausedInSec = 2;
 		KafkaMessageListenerContainer<Object, Object> messageListenerContainer = mock(
-				KafkaMessageListenerContainer.class);
+	KafkaMessageListenerContainer.class);
 
 		AtomicBoolean paused = new AtomicBoolean();
 		willAnswer(inv -> {
@@ -78,7 +78,7 @@ class ListenerContainerPauseServiceTests {
 		}).given(messageListenerContainer).resume();
 
 		given(this.listenerContainerRegistry.getListenerContainer("test-listener"))
-				.willReturn(messageListenerContainer);
+	.willReturn(messageListenerContainer);
 		willAnswer(inv -> {
 			Runnable r = inv.getArgument(0);
 			r.run();
@@ -104,7 +104,7 @@ class ListenerContainerPauseServiceTests {
 		long timeToBePausedInSec = 2;
 
 		KafkaMessageListenerContainer<Object, Object> messageListenerContainer = mock(
-				KafkaMessageListenerContainer.class);
+	KafkaMessageListenerContainer.class);
 		given(listenerContainerRegistry.getListenerContainer("test-listener")).willReturn(null);
 
 		kafkaPausableListenersService.pause("test-listener", Duration.ofSeconds(timeToBePausedInSec));
@@ -117,7 +117,7 @@ class ListenerContainerPauseServiceTests {
 	void testResumingNotPausedListener() throws InterruptedException {
 		long timeToBePausedInSec = 2;
 		KafkaMessageListenerContainer<Object, Object> messageListenerContainer = mock(
-				KafkaMessageListenerContainer.class);
+	KafkaMessageListenerContainer.class);
 
 		given(messageListenerContainer.isPauseRequested()).willReturn(false);
 		given(listenerContainerRegistry.getListenerContainer("test-listener")).willReturn(messageListenerContainer);
@@ -138,7 +138,7 @@ class ListenerContainerPauseServiceTests {
 	@SuppressWarnings("unchecked")
 	void testAlreadyPausedListener() {
 		KafkaMessageListenerContainer<Object, Object> messageListenerContainer = mock(
-				KafkaMessageListenerContainer.class);
+	KafkaMessageListenerContainer.class);
 
 		given(messageListenerContainer.isPauseRequested()).willReturn(true);
 		given(listenerContainerRegistry.getListenerContainer("test-listener")).willReturn(messageListenerContainer);

@@ -707,7 +707,7 @@ public class ContainerProperties extends ConsumerProperties {
 	 * @see #setObservationEnabled(boolean)
 	 */
 	public void setMicrometerTagsProvider(
-			@Nullable Function<ConsumerRecord<?, ?>, Map<String, String>> micrometerTagsProvider) {
+@Nullable Function<ConsumerRecord<?, ?>, Map<String, String>> micrometerTagsProvider) {
 
 		this.micrometerTagsProvider = micrometerTagsProvider;
 	}
@@ -1034,42 +1034,42 @@ public class ContainerProperties extends ConsumerProperties {
 	@Override
 	public String toString() {
 		return "ContainerProperties ["
-				+ renderProperties()
-				+ "\n ackMode=" + this.ackMode
-				+ "\n ackCount=" + this.ackCount
-				+ "\n ackTime=" + this.ackTime
-				+ "\n messageListener=" + this.messageListener
-				+ (this.listenerTaskExecutor != null
-						? "\n listenerTaskExecutor=" + this.listenerTaskExecutor
-						: "")
-				+ "\n shutdownTimeout=" + this.shutdownTimeout
-				+ "\n idleEventInterval="
-				+ (this.idleEventInterval == null ? "not enabled" : this.idleEventInterval)
-				+ "\n idlePartitionEventInterval="
-				+ (this.idlePartitionEventInterval == null ? "not enabled" : this.idlePartitionEventInterval)
-				+ (this.transactionManager != null
-						? "\n transactionManager=" + this.transactionManager
-						: "")
-				+ "\n monitorInterval=" + this.monitorInterval
-				+ (this.scheduler != null ? "\n scheduler=" + this.scheduler : "")
-				+ "\n noPollThreshold=" + this.noPollThreshold
-				+ "\n pollTimeoutWhilePaused=" + this.pollTimeoutWhilePaused
-				+ "\n subBatchPerPartition=" + this.subBatchPerPartition
-				+ "\n assignmentCommitOption=" + this.assignmentCommitOption
-				+ "\n deliveryAttemptHeader=" + this.deliveryAttemptHeader
-				+ "\n eosMode=" + this.eosMode
-				+ "\n transactionDefinition=" + this.transactionDefinition
-				+ "\n stopContainerWhenFenced=" + this.stopContainerWhenFenced
-				+ "\n stopImmediate=" + this.stopImmediate
-				+ "\n asyncAcks=" + this.asyncAcks
-				+ "\n idleBeforeDataMultiplier=" + this.idleBeforeDataMultiplier
-				+ "\n micrometerEnabled=" + this.micrometerEnabled
-				+ "\n observationEnabled=" + this.observationEnabled
-				+ (this.observationConvention != null
-						? "\n observationConvention=" + this.observationConvention
-						: "")
-				+ "\n restartAfterAuthExceptions=" + this.restartAfterAuthExceptions
-				+ "\n]";
+	+ renderProperties()
+	+ "\n ackMode=" + this.ackMode
+	+ "\n ackCount=" + this.ackCount
+	+ "\n ackTime=" + this.ackTime
+	+ "\n messageListener=" + this.messageListener
+	+ (this.listenerTaskExecutor != null
+	? "\n listenerTaskExecutor=" + this.listenerTaskExecutor
+	: "")
+	+ "\n shutdownTimeout=" + this.shutdownTimeout
+	+ "\n idleEventInterval="
+	+ (this.idleEventInterval == null ? "not enabled" : this.idleEventInterval)
+	+ "\n idlePartitionEventInterval="
+	+ (this.idlePartitionEventInterval == null ? "not enabled" : this.idlePartitionEventInterval)
+	+ (this.transactionManager != null
+	? "\n transactionManager=" + this.transactionManager
+	: "")
+	+ "\n monitorInterval=" + this.monitorInterval
+	+ (this.scheduler != null ? "\n scheduler=" + this.scheduler : "")
+	+ "\n noPollThreshold=" + this.noPollThreshold
+	+ "\n pollTimeoutWhilePaused=" + this.pollTimeoutWhilePaused
+	+ "\n subBatchPerPartition=" + this.subBatchPerPartition
+	+ "\n assignmentCommitOption=" + this.assignmentCommitOption
+	+ "\n deliveryAttemptHeader=" + this.deliveryAttemptHeader
+	+ "\n eosMode=" + this.eosMode
+	+ "\n transactionDefinition=" + this.transactionDefinition
+	+ "\n stopContainerWhenFenced=" + this.stopContainerWhenFenced
+	+ "\n stopImmediate=" + this.stopImmediate
+	+ "\n asyncAcks=" + this.asyncAcks
+	+ "\n idleBeforeDataMultiplier=" + this.idleBeforeDataMultiplier
+	+ "\n micrometerEnabled=" + this.micrometerEnabled
+	+ "\n observationEnabled=" + this.observationEnabled
+	+ (this.observationConvention != null
+	? "\n observationConvention=" + this.observationConvention
+	: "")
+	+ "\n restartAfterAuthExceptions=" + this.restartAfterAuthExceptions
+	+ "\n]";
 	}
 
 }

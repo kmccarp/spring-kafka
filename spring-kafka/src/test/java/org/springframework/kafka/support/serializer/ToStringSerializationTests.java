@@ -56,16 +56,16 @@ public class ToStringSerializationTests {
 
 		/* Then */
 		assertThat(serialized)
-				.isNotNull()
-				.isNotEmpty();
+	.isNotNull()
+	.isNotEmpty();
 		assertThat(new String(serialized))
-				.isEqualTo("toto:123:true");
+	.isEqualTo("toto:123:true");
 		assertThat(headers)
-				.isNotEmpty()
-				.hasSize(1);
+	.isNotEmpty()
+	.hasSize(1);
 		assertThat(headers.lastHeader(ToStringSerializer.KEY_TYPE))
-				.hasFieldOrPropertyWithValue("key", ToStringSerializer.KEY_TYPE)
-				.hasFieldOrPropertyWithValue("value", TestEntity.class.getName().getBytes());
+	.hasFieldOrPropertyWithValue("key", ToStringSerializer.KEY_TYPE)
+	.hasFieldOrPropertyWithValue("value", TestEntity.class.getName().getBytes());
 	}
 
 	@Test
@@ -86,12 +86,12 @@ public class ToStringSerializationTests {
 
 		/* Then */
 		assertThat(serialized)
-				.isNotNull()
-				.isNotEmpty();
+	.isNotNull()
+	.isNotEmpty();
 		assertThat(new String(serialized))
-				.isEqualTo("toto:123:true");
+	.isEqualTo("toto:123:true");
 		assertThat(headers)
-				.isEmpty();
+	.isEmpty();
 	}
 
 	@Test
@@ -112,16 +112,16 @@ public class ToStringSerializationTests {
 
 		/* Then */
 		assertThat(serialized)
-				.isNotNull()
-				.isNotEmpty();
+	.isNotNull()
+	.isNotEmpty();
 		assertThat(new String(serialized))
-				.isEqualTo("toto:123:true");
+	.isEqualTo("toto:123:true");
 		assertThat(headers)
-				.isNotEmpty()
-				.hasSize(1);
+	.isNotEmpty()
+	.hasSize(1);
 		assertThat(headers.lastHeader(ToStringSerializer.VALUE_TYPE))
-				.hasFieldOrPropertyWithValue("key", ToStringSerializer.VALUE_TYPE)
-				.hasFieldOrPropertyWithValue("value", TestEntity.class.getName().getBytes());
+	.hasFieldOrPropertyWithValue("key", ToStringSerializer.VALUE_TYPE)
+	.hasFieldOrPropertyWithValue("value", TestEntity.class.getName().getBytes());
 	}
 
 	@Test
@@ -142,12 +142,12 @@ public class ToStringSerializationTests {
 
 		/* Then */
 		assertThat(serialized)
-				.isNotNull()
-				.isNotEmpty();
+	.isNotNull()
+	.isNotEmpty();
 		assertThat(new String(serialized))
-				.isEqualTo("toto:123:true");
+	.isEqualTo("toto:123:true");
 		assertThat(headers)
-				.isEmpty();
+	.isEmpty();
 	}
 
 	@Test
@@ -163,9 +163,9 @@ public class ToStringSerializationTests {
 
 		/* Then */
 		assertThat(entity)
-				.hasFieldOrPropertyWithValue("first", "toto")
-				.hasFieldOrPropertyWithValue("second", 123)
-				.hasFieldOrPropertyWithValue("third", true);
+	.hasFieldOrPropertyWithValue("first", "toto")
+	.hasFieldOrPropertyWithValue("second", 123)
+	.hasFieldOrPropertyWithValue("third", true);
 	}
 
 	@Test
@@ -184,9 +184,9 @@ public class ToStringSerializationTests {
 
 		/* Then */
 		assertThat(entity)
-				.hasFieldOrPropertyWithValue("first", "toto")
-				.hasFieldOrPropertyWithValue("second", 123)
-				.hasFieldOrPropertyWithValue("third", true);
+	.hasFieldOrPropertyWithValue("first", "toto")
+	.hasFieldOrPropertyWithValue("second", 123)
+	.hasFieldOrPropertyWithValue("third", true);
 	}
 
 	@Test
@@ -195,7 +195,7 @@ public class ToStringSerializationTests {
 
 		/* Given */
 		ParseStringDeserializer<Object> deserializer =
-				new ParseStringDeserializer<>(ToStringSerializationTests::parseWithHeaders);
+	new ParseStringDeserializer<>(ToStringSerializationTests::parseWithHeaders);
 
 		byte[] data = "toto:123:true".getBytes();
 		Headers headers = new RecordHeaders();
@@ -206,10 +206,10 @@ public class ToStringSerializationTests {
 
 		/* Then */
 		assertThat(entity)
-				.isNotNull()
-				.isInstanceOf(DummyEntity.class)
-				.hasFieldOrPropertyWithValue("stringValue", "toto")
-				.hasFieldOrPropertyWithValue("intValue", 123);
+	.isNotNull()
+	.isInstanceOf(DummyEntity.class)
+	.hasFieldOrPropertyWithValue("stringValue", "toto")
+	.hasFieldOrPropertyWithValue("intValue", 123);
 	}
 
 	@Test
@@ -218,7 +218,7 @@ public class ToStringSerializationTests {
 
 		Map<String, Object> configs = new HashMap<>();
 		configs.put(ParseStringDeserializer.VALUE_PARSER,
-				"org.springframework.kafka.support.serializer.ToStringSerializationTests.parseWithHeaders");
+	"org.springframework.kafka.support.serializer.ToStringSerializationTests.parseWithHeaders");
 		/* Given */
 		ParseStringDeserializer<Object> deserializer = new ParseStringDeserializer<>();
 		deserializer.configure(configs, false);
@@ -232,10 +232,10 @@ public class ToStringSerializationTests {
 
 		/* Then */
 		assertThat(entity)
-				.isNotNull()
-				.isInstanceOf(DummyEntity.class)
-				.hasFieldOrPropertyWithValue("stringValue", "toto")
-				.hasFieldOrPropertyWithValue("intValue", 123);
+	.isNotNull()
+	.isInstanceOf(DummyEntity.class)
+	.hasFieldOrPropertyWithValue("stringValue", "toto")
+	.hasFieldOrPropertyWithValue("intValue", 123);
 	}
 
 	@Test
@@ -261,15 +261,15 @@ public class ToStringSerializationTests {
 
 		/* Then */
 		assertThat(deserializedWithLatin1)
-				.hasFieldOrPropertyWithValue("first", "tôtô")
-				.hasFieldOrPropertyWithValue("second", 123)
-				.hasFieldOrPropertyWithValue("third", true);
+	.hasFieldOrPropertyWithValue("first", "tôtô")
+	.hasFieldOrPropertyWithValue("second", 123)
+	.hasFieldOrPropertyWithValue("third", true);
 
 		assertThat(deserializedWithUtf8)
-				.hasFieldOrPropertyWithValue("second", 123)
-				.hasFieldOrPropertyWithValue("third", true);
+	.hasFieldOrPropertyWithValue("second", 123)
+	.hasFieldOrPropertyWithValue("third", true);
 		assertThat(deserializedWithUtf8.first)
-				.isNotEqualTo("tôtô");
+	.isNotEqualTo("tôtô");
 	}
 
 	public static Object parseWithHeaders(String str, Headers headers) {
