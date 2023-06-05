@@ -400,13 +400,12 @@ public class KafkaTemplateTransactionTests {
 			@SuppressWarnings({ "rawtypes", "unchecked" })
 			@Override
 			public Producer<String, String> createProducer(@Nullable String txIdPrefixArg) {
-				CloseSafeProducer<String, String> closeSafeProducer = new CloseSafeProducer<>(producer,
+				return new CloseSafeProducer<>(producer,
 						(prod, timeout) -> {
 							prod.closeDelegate(timeout, Collections.emptyList());
 							return true;
 						},
 						Duration.ofSeconds(1), "factory", 0);
-				return closeSafeProducer;
 			}
 
 		};
@@ -418,9 +417,7 @@ public class KafkaTemplateTransactionTests {
 		willThrow(new TimeoutException()).given(producer).commitTransaction();
 		assertThatExceptionOfType(TimeoutException.class)
 			.isThrownBy(() ->
-				template.executeInTransaction(t -> {
-					return null;
-				}));
+				template.executeInTransaction(t -> null));
 		verify(producer, never()).abortTransaction();
 		verify(producer).close(Duration.ofMillis(0));
 	}
@@ -445,9 +442,8 @@ public class KafkaTemplateTransactionTests {
 					Thread.currentThread().interrupt();
 				}
 				KafkaTestUtils.getPropertyValue(this, "cache", Map.class).put("foo", cache);
-				CloseSafeProducer<String, String> closeSafeProducer = new CloseSafeProducer<>(producer,
+				return new CloseSafeProducer<>(producer,
 						this::cacheReturner, "foo", Duration.ofSeconds(1), "factory", 0);
-				return closeSafeProducer;
 			}
 
 		};
@@ -456,9 +452,7 @@ public class KafkaTemplateTransactionTests {
 		KafkaTemplate<String, String> template = new KafkaTemplate<>(pf);
 		template.setDefaultTopic(STRING_KEY_TOPIC);
 
-		template.executeInTransaction(t -> {
-			return null;
-		});
+		template.executeInTransaction(t -> null);
 		verify(producer).close(ProducerFactoryUtils.DEFAULT_CLOSE_TIMEOUT);
 	}
 
@@ -561,9 +555,7 @@ public class KafkaTemplateTransactionTests {
 					.isEqualTo("tx.0");
 			return null;
 		}));
-		assertThatIllegalStateException().isThrownBy(() -> template.execute(prod -> {
-			return null;
-		}));
+		assertThatIllegalStateException().isThrownBy(() -> template.execute(prod -> null));
 		template.setAllowNonTransactional(true);
 		template.execute(prod -> {
 			assertThat(KafkaTestUtils.getPropertyValue(prod, "delegate.transactionManager.transactionalId")).isNull();
@@ -758,6 +750,8 @@ public class KafkaTemplateTransactionTests {
 
 	@SuppressWarnings("serial")
 	private static final class DummyTM extends AbstractPlatformTransactionManager {
+
+		private static final long serialVersionUID = 1;
 
 		boolean committed;
 

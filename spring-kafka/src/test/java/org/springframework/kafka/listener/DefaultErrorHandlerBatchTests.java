@@ -283,7 +283,7 @@ public class DefaultErrorHandlerBatchTests {
 			received.addAll(in);
 			this.deliveryLatch.countDown();
 			for (int i = 0; i < in.size(); i++) {
-				if (in.get(i).equals("baz")) {
+				if ("baz".equals(in.get(i))) {
 					throw new BatchListenerFailedException("fail", i);
 				}
 			}

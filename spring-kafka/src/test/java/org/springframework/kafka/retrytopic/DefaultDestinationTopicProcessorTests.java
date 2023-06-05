@@ -22,6 +22,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,7 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 		List<DestinationTopic.Properties> processedProps = new ArrayList<>();
 
 		// when
-		destinationTopicProcessor.processDestinationTopicProperties(props -> processedProps.add(props), context);
+		destinationTopicProcessor.processDestinationTopicProperties(processedProps::add, context);
 
 		// then
 		assertThat(processedProps).isEqualTo(allProps);
@@ -140,7 +141,7 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 		List<DestinationTopic> destinationList = destinationTopicListCaptor
 				.getAllValues()
 				.stream()
-				.flatMap(list -> list.stream())
+				.flatMap(Collection::stream)
 				.collect(Collectors.toList());
 
 		assertThat(destinationList.size()).isEqualTo(11);
@@ -170,12 +171,12 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 
 		List<String> allTopics = allFirstDestinationsTopics
 				.stream()
-				.map(destinationTopic -> destinationTopic.getDestinationName())
+				.map(DestinationTopic::getDestinationName)
 				.collect(Collectors.toList());
 
 		allTopics.addAll(allSecondDestinationTopics
 				.stream()
-				.map(destinationTopic -> destinationTopic.getDestinationName())
+				.map(DestinationTopic::getDestinationName)
 				.collect(Collectors.toList()));
 
 		List<String> allProcessedTopics = new ArrayList<>();
@@ -183,7 +184,7 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 		// when
 		registerFirstTopicDestinations(context);
 		registerSecondTopicDestinations(context);
-		destinationTopicProcessor.processRegisteredDestinations(topics -> allProcessedTopics.addAll(topics), context);
+		destinationTopicProcessor.processRegisteredDestinations(allProcessedTopics::addAll, context);
 
 		// then
 		assertThat(allProcessedTopics).isEqualTo(allTopics);

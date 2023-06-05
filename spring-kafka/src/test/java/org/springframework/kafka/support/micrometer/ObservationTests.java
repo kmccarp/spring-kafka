@@ -99,8 +99,8 @@ public class ObservationTests {
 		assertThat(listener.latch1.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(listener.record).isNotNull();
 		Headers headers = listener.record.headers();
-		assertThat(headers.lastHeader("foo")).extracting(hdr -> hdr.value()).isEqualTo("some foo value".getBytes());
-		assertThat(headers.lastHeader("bar")).extracting(hdr -> hdr.value()).isEqualTo("some bar value".getBytes());
+		assertThat(headers.lastHeader("foo")).extracting(Header::value).isEqualTo("some foo value".getBytes());
+		assertThat(headers.lastHeader("bar")).extracting(Header::value).isEqualTo("some bar value".getBytes());
 		Deque<SimpleSpan> spans = tracer.getSpans();
 		assertThat(spans).hasSize(4);
 		SimpleSpan span = spans.poll();
@@ -147,8 +147,8 @@ public class ObservationTests {
 		assertThat(listener.latch2.await(10, TimeUnit.SECONDS)).isTrue();
 		assertThat(listener.record).isNotNull();
 		headers = listener.record.headers();
-		assertThat(headers.lastHeader("foo")).extracting(hdr -> hdr.value()).isEqualTo("some foo value".getBytes());
-		assertThat(headers.lastHeader("bar")).extracting(hdr -> hdr.value()).isEqualTo("some bar value".getBytes());
+		assertThat(headers.lastHeader("foo")).extracting(Header::value).isEqualTo("some foo value".getBytes());
+		assertThat(headers.lastHeader("bar")).extracting(Header::value).isEqualTo("some bar value".getBytes());
 		assertThat(spans).hasSize(4);
 		span = spans.poll();
 		assertThat(span.getTags()).containsEntry("spring.kafka.template.name", "template");
@@ -269,7 +269,7 @@ public class ObservationTests {
 			factory.setConsumerFactory(cf);
 			factory.getContainerProperties().setObservationEnabled(true);
 			factory.setContainerCustomizer(container -> {
-				if (container.getListenerId().equals("obs3")) {
+				if ("obs3".equals(container.getListenerId())) {
 					((AbstractMessageListenerContainer<Integer, String>) container).setKafkaAdmin(this.mockAdmin);
 				}
 			});

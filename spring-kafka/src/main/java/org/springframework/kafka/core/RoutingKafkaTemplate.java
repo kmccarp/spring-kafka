@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 
 import org.apache.kafka.clients.consumer.ConsumerGroupMetadata;
 import org.apache.kafka.clients.consumer.OffsetAndMetadata;
-import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.common.Metric;
 import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.TopicPartition;
@@ -58,17 +57,12 @@ public class RoutingKafkaTemplate extends KafkaTemplate<Object, Object> {
 	 * @param factories the factories.
 	 */
 	public RoutingKafkaTemplate(Map<Pattern, ProducerFactory<Object, Object>> factories) {
-		super(new ProducerFactory<Object, Object>() {
-
-			@Override
-			public Producer<Object, Object> createProducer() {
-				throw new UnsupportedOperationException();
-			}
-
+		super(() -> {
+			throw new UnsupportedOperationException();
 		});
 		this.factoryMatchers = new LinkedHashMap<>(factories);
 		Optional<Boolean> transactional = factories.values().stream()
-			.map(fact -> fact.transactionCapable())
+			.map(ProducerFactory::transactionCapable)
 			.findFirst();
 		Assert.isTrue(!transactional.isPresent() || !transactional.get(), "Transactional factories are not supported");
 	}

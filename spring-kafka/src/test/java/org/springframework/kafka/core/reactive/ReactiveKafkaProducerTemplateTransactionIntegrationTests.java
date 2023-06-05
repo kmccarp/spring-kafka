@@ -308,7 +308,7 @@ public class ReactiveKafkaProducerTemplateTransactionIntegrationTests {
 		StepVerifier.create(
 				reactiveKafkaConsumerTemplate
 						.receiveExactlyOnce(this.reactiveKafkaProducerTemplate.transactionManager())
-						.concatMap(consumerRecordFlux -> sendAndCommit(consumerRecordFlux)))
+						.concatMap(this::sendAndCommit))
 				.assertNext(senderResult -> {
 					assertThat(senderResult.correlationMetadata().intValue()).isEqualTo(DEFAULT_KEY);
 					assertThat(senderResult.recordMetadata().offset()).isGreaterThan(0);

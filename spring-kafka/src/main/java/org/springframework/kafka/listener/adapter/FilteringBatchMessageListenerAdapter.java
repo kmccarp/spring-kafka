@@ -85,7 +85,7 @@ public class FilteringBatchMessageListenerAdapter<K, V>
 		 *  An empty list goes to the listener if ackDiscarded is false and the listener can ack
 		 *  either through the acknowledgment
 		 */
-		if (consumerRecords.size() > 0 || consumerAware
+		if (!consumerRecords.isEmpty() || consumerAware
 				|| (!this.ackDiscarded && this.delegateType.equals(ListenerType.ACKNOWLEDGING))) {
 			invokeDelegate(consumerRecords, acknowledgment, consumer);
 		}

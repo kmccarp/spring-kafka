@@ -72,11 +72,11 @@ public class RetryTopicSameContainerFactoryIntegrationTests {
 
 	private static final Logger logger = LoggerFactory.getLogger(RetryTopicSameContainerFactoryIntegrationTests.class);
 
-	public final static String FIRST_TOPIC = "myRetryTopic1";
+	public static final String FIRST_TOPIC = "myRetryTopic1";
 
-	public final static String SECOND_TOPIC = "myRetryTopic2";
+	public static final String SECOND_TOPIC = "myRetryTopic2";
 
-	public final static String THIRD_TOPIC = "myRetryTopic3";
+	public static final String THIRD_TOPIC = "myRetryTopic3";
 
 	@Autowired
 	private KafkaTemplate<String, String> sendKafkaTemplate;

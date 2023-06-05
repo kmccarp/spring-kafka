@@ -92,6 +92,8 @@ public class TransactionSynchronizationTests {
 
 	static class TM extends AbstractPlatformTransactionManager {
 
+		private static final long serialVersionUID = 1;
+
 		@Override
 		protected Object doGetTransaction() throws TransactionException {
 			return new Object();
