@@ -74,7 +74,7 @@ public class JsonSerializer<T> implements Serializer<T> {
 
 	protected Jackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper(); // NOSONAR
 
-	private boolean typeMapperExplicitlySet = false;
+	private boolean typeMapperExplicitlySet;
 
 	private boolean setterCalled;
 

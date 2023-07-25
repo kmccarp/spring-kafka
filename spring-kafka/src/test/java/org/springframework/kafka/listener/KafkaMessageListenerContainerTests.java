@@ -777,12 +777,8 @@ public class KafkaMessageListenerContainerTests {
 			pausedParts.set(Collections.emptySet());
 			return null;
 		}).given(consumer).resume(any());
-		willAnswer(inv -> {
-			return pausedParts.get();
-		}).given(consumer).paused();
-		willAnswer(inv -> {
-			return Collections.singleton(new TopicPartition("foo", 0));
-		}).given(consumer).assignment();
+		willAnswer(inv -> pausedParts.get()).given(consumer).paused();
+		willAnswer(inv -> Collections.singleton(new TopicPartition("foo", 0))).given(consumer).assignment();
 		AtomicInteger polled = new AtomicInteger();
 		given(consumer.poll(any(Duration.class))).willAnswer(i -> {
 			Thread.sleep(50);
@@ -827,7 +823,7 @@ public class KafkaMessageListenerContainerTests {
 				latch1.countDown();
 				latch2.countDown();
 				acks.add(ack);
-				if (latch1.getCount() == 0 && records1.values().size() > 0
+				if (latch1.getCount() == 0 && !records1.values().isEmpty()
 						&& records1.values().iterator().next().size() == 4) {
 					acks.get(3).acknowledge();
 					acks.get(2).acknowledge();
@@ -1690,12 +1686,12 @@ public class KafkaMessageListenerContainerTests {
 
 		CountDownLatch initialConsumersLatch = new CountDownLatch(2);
 
-		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<Integer, String>(props) {
+		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(props) {
 
 			@Override
 			protected KafkaConsumer<Integer, String> createKafkaConsumer(Map<String, Object> configs) {
 				assertThat(configs).containsKey(ConsumerConfig.MAX_POLL_RECORDS_CONFIG);
-				return new KafkaConsumer<Integer, String>(props) {
+				return new KafkaConsumer<>(props) {
 
 					@Override
 					public ConsumerRecords<Integer, String> poll(Duration timeout) {
@@ -1808,7 +1804,7 @@ public class KafkaMessageListenerContainerTests {
 
 		CountDownLatch stubbingComplete3 = new CountDownLatch(1);
 		KafkaMessageListenerContainer<Integer, String> resettingContainer = spyOnContainer(
-				new KafkaMessageListenerContainer<Integer, String>(cf, container3Props), stubbingComplete3);
+				new KafkaMessageListenerContainer<>(cf, container3Props), stubbingComplete3);
 		stubSetRunning(listenerConsumerAvailableLatch, listenerConsumerStartLatch, resettingContainer);
 		resettingContainer.setBeanName("b3");
 
@@ -2377,7 +2373,7 @@ public class KafkaMessageListenerContainerTests {
 		containerProps.setMissingTopicsFatal(false);
 		KafkaMessageListenerContainer<Integer, Foo1> badContainer =
 				new KafkaMessageListenerContainer<>(cf, containerProps);
-		assertThatIllegalStateException().isThrownBy(() -> badContainer.start())
+		assertThatIllegalStateException().isThrownBy(badContainer::start)
 			.withMessageContaining("implementation must be provided");
 		badContainer.setupMessageListener((GenericMessageListener<String>) data -> {
 		});
@@ -2385,7 +2381,7 @@ public class KafkaMessageListenerContainerTests {
 		badContainer.pause();
 		assertThat(badContainer.isContainerPaused()).isFalse();
 		assertThat(badContainer.metrics()).isEqualTo(Collections.emptyMap());
-		assertThatIllegalArgumentException().isThrownBy(() -> badContainer.start())
+		assertThatIllegalArgumentException().isThrownBy(badContainer::start)
 			.withMessageContaining("Listener must be");
 		assertThat(badContainer.toString()).contains("none assigned");
 
@@ -2402,7 +2398,7 @@ public class KafkaMessageListenerContainerTests {
 				new KafkaMessageListenerContainer<>(cf, containerProps);
 		badContainer.setupMessageListener((MessageListener<String, String>) m -> {
 		});
-		assertThatIllegalStateException().isThrownBy(() -> badContainer.start())
+		assertThatIllegalStateException().isThrownBy(badContainer::start)
 			.withMessageContaining("Consumer cannot be configured for auto commit for ackMode");
 
 	}
@@ -2420,7 +2416,7 @@ public class KafkaMessageListenerContainerTests {
 		});
 		badContainer.setupMessageListener((MessageListener<String, String>) m -> {
 		});
-		assertThatIllegalStateException().isThrownBy(() -> badContainer.start())
+		assertThatIllegalStateException().isThrownBy(badContainer::start)
 			.withMessageContaining("Error handler is not compatible with the message listener");
 
 	}
@@ -2438,7 +2434,7 @@ public class KafkaMessageListenerContainerTests {
 		});
 		badContainer.setupMessageListener((BatchMessageListener<String, String>) m -> {
 		});
-		assertThatIllegalStateException().isThrownBy(() -> badContainer.start())
+		assertThatIllegalStateException().isThrownBy(badContainer::start)
 			.withMessageContaining("Error handler is not compatible with the message listener");
 
 	}
@@ -3514,7 +3510,7 @@ public class KafkaMessageListenerContainerTests {
 			assertThat(commits.get(5)).hasSize(2); // GH-2489: offsets for both partition should be re-committed before partition 1 is revoked
 			assertThat(commits.get(5).get(new TopicPartition("foo", 1)))
 				.isNotNull()
-				.extracting(om -> om.offset())
+				.extracting(OffsetAndMetadata::offset)
 				.isEqualTo(2L);
 		});
 	}

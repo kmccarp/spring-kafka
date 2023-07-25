@@ -65,9 +65,7 @@ class ListenerContainerPauseServiceTests {
 				KafkaMessageListenerContainer.class);
 
 		AtomicBoolean paused = new AtomicBoolean();
-		willAnswer(inv -> {
-			return paused.get();
-		}).given(messageListenerContainer).isPauseRequested();
+		willAnswer(inv -> paused.get()).given(messageListenerContainer).isPauseRequested();
 		willAnswer(inv -> {
 			paused.set(true);
 			return null;

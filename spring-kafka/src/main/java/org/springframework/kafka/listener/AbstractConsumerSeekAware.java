@@ -68,7 +68,7 @@ public abstract class AbstractConsumerSeekAware implements ConsumerSeekAware {
 				List<TopicPartition> topics = this.callbacksToTopic.get(removed);
 				if (topics != null) {
 					topics.remove(tp);
-					if (topics.size() == 0) {
+					if (topics.isEmpty()) {
 						this.callbacksToTopic.remove(removed);
 					}
 				}
@@ -113,7 +113,7 @@ public abstract class AbstractConsumerSeekAware implements ConsumerSeekAware {
 	 * @since 2.6
 	 */
 	public void seekToBeginning() {
-		getCallbacksAndTopics().forEach((cb, topics) -> cb.seekToBeginning(topics));
+		getCallbacksAndTopics().forEach(org.springframework.kafka.listener.ConsumerSeekAware.ConsumerSeekCallback::seekToBeginning);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public abstract class AbstractConsumerSeekAware implements ConsumerSeekAware {
 	 * @since 2.6
 	 */
 	public void seekToEnd() {
-		getCallbacksAndTopics().forEach((cb, topics) -> cb.seekToEnd(topics));
+		getCallbacksAndTopics().forEach(org.springframework.kafka.listener.ConsumerSeekAware.ConsumerSeekCallback::seekToEnd);
 	}
 
 	/**

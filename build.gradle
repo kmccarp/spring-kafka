@@ -372,7 +372,7 @@ project('spring-kafka-bom') {
 	dependencies {
 		constraints {
 			javaProjects.sort { "$it.name" }.each {
-				if (it.name != 'spring-kafka-docs') {
+				if (!'spring-kafka-docs'.equals(it.name)) {
 					api it
 				}
 			}
@@ -562,7 +562,7 @@ task reference(dependsOn: asciidoctor) {
 	description = 'Generate the reference documentation'
 }
 
-reference.onlyIf { "$System.env.NO_REFERENCE_TASK" != 'true' || project.hasProperty('ignoreEnvToStopReference') }
+reference.onlyIf { !'true'.equals("$System.env.NO_REFERENCE_TASK") || project.hasProperty('ignoreEnvToStopReference') }
 
 task api(type: Javadoc) {
 	group = 'Documentation'

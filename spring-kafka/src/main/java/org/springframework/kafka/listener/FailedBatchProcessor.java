@@ -120,7 +120,7 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 	@Override
 	protected void notRetryable(Stream<Class<? extends Exception>> notRetryable) {
 		if (this.fallbackBatchHandler instanceof ExceptionClassifier handler) {
-			notRetryable.forEach(ex -> handler.addNotRetryableExceptions(ex));
+			notRetryable.forEach(handler::addNotRetryableExceptions);
 		}
 	}
 
@@ -240,7 +240,7 @@ public abstract class FailedBatchProcessor extends FailedRecordProcessor {
 			commit(consumer, container, offsets);
 		}
 		if (isSeekAfterError()) {
-			if (remaining.size() > 0) {
+			if (!remaining.isEmpty()) {
 				SeekUtils.seekOrRecover(thrownException, remaining, consumer, container, false,
 					getFailureTracker()::recovered, this.logger, getLogLevel());
 				ConsumerRecord<?, ?> recovered = remaining.get(0);

@@ -101,14 +101,14 @@ public class Application {
 // tag::sendReceive[]
             RequestReplyTypedMessageFuture<String, String, Thing> future1 =
                     template.sendAndReceive(MessageBuilder.withPayload("getAThing").build(),
-                            new ParameterizedTypeReference<Thing>() { });
+                            new ParameterizedTypeReference<>() { });
             log.info(future1.getSendFuture().get(10, TimeUnit.SECONDS).getRecordMetadata().toString());
             Thing thing = future1.get(10, TimeUnit.SECONDS).getPayload();
             log.info(thing.toString());
 
             RequestReplyTypedMessageFuture<String, String, List<Thing>> future2 =
                     template.sendAndReceive(MessageBuilder.withPayload("getThings").build(),
-                            new ParameterizedTypeReference<List<Thing>>() { });
+                            new ParameterizedTypeReference<>() { });
             log.info(future2.getSendFuture().get(10, TimeUnit.SECONDS).getRecordMetadata().toString());
             List<Thing> things = future2.get(10, TimeUnit.SECONDS).getPayload();
             things.forEach(thing1 -> log.info(thing1.toString()));
@@ -120,11 +120,11 @@ public class Application {
     @SendTo
     public byte[] listen(String in) {
         log.info(in);
-        if (in.equals("\"getAThing\"")) {
-            return ("{\"thingProp\":\"someValue\"}").getBytes();
+        if ("\"getAThing\"".equals(in)) {
+            return "{\"thingProp\":\"someValue\"}".getBytes();
         }
-        if (in.equals("\"getThings\"")) {
-            return ("[{\"thingProp\":\"someValue1\"},{\"thingProp\":\"someValue2\"}]").getBytes();
+        if ("\"getThings\"".equals(in)) {
+            return "[{\"thingProp\":\"someValue1\"},{\"thingProp\":\"someValue2\"}]".getBytes();
         }
         return in.toUpperCase().getBytes();
     }

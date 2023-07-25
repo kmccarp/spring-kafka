@@ -23,10 +23,7 @@ import java.time.Duration;
 import java.util.Map;
 
 import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.TopicPartition;
@@ -97,14 +94,14 @@ public class KafkaTestUtilsTests {
 		assertThat(oneRecord.value()).isEqualTo("foo");
 		assertThat(KafkaTestUtils.getCurrentOffset(broker.getBrokersAsString(), "getOne", "singleTopic3", 0))
 				.isNotNull()
-				.extracting(omd -> omd.offset())
+				.extracting(OffsetAndMetadata::offset)
 				.isEqualTo(1L);
 		oneRecord = KafkaTestUtils.getOneRecord(broker.getBrokersAsString(), "getOne",
 				"singleTopic3", 0, true, true, Duration.ofSeconds(10));
 		assertThat(oneRecord.value()).isEqualTo("foo");
 		assertThat(KafkaTestUtils.getCurrentOffset(broker.getBrokersAsString(), "getOne", "singleTopic3", 0))
 				.isNotNull()
-				.extracting(omd -> omd.offset())
+				.extracting(OffsetAndMetadata::offset)
 				.isEqualTo(1L);
 	}
 
@@ -142,7 +139,7 @@ public class KafkaTestUtilsTests {
 					"singleTopic3", 0, false, true, Duration.ofSeconds(10));
 			assertThat(KafkaTestUtils.getCurrentOffset(adminClient, "testGetCurrentOffsetWithAdminClient", "singleTopic3", 0))
 					.isNotNull()
-					.extracting(omd -> omd.offset())
+					.extracting(OffsetAndMetadata::offset)
 					.isEqualTo(1L);
 		}
 

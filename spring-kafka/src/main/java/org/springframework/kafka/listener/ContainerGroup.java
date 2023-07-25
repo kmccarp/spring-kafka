@@ -88,7 +88,7 @@ public class ContainerGroup implements Lifecycle {
 	 */
 	public Collection<String> getListenerIds() {
 		return this.containers.stream()
-				.map(container -> container.getListenerId())
+				.map(MessageListenerContainer::getListenerId)
 				.map(id -> {
 					Assert.state(id != null, "Containers must have listener ids to be used here");
 					return id;
@@ -147,7 +147,7 @@ public class ContainerGroup implements Lifecycle {
 	@Override
 	public synchronized void stop() {
 		if (this.running) {
-			this.containers.forEach(container -> container.stop());
+			this.containers.forEach(Lifecycle::stop);
 			this.running = false;
 		}
 	}

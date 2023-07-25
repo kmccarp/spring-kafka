@@ -123,7 +123,7 @@ public class ConcurrentMessageListenerContainerTests {
 		this.logger.info("Start auto");
 		Map<String, Object> props = KafkaTestUtils.consumerProps("test1", "true", embeddedKafka);
 		AtomicReference<Properties> overrides = new AtomicReference<>();
-		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<Integer, String>(props) {
+		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(props) {
 
 			@Override
 			protected Consumer<Integer, String> createKafkaConsumer(String groupId, String clientIdPrefix,
@@ -164,7 +164,7 @@ public class ConcurrentMessageListenerContainerTests {
 		CountDownLatch intercepted = new CountDownLatch(4);
 		container.setRecordInterceptor((record, consumer) -> {
 			intercepted.countDown();
-			return record.value().equals("baz") ? null : record;
+			return "baz".equals(record.value()) ? null : record;
 		});
 		container.start();
 
@@ -227,7 +227,7 @@ public class ConcurrentMessageListenerContainerTests {
 		this.logger.info("Start auto");
 		Map<String, Object> props = KafkaTestUtils.consumerProps("test10", "false", embeddedKafka);
 		AtomicReference<Properties> overrides = new AtomicReference<>();
-		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<Integer, String>(props) {
+		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(props) {
 
 			@Override
 			protected Consumer<Integer, String> createKafkaConsumer(String groupId, String clientIdPrefix,
@@ -305,7 +305,7 @@ public class ConcurrentMessageListenerContainerTests {
 		Map<String, Object> props = KafkaTestUtils.consumerProps("test2", "false", embeddedKafka);
 		props.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
 		AtomicReference<Properties> overrides = new AtomicReference<>();
-		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<Integer, String>(props) {
+		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(props) {
 
 			@Override
 			protected Consumer<Integer, String> createKafkaConsumer(String groupId, String clientIdPrefix,
@@ -466,7 +466,7 @@ public class ConcurrentMessageListenerContainerTests {
 	public void testManualCommitSyncExisting() throws Exception {
 		this.logger.info("Start MANUAL_IMMEDIATE with Existing");
 		Map<String, Object> senderProps = KafkaTestUtils.producerProps(embeddedKafka);
-		ProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<Integer, String>(senderProps);
+		ProducerFactory<Integer, String> pf = new DefaultKafkaProducerFactory<>(senderProps);
 		KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf);
 		template.setDefaultTopic(topic8);
 		template.sendDefault(0, "foo");
@@ -475,7 +475,7 @@ public class ConcurrentMessageListenerContainerTests {
 		template.sendDefault(2, "qux");
 		template.flush();
 		Map<String, Object> props = KafkaTestUtils.consumerProps("testManualExistingSync", "false", embeddedKafka);
-		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<Integer, String>(props);
+		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(props);
 		ContainerProperties containerProps = new ContainerProperties(topic8);
 		containerProps.setSyncCommits(true);
 		final CountDownLatch latch = new CountDownLatch(8);
@@ -569,7 +569,7 @@ public class ConcurrentMessageListenerContainerTests {
 		Consumer<Integer, String> consumer = mock(Consumer.class);
 		given(cf.createConsumer(anyString(), anyString(), anyString(), any())).willReturn(consumer);
 		given(consumer.poll(any(Duration.class)))
-			.willAnswer(new Answer<ConsumerRecords<Integer, String>>() {
+			.willAnswer(new Answer<>() {
 
 				@Override
 				public ConsumerRecords<Integer, String> answer(InvocationOnMock invocation) throws Throwable {
@@ -738,7 +738,7 @@ public class ConcurrentMessageListenerContainerTests {
 	private void testAckOnErrorWithManualImmediateGuts(String topic, boolean ackOnError) throws Exception {
 		logger.info("Start ack on error with ManualImmediate ack mode");
 		Map<String, Object> props = KafkaTestUtils.consumerProps("testMan" + ackOnError, "false", embeddedKafka);
-		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<Integer, String>(props);
+		DefaultKafkaConsumerFactory<Integer, String> cf = new DefaultKafkaConsumerFactory<>(props);
 		final CountDownLatch latch = new CountDownLatch(2);
 		ContainerProperties containerProps = new ContainerProperties(topic);
 		containerProps.setSyncCommits(true);

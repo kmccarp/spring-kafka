@@ -103,9 +103,7 @@ public class DefaultKafkaProducerFactoryTests {
 		assertThat(queue).hasSize(1);
 		assertThatExceptionOfType(CannotCreateTransactionException.class)
 				.isThrownBy(() -> {
-					transactionTemplate.execute(s -> {
-						return null;
-					});
+					transactionTemplate.execute(s -> null);
 				})
 				.withStackTraceContaining("Invalid transition");
 
@@ -321,7 +319,7 @@ public class DefaultKafkaProducerFactoryTests {
 		Map<MetricName, ? extends Metric> metrics = new HashMap<>();
 		metrics.put(new MetricName("test", "group", "desc", Collections.singletonMap("client-id", "foo-0")), null);
 		given(producer.metrics()).willReturn(metrics);
-		DefaultKafkaProducerFactory pf = new DefaultKafkaProducerFactory(Collections.EMPTY_MAP) {
+		DefaultKafkaProducerFactory pf = new DefaultKafkaProducerFactory(Collections.emptyMap()) {
 
 			@Override
 			protected Producer createRawProducer(Map configs) {

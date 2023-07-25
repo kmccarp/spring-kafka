@@ -112,7 +112,9 @@ class Application {
         }
         return if (`in` == "\"getThings\"") {
             "[{\"thingProp\":\"someValue1\"},{\"thingProp\":\"someValue2\"}]".toByteArray()
-        } else `in`.toUpperCase().toByteArray()
+        } else {
+			`in`.toUpperCase().toByteArray()
+		}
     }
 
     class Thing {

@@ -238,17 +238,16 @@ public class SubBatchPerPartitionTests {
 				if (which.get() == null) {
 					which.set(new AtomicInteger());
 				}
-				switch (which.get().getAndIncrement()) {
-					case 0:
-						return new ConsumerRecords(records1);
-					default:
-						try {
-							Thread.sleep(100);
-						}
-						catch (@SuppressWarnings("unused") InterruptedException e) {
-							Thread.currentThread().interrupt();
-						}
-						return new ConsumerRecords(Collections.emptyMap());
+				if (which.get().getAndIncrement() == 0) {
+					return new ConsumerRecords(records1);
+				} else {
+					try {
+						Thread.sleep(100);
+					}
+					catch (@SuppressWarnings("unused") InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+					return new ConsumerRecords(Collections.emptyMap());
 				}
 			}).given(consumer).poll(Duration.ofMillis(ContainerProperties.DEFAULT_POLL_TIMEOUT));
 			willAnswer(i -> {

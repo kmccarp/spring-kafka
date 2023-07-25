@@ -179,17 +179,16 @@ public class DefaultErrorHandlerNoSeeksBatchAckTests {
 			final AtomicInteger which = new AtomicInteger();
 			willAnswer(i -> {
 				this.pollLatch.countDown();
-				switch (which.getAndIncrement()) {
-					case 0:
-						return new ConsumerRecords(records1);
-					default:
-						try {
-							Thread.sleep(1000);
-						}
-						catch (InterruptedException e) {
-							Thread.currentThread().interrupt();
-						}
-						return ConsumerRecords.empty();
+				if (which.getAndIncrement() == 0) {
+					return new ConsumerRecords(records1);
+				} else {
+					try {
+						Thread.sleep(1000);
+					}
+					catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+					return ConsumerRecords.empty();
 				}
 			}).given(consumer).poll(any());
 			willAnswer(i -> {
