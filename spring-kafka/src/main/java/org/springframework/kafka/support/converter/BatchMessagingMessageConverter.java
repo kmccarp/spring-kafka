@@ -68,9 +68,9 @@ public class BatchMessagingMessageConverter implements BatchMessageConverter {
 
 	private final RecordMessageConverter recordConverter;
 
-	private boolean generateMessageId = false;
+	private boolean generateMessageId;
 
-	private boolean generateTimestamp = false;
+	private boolean generateTimestamp;
 
 	private KafkaHeaderMapper headerMapper;
 

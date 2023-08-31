@@ -187,22 +187,20 @@ public class ManualAckPartialBatchTests {
 			final AtomicInteger which = new AtomicInteger();
 			willAnswer(i -> {
 				this.pollLatch.countDown();
-				switch (which.getAndIncrement()) {
-					case 0:
-						return new ConsumerRecords(records1);
-					default:
-						try {
-							Thread.sleep(100);
-						}
-						catch (@SuppressWarnings("unused") InterruptedException e) {
-							Thread.currentThread().interrupt();
-						}
-						return ConsumerRecords.empty();
+				if (which.getAndIncrement() == 0) {
+					return new ConsumerRecords(records1);
+				}
+				else {
+					try {
+						Thread.sleep(100);
+					}
+					catch (@SuppressWarnings("unused") InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+					return ConsumerRecords.empty();
 				}
 			}).given(consumer).poll(Duration.ofMillis(ContainerProperties.DEFAULT_POLL_TIMEOUT));
-			willAnswer(i -> {
-				return Collections.emptySet();
-			}).given(consumer).paused();
+			willAnswer(i -> Collections.emptySet()).given(consumer).paused();
 			willAnswer(i -> {
 				this.commitLatch.countDown();
 				return null;

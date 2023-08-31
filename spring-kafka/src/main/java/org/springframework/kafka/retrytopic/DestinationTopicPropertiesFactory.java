@@ -162,7 +162,7 @@ public class DestinationTopicPropertiesFactory {
 	}
 
 	private int reusableTopicAttempts() {
-		return this.backOffValues.size() > 0
+		return !this.backOffValues.isEmpty()
 				? !isFixedDelay()
 					? isSingleTopicSameIntervalTopicReuseStrategy()
 						// Assuming that duplicates are always in
@@ -235,8 +235,8 @@ public class DestinationTopicPropertiesFactory {
 	}
 
 	private boolean isDelayWithReusedTopic(Long backoffValue) {
-		return ((isSingleTopicFixedDelay()) ||
-				(hasDuplicates(backoffValue) && isSingleTopicSameIntervalTopicReuseStrategy()));
+		return (isSingleTopicFixedDelay()) ||
+				(hasDuplicates(backoffValue) && isSingleTopicSameIntervalTopicReuseStrategy());
 	}
 
 	private int getIndexInBackoffValues(int indexInBackoffValues, Long thisBackOffValue) {

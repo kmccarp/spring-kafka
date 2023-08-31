@@ -66,11 +66,11 @@ public interface MessageConverter {
 		rawHeaders.put(KafkaHeaders.TIMESTAMP_TYPE, timestampType);
 		rawHeaders.put(KafkaHeaders.RECEIVED_TIMESTAMP, timestamp);
 		JavaUtils.INSTANCE
-			.acceptIfNotNull(KafkaHeaders.RECEIVED_KEY, theKey, (key, val) -> rawHeaders.put(key, val))
+			.acceptIfNotNull(KafkaHeaders.RECEIVED_KEY, theKey, rawHeaders::put)
 			.acceptIfNotNull(KafkaHeaders.GROUP_ID, MessageConverter.getGroupId(),
-					(key, val) -> rawHeaders.put(key, val))
-			.acceptIfNotNull(KafkaHeaders.ACKNOWLEDGMENT, acknowledgment, (key, val) -> rawHeaders.put(key, val))
-			.acceptIfNotNull(KafkaHeaders.CONSUMER, consumer, (key, val) -> rawHeaders.put(key, val));
+					rawHeaders::put)
+			.acceptIfNotNull(KafkaHeaders.ACKNOWLEDGMENT, acknowledgment, rawHeaders::put)
+			.acceptIfNotNull(KafkaHeaders.CONSUMER, consumer, rawHeaders::put);
 	}
 
 }

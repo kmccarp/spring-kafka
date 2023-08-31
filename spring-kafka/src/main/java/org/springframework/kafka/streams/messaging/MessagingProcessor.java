@@ -74,7 +74,7 @@ public class MessagingProcessor<Kin, Vin, Kout, Vout> extends ContextualProcesso
 		RecordMetadata meta = context.recordMetadata().orElse(null);
 		Assert.state(meta != null, "No record metadata present");
 		Headers headers = record.headers();
-		ConsumerRecord<Object, Object> rebuilt = new ConsumerRecord<Object, Object>(meta.topic(),
+		ConsumerRecord<Object, Object> rebuilt = new ConsumerRecord<>(meta.topic(),
 				meta.partition(), meta.offset(),
 				record.timestamp(), TimestampType.NO_TIMESTAMP_TYPE,
 				0, 0,
@@ -84,7 +84,7 @@ public class MessagingProcessor<Kin, Vin, Kout, Vout> extends ContextualProcesso
 		message = this.function.exchange(message);
 		List<String> headerList = new ArrayList<>();
 		headers.forEach(header -> headerList.add(header.key()));
-		headerList.forEach(name -> headers.remove(name));
+		headerList.forEach(headers::remove);
 		ProducerRecord<?, ?> fromMessage = this.converter.fromMessage(message, "dummy");
 		fromMessage.headers().forEach(header -> {
 			if (!header.key().equals(KafkaHeaders.TOPIC)) {

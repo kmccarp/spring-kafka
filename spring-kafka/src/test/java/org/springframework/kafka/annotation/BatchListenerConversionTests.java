@@ -219,8 +219,7 @@ public class BatchListenerConversionTests {
 
 		@Bean
 		public Map<String, Object> producerConfigs(EmbeddedKafkaBroker embeddedKafka) {
-			Map<String, Object> props = KafkaTestUtils.producerProps(embeddedKafka);
-			return props;
+			return KafkaTestUtils.producerProps(embeddedKafka);
 		}
 
 		@Bean

@@ -35,7 +35,7 @@ public class ConsumerStoppingEvent extends KafkaEvent {
 
 	private static final long serialVersionUID = 1L;
 
-	private transient Consumer<?, ?> consumer;
+	private final transient Consumer<?, ?> consumer;
 
 	private final Collection<TopicPartition> partitions;
 
