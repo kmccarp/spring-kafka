@@ -140,7 +140,7 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 		List<DestinationTopic> destinationList = destinationTopicListCaptor
 				.getAllValues()
 				.stream()
-				.flatMap(list -> list.stream())
+				.flatMap(java.util.Collection::stream)
 				.collect(Collectors.toList());
 
 		assertThat(destinationList.size()).isEqualTo(11);
@@ -170,12 +170,12 @@ class DefaultDestinationTopicProcessorTests extends DestinationTopicTests {
 
 		List<String> allTopics = allFirstDestinationsTopics
 				.stream()
-				.map(destinationTopic -> destinationTopic.getDestinationName())
+				.map(DestinationTopic::getDestinationName)
 				.collect(Collectors.toList());
 
 		allTopics.addAll(allSecondDestinationTopics
 				.stream()
-				.map(destinationTopic -> destinationTopic.getDestinationName())
+				.map(DestinationTopic::getDestinationName)
 				.collect(Collectors.toList()));
 
 		List<String> allProcessedTopics = new ArrayList<>();

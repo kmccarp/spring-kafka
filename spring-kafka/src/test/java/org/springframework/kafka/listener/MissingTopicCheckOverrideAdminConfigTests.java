@@ -64,7 +64,7 @@ public class MissingTopicCheckOverrideAdminConfigTests {
 		};
 		LogAccessor logger = spy(new LogAccessor(LogFactory.getLog(getClass())));
 		new DirectFieldAccessor(container).setPropertyValue("logger", logger);
-		assertThatNoException().isThrownBy(() -> container.checkTopics());
+		assertThatNoException().isThrownBy(container::checkTopics);
 		verify(logger, never()).error(any(), anyString());
 	}
 
@@ -94,7 +94,7 @@ public class MissingTopicCheckOverrideAdminConfigTests {
 		};
 		LogAccessor logger = spy(new LogAccessor(LogFactory.getLog(getClass())));
 		new DirectFieldAccessor(container).setPropertyValue("logger", logger);
-		assertThatNoException().isThrownBy(() -> container.checkTopics());
+		assertThatNoException().isThrownBy(container::checkTopics);
 		verify(logger, never()).error(any(), anyString());
 	}
 

@@ -98,7 +98,7 @@ public class JsonSerializationTests {
 
 		topic = "topic-name";
 
-		jsonReader = new JsonDeserializer<DummyEntity>() { };
+		jsonReader = new JsonDeserializer<>() { };
 		jsonReader.close(); // does nothing, so may be called any time, or not called at all
 		jsonArrayReader = new JsonDeserializer<DummyEntity[]>() { };
 		jsonArrayReader.configure(new HashMap<>(), false);

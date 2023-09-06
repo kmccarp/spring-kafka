@@ -129,7 +129,7 @@ public class ManualNackPauseResumeTests {
 		@KafkaListener(id = "foo", topics = "foo", groupId = "grp")
 		public void foo(String in, Acknowledgment ack) {
 			this.contents.add(in);
-			if (in.equals("qux")) {
+			if ("qux".equals(in)) {
 				this.replayTime = System.currentTimeMillis() - this.replayTime;
 			}
 			this.deliveryLatch.countDown();
@@ -207,9 +207,7 @@ public class ManualNackPauseResumeTests {
 						return new ConsumerRecords(Collections.emptyMap());
 				}
 			}).given(consumer).poll(Duration.ofMillis(ContainerProperties.DEFAULT_POLL_TIMEOUT));
-			willAnswer(i -> {
-				return Set.of(topicPartition0, topicPartition2);
-			}).given(consumer).paused();
+			willAnswer(i -> Set.of(topicPartition0, topicPartition2)).given(consumer).paused();
 			willAnswer(i -> {
 				paused.set(true);
 				this.pausedForNack.addAll(i.getArgument(0));
