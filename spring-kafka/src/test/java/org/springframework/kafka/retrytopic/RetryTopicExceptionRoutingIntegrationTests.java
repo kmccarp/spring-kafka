@@ -74,11 +74,11 @@ public class RetryTopicExceptionRoutingIntegrationTests {
 
 	private static final Logger logger = LoggerFactory.getLogger(RetryTopicExceptionRoutingIntegrationTests.class);
 
-	public final static String BLOCKING_AND_TOPIC_RETRY = "blocking-and-topic-retry";
-	public final static String ONLY_RETRY_VIA_BLOCKING = "only-retry-blocking-topic";
-	public final static String ONLY_RETRY_VIA_TOPIC = "only-retry-topic";
-	public final static String USER_FATAL_EXCEPTION_TOPIC = "user-fatal-topic";
-	public final static String FRAMEWORK_FATAL_EXCEPTION_TOPIC = "framework-fatal-topic";
+	public static final String BLOCKING_AND_TOPIC_RETRY = "blocking-and-topic-retry";
+	public static final String ONLY_RETRY_VIA_BLOCKING = "only-retry-blocking-topic";
+	public static final String ONLY_RETRY_VIA_TOPIC = "only-retry-topic";
+	public static final String USER_FATAL_EXCEPTION_TOPIC = "user-fatal-topic";
+	public static final String FRAMEWORK_FATAL_EXCEPTION_TOPIC = "framework-fatal-topic";
 
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;

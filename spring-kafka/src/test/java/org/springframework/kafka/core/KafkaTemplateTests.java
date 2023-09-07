@@ -376,7 +376,7 @@ public class KafkaTemplateTests {
 		KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf);
 		template.setDefaultTopic(INT_KEY_TOPIC);
 		final CountDownLatch latch = new CountDownLatch(1);
-		template.setProducerListener(new ProducerListener<Integer, String>() {
+		template.setProducerListener(new ProducerListener<>() {
 
 			@Override
 			public void onSuccess(ProducerRecord<Integer, String> record, RecordMetadata recordMetadata) {
@@ -505,7 +505,7 @@ public class KafkaTemplateTests {
 		overrides.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "TX2");
 		KafkaTemplate<String, String> templateWTX2 = new KafkaTemplate<>(template.getProducerFactory(), true, overrides);
 		// clone the factory again with empty properties
-		KafkaTemplate<String, String> templateWTX2_2 = new KafkaTemplate<>(templateWTX2.getProducerFactory(), true,
+		KafkaTemplate<String, String> templateWTX22 = new KafkaTemplate<>(templateWTX2.getProducerFactory(), true,
 				Collections.singletonMap("dummy", "dont use"));
 		assertThat(template.getProducerFactory()).isOfAnyClassIn(DefaultKafkaProducerFactory.class);
 		assertThat(template.getProducerFactory().getConfigurationProperties()
@@ -525,7 +525,7 @@ public class KafkaTemplateTests {
 		// and: we modified TX to TX2 in the second copy factory
 		assertThat(templateWTX2.getProducerFactory().getTransactionIdPrefix()).isEqualTo("TX2");
 		// and: we reuse the id from the template (TX2) in the third copy factory
-		assertThat(templateWTX2_2.getProducerFactory().getTransactionIdPrefix()).isEqualTo("TX2");
+		assertThat(templateWTX22.getProducerFactory().getTransactionIdPrefix()).isEqualTo("TX2");
 	}
 
 	@Test

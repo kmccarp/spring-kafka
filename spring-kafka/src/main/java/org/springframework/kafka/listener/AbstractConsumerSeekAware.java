@@ -68,7 +68,7 @@ public abstract class AbstractConsumerSeekAware implements ConsumerSeekAware {
 				List<TopicPartition> topics = this.callbacksToTopic.get(removed);
 				if (topics != null) {
 					topics.remove(tp);
-					if (topics.size() == 0) {
+					if (topics.isEmpty()) {
 						this.callbacksToTopic.remove(removed);
 					}
 				}

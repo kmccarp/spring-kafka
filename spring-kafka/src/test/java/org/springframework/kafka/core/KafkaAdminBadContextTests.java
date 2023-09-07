@@ -40,7 +40,7 @@ public class KafkaAdminBadContextTests {
 	@Test
 	public void testContextNotLoaded() {
 		assertThatIllegalStateException()
-				.isThrownBy(() -> new AnnotationConfigApplicationContext(BadConfig.class).close())
+				.isThrownBy(new AnnotationConfigApplicationContext(BadConfig.class)::close)
 				.withMessageMatching("(Could not create admin|Could not configure topics)");
 	}
 
