@@ -391,7 +391,7 @@ public class RetryTopicConfigurer implements BeanFactoryAware {
 
 	protected void createNewTopicBeans(Collection<String> topics, RetryTopicConfiguration.TopicCreation config) {
 		topics.forEach(topic -> {
-				DefaultListableBeanFactory bf = ((DefaultListableBeanFactory) this.beanFactory);
+				DefaultListableBeanFactory bf = (DefaultListableBeanFactory) this.beanFactory;
 				String beanName = topic + "-topicRegistrationBean";
 				if (!bf.containsBean(beanName)) {
 					bf.registerSingleton(beanName,

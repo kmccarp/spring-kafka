@@ -72,15 +72,13 @@ public class ContainerFactoryTests {
 		factory.getContainerProperties().setClientId("myClientId");
 		factory.getContainerProperties().setGroupId("myGroup");
 		factory.setConsumerFactory(mock(ConsumerFactory.class));
-		AbstractKafkaListenerEndpoint<String, String> endpoint = new AbstractKafkaListenerEndpoint<String, String>() {
+		AbstractKafkaListenerEndpoint<String, String> endpoint = new AbstractKafkaListenerEndpoint<>() {
 
 			@Override
 			protected MessagingMessageListenerAdapter<String, String> createMessageListener(
 					MessageListenerContainer container, MessageConverter messageConverter) {
 
-				RecordMessagingMessageListenerAdapter<String, String> adapter =
-						new RecordMessagingMessageListenerAdapter<String, String>(null, null);
-				return adapter;
+				return new RecordMessagingMessageListenerAdapter<>(null, null);
 			}
 
 		};

@@ -157,9 +157,8 @@ class RetryTopicConfigurationIntegrationTests {
 		protected java.util.function.Consumer<DeadLetterPublishingRecovererFactory>
 				configureDeadLetterPublishingContainerFactory() {
 
-			return (factory) -> factory.setDeadLetterPublisherCreator(
-					(templateResolver, destinationResolver) ->
-							new CustomDLPR(templateResolver, destinationResolver));
+			return factory -> factory.setDeadLetterPublisherCreator(
+					CustomDLPR::new);
 		}
 
 		@Bean

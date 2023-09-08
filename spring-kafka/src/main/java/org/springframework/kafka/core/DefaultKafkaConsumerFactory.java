@@ -386,7 +386,7 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 		boolean shouldModifyClientId = (this.configs.containsKey(ConsumerConfig.CLIENT_ID_CONFIG)
 				&& StringUtils.hasText(clientIdSuffix)) || overrideClientIdPrefix;
 		if (groupId == null
-				&& (properties == null || properties.stringPropertyNames().size() == 0)
+				&& (properties == null || properties.stringPropertyNames().isEmpty())
 				&& !shouldModifyClientId) {
 			return createKafkaConsumer(new HashMap<>(this.configs));
 		}
@@ -450,7 +450,7 @@ public class DefaultKafkaConsumerFactory<K, V> extends KafkaResourceFactory
 		checkBootstrap(configProps);
 		Consumer<K, V> kafkaConsumer = createRawConsumer(configProps);
 
-		if (this.listeners.size() > 0) {
+		if (!this.listeners.isEmpty()) {
 			Map<MetricName, ? extends Metric> metrics = kafkaConsumer.metrics();
 			Iterator<MetricName> metricIterator = metrics.keySet().iterator();
 			String clientId;

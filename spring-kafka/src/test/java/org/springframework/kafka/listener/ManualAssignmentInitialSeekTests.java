@@ -101,7 +101,7 @@ public class ManualAssignmentInitialSeekTests {
 				.getContainerProperties()
 				.getTopicPartitions();
 		Stream<Integer> collected = Arrays.stream(topicPartitions)
-				.map(tp -> tp.getPartition());
+				.map(TopicPartitionOffset::getPartition);
 		assertThat(collected).containsExactly(0, 1, 2, 3, 4, 5, 7, 10, 11, 12, 13, 14, 15);
 
 		assertThat(Arrays.stream(this.registry.getListenerContainer("ppo")
@@ -114,7 +114,7 @@ public class ManualAssignmentInitialSeekTests {
 		assertThat(Arrays.stream(this.registry.getListenerContainer("ppo")
 				.getContainerProperties()
 				.getTopicPartitions())
-				.map(tpo -> tpo.getOffset())).containsExactly(0L, 0L, 1L, 1L);
+				.map(TopicPartitionOffset::getOffset)).containsExactly(0L, 0L, 1L, 1L);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

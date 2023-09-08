@@ -94,7 +94,7 @@ public class DeliveryHeaderTests {
 
 		@Override
 		protected Consumer<DeadLetterPublishingRecovererFactory> configureDeadLetterPublishingContainerFactory() {
-			return factory -> factory.neverLogListenerException();
+			return DeadLetterPublishingRecovererFactory::neverLogListenerException;
 		}
 
 		@RetryableTopic(backoff = @Backoff(maxDelay = 0))

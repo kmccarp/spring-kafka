@@ -152,7 +152,7 @@ public class ContainerProperties extends ConsumerProperties {
 		/**
 		 *  fetch-offset-request fencing (2.5+ brokers).
 		 */
-		V2;
+		V2
 
 	}
 
@@ -169,7 +169,7 @@ public class ContainerProperties extends ConsumerProperties {
 	/**
 	 * The default {@link #setNoPollThreshold(float) noPollThreshold}.
 	 */
-	public static final float DEFAULT_NO_POLL_THRESHOLD = 3f;
+	public static final float DEFAULT_NO_POLL_THRESHOLD = 3F;
 
 	private static final Duration DEFAULT_CONSUMER_START_TIMEOUT = Duration.ofSeconds(30);
 
@@ -266,7 +266,7 @@ public class ContainerProperties extends ConsumerProperties {
 
 	private boolean logContainerConfig;
 
-	private boolean missingTopicsFatal = false;
+	private boolean missingTopicsFatal;
 
 	private long idleBetweenPolls;
 

@@ -64,9 +64,9 @@ public class MessagingMessageConverter implements RecordMessageConverter {
 
 	private final Function<Message<?>, Integer> partitionProvider;
 
-	private boolean generateMessageId = false;
+	private boolean generateMessageId;
 
-	private boolean generateTimestamp = false;
+	private boolean generateTimestamp;
 
 	private KafkaHeaderMapper headerMapper;
 
