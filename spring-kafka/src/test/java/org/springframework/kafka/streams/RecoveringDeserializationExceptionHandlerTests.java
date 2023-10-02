@@ -86,7 +86,7 @@ public class RecoveringDeserializationExceptionHandlerTests {
 	@Test
 	void viaStringProperty() {
 		RecoveringDeserializationExceptionHandler handler = new RecoveringDeserializationExceptionHandler();
-		Map<String, Object> configs = new HashMap<String, Object>();
+		Map<String, Object> configs = new HashMap<>();
 		configs.put(RecoveringDeserializationExceptionHandler.KSTREAM_DESERIALIZATION_RECOVERER,
 				Recoverer.class.getName());
 		handler.configure(configs);
@@ -100,7 +100,7 @@ public class RecoveringDeserializationExceptionHandlerTests {
 	@Test
 	void viaClassProperty() {
 		RecoveringDeserializationExceptionHandler handler = new RecoveringDeserializationExceptionHandler();
-		Map<String, Object> configs = new HashMap<String, Object>();
+		Map<String, Object> configs = new HashMap<>();
 		configs.put(RecoveringDeserializationExceptionHandler.KSTREAM_DESERIALIZATION_RECOVERER, Recoverer.class);
 		handler.configure(configs);
 		assertThat(KafkaTestUtils.getPropertyValue(handler, "recoverer")).isInstanceOf(Recoverer.class);
@@ -113,7 +113,7 @@ public class RecoveringDeserializationExceptionHandlerTests {
 	@Test
 	void viaObjectProperty() {
 		RecoveringDeserializationExceptionHandler handler = new RecoveringDeserializationExceptionHandler();
-		Map<String, Object> configs = new HashMap<String, Object>();
+		Map<String, Object> configs = new HashMap<>();
 		Recoverer rec = new Recoverer();
 		configs.put(RecoveringDeserializationExceptionHandler.KSTREAM_DESERIALIZATION_RECOVERER, rec);
 		handler.configure(configs);
@@ -266,7 +266,7 @@ public class RecoveringDeserializationExceptionHandlerTests {
 
 		@Override
 		public Deserializer<byte[]> deserializer() {
-			return new Deserializer<byte[]>() {
+			return new Deserializer<>() {
 
 				private boolean key;
 

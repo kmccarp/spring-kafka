@@ -108,21 +108,21 @@ public class RetryTopicIntegrationTests {
 
 	private static final Logger logger = LoggerFactory.getLogger(RetryTopicIntegrationTests.class);
 
-	public final static String FIRST_TOPIC = "myRetryTopic1";
+	public static final String FIRST_TOPIC = "myRetryTopic1";
 
-	public final static String SECOND_TOPIC = "myRetryTopic2";
+	public static final String SECOND_TOPIC = "myRetryTopic2";
 
-	public final static String THIRD_TOPIC = "myRetryTopic3";
+	public static final String THIRD_TOPIC = "myRetryTopic3";
 
-	public final static String FOURTH_TOPIC = "myRetryTopic4";
+	public static final String FOURTH_TOPIC = "myRetryTopic4";
 
-	public final static String TWO_LISTENERS_TOPIC = "myRetryTopic5";
+	public static final String TWO_LISTENERS_TOPIC = "myRetryTopic5";
 
-	public final static String MANUAL_TOPIC = "myRetryTopic6";
+	public static final String MANUAL_TOPIC = "myRetryTopic6";
 
-	public final static String NOT_RETRYABLE_EXCEPTION_TOPIC = "noRetryTopic";
+	public static final String NOT_RETRYABLE_EXCEPTION_TOPIC = "noRetryTopic";
 
-	private final static String MAIN_TOPIC_CONTAINER_FACTORY = "kafkaListenerContainerFactory";
+	private static final String MAIN_TOPIC_CONTAINER_FACTORY = "kafkaListenerContainerFactory";
 
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
@@ -148,7 +148,7 @@ public class RetryTopicIntegrationTests {
 				.forEach(id -> {
 					ConcurrentMessageListenerContainer<?, ?> container = (ConcurrentMessageListenerContainer<?, ?>) registry
 							.getListenerContainer(id);
-					if (id.equals("firstTopicId")) {
+					if ("firstTopicId".equals(id)) {
 						assertThat(container.getConcurrency()).isEqualTo(2);
 					}
 					else {
@@ -182,7 +182,7 @@ public class RetryTopicIntegrationTests {
 		org.springframework.util.ReflectionUtils.doWithMethods(KafkaAdmin.class, m -> {
 			m.setAccessible(true);
 			method.set(m);
-		}, m -> m.getName().equals("newTopics"));
+		}, m -> "newTopics".equals(m.getName()));
 		@SuppressWarnings("unchecked")
 		Collection<NewTopic> weededTopics = (Collection<NewTopic>) method.get().invoke(admin);
 		AtomicInteger weeded = new AtomicInteger();
@@ -198,7 +198,7 @@ public class RetryTopicIntegrationTests {
 				.forEach(id -> {
 					ConcurrentMessageListenerContainer<?, ?> container =
 							(ConcurrentMessageListenerContainer<?, ?>) registry.getListenerContainer(id);
-					if (id.equals("thirdTopicId")) {
+					if ("thirdTopicId".equals(id)) {
 						assertThat(container.getConcurrency()).isEqualTo(2);
 					}
 					else {

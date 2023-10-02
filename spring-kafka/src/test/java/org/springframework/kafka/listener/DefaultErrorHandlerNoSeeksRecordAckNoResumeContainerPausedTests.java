@@ -174,17 +174,17 @@ public class DefaultErrorHandlerNoSeeksRecordAckNoResumeContainerPausedTests {
 			final AtomicInteger which = new AtomicInteger();
 			willAnswer(i -> {
 				this.pollLatch.countDown();
-				switch (which.getAndIncrement()) {
-					case 0:
-						return new ConsumerRecords(records1);
-					default:
-						try {
-							Thread.sleep(50);
-						}
-						catch (InterruptedException e) {
-							Thread.currentThread().interrupt();
-						}
-						return new ConsumerRecords(Collections.emptyMap());
+				if (which.getAndIncrement() == 0) {
+					return new ConsumerRecords(records1);
+				}
+				else {
+					try {
+						Thread.sleep(50);
+					}
+					catch (InterruptedException e) {
+						Thread.currentThread().interrupt();
+					}
+					return new ConsumerRecords(Collections.emptyMap());
 				}
 			}).given(consumer).poll(any());
 			List<TopicPartition> paused = new ArrayList<>();
@@ -201,9 +201,7 @@ public class DefaultErrorHandlerNoSeeksRecordAckNoResumeContainerPausedTests {
 				paused.addAll(i.getArgument(0));
 				return null;
 			}).given(consumer).pause(any());
-			willAnswer(i -> {
-				return new HashSet<>(paused);
-			}).given(consumer).paused();
+			willAnswer(i -> new HashSet<>(paused)).given(consumer).paused();
 			willAnswer(i -> {
 				paused.removeAll(i.getArgument(0));
 				return null;

@@ -41,6 +41,7 @@ import org.apache.kafka.clients.admin.DescribeTopicsResult;
 import org.apache.kafka.clients.admin.NewPartitions;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicDescription;
+import org.apache.kafka.common.TopicPartitionInfo;
 import org.apache.kafka.common.config.ConfigResource;
 import org.apache.kafka.common.config.ConfigResource.Type;
 import org.apache.kafka.common.config.TopicConfig;
@@ -106,7 +107,7 @@ public class KafkaAdminTests {
 	@Test
 	public void testAddTopicsAndAddPartitions() throws Exception {
 		Map<String, TopicDescription> results = this.admin.describeTopics("foo", "bar");
-		results.forEach((name, td) -> assertThat(td.partitions()).hasSize(name.equals("foo") ? 2 : 1));
+		results.forEach((name, td) -> assertThat(td.partitions()).hasSize("foo".equals(name) ? 2 : 1));
 		new DirectFieldAccessor(this.topic1).setPropertyValue("numPartitions", Optional.of(4));
 		new DirectFieldAccessor(this.topic2).setPropertyValue("numPartitions", Optional.of(3));
 		this.admin.initialize();
@@ -116,16 +117,16 @@ public class KafkaAdminTests {
 		await().until(() -> {
 			results.putAll(this.admin.describeTopics("foo", "bar"));
 			TopicDescription foo = results.values().stream()
-					.filter(tp -> tp.name().equals("foo"))
+					.filter(tp -> "foo".equals(tp.name()))
 					.findFirst()
 					.get();
 			TopicDescription bar = results.values().stream()
-					.filter(tp -> tp.name().equals("bar"))
+					.filter(tp -> "bar".equals(tp.name()))
 					.findFirst()
 					.get();
 			return foo.partitions().size() == 4 && bar.partitions().size() == 3;
 		});
-		results.forEach((name, td) -> assertThat(td.partitions()).hasSize(name.equals("foo") ? 4 : 3));
+		results.forEach((name, td) -> assertThat(td.partitions()).hasSize("foo".equals(name) ? 4 : 3));
 		new DirectFieldAccessor(this.topic1).setPropertyValue("numPartitions", Optional.of(5));
 		this.admin.createOrModifyTopics(this.topic1,
 				TopicBuilder.name("qux")
@@ -135,7 +136,7 @@ public class KafkaAdminTests {
 		await().until(() -> {
 			results.putAll(this.admin.describeTopics("foo", "qux"));
 			TopicDescription foo = results.values().stream()
-					.filter(tp -> tp.name().equals("foo"))
+					.filter(tp -> "foo".equals(tp.name()))
 					.findFirst()
 					.get();
 			return foo.partitions().size() == 5;
@@ -152,8 +153,8 @@ public class KafkaAdminTests {
 					.describeConfigs(List.of(new ConfigResource(Type.TOPIC, "mismatchconfig")));
 			Map<ConfigResource, org.apache.kafka.clients.admin.Config> configResourceConfigMap = describeConfigsResult.all()
 					.get();
-			return configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig")).get("retention.bytes").value().equals("10")
-					&& configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig")).get("retention.ms").value().equals("11");
+			return "10".equals(configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig")).get("retention.bytes").value())
+					&& "11".equals(configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig")).get("retention.ms").value());
 		});
 
 		this.admin.createOrModifyTopics(mismatchconfig,
@@ -169,12 +170,12 @@ public class KafkaAdminTests {
 							new ConfigResource(Type.TOPIC, "noConfigAddLater")));
 			Map<ConfigResource, org.apache.kafka.clients.admin.Config> configResourceConfigMap = describeConfigsResult.all()
 					.get();
-			return configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig"))
-					.get("retention.bytes").value().equals("1024")
-					&& configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig"))
-					.get("retention.ms").value().equals("1111")
-					&& configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "noConfigAddLater"))
-					.get("retention.ms").value().equals("1000");
+			return "1024".equals(configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig"))
+					.get("retention.bytes").value())
+					&& "1111".equals(configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "mismatchconfig"))
+					.get("retention.ms").value())
+					&& "1000".equals(configResourceConfigMap.get(new ConfigResource(Type.TOPIC, "noConfigAddLater"))
+					.get("retention.ms").value());
 		});
 	}
 
@@ -202,20 +203,20 @@ public class KafkaAdminTests {
 			var topicDescription = results.get("optBoth");
 			assertThat(topicDescription.partitions()).hasSize(2);
 			assertThat(topicDescription.partitions().stream()
-					.map(tpi -> tpi.replicas())
-					.flatMap(nodes -> nodes.stream())
+					.map(TopicPartitionInfo::replicas)
+					.flatMap(java.util.Collection::stream)
 					.count()).isEqualTo(4);
 			topicDescription = results.get("optPart");
 			assertThat(topicDescription.partitions()).hasSize(2);
 			assertThat(topicDescription.partitions().stream()
-					.map(tpi -> tpi.replicas())
-					.flatMap(nodes -> nodes.stream())
+					.map(TopicPartitionInfo::replicas)
+					.flatMap(java.util.Collection::stream)
 					.count()).isEqualTo(2);
 			topicDescription = results.get("optRepl");
 			assertThat(topicDescription.partitions()).hasSize(3);
 			assertThat(topicDescription.partitions().stream()
-					.map(tpi -> tpi.replicas())
-					.flatMap(nodes -> nodes.stream())
+					.map(TopicPartitionInfo::replicas)
+					.flatMap(java.util.Collection::stream)
 					.count()).isEqualTo(6);
 		}
 	}
@@ -225,11 +226,11 @@ public class KafkaAdminTests {
 		AtomicReference<Method> addTopics = new AtomicReference<>();
 		AtomicReference<Method> modifyTopics = new AtomicReference<>();
 		ReflectionUtils.doWithMethods(KafkaAdmin.class, m -> {
-			if (m.getName().equals("addTopics")) {
+			if ("addTopics".equals(m.getName())) {
 				m.setAccessible(true);
 				addTopics.set(m);
 			}
-			else if (m.getName().equals("createMissingPartitions")) {
+			else if ("createMissingPartitions".equals(m.getName())) {
 				m.setAccessible(true);
 				modifyTopics.set(m);
 			}
@@ -273,7 +274,7 @@ public class KafkaAdminTests {
 			KafkaAdmin admin = new KafkaAdmin(configs);
 			admin.setBootstrapServersSupplier(() ->
 					StringUtils.arrayToCommaDelimitedString(kafkaEmbedded().getBrokerAddresses()));
-			admin.setCreateOrModifyTopic(nt -> !nt.name().equals("dontCreate"));
+			admin.setCreateOrModifyTopic(nt -> !"dontCreate".equals(nt.name()));
 			return admin;
 		}
 

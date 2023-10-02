@@ -76,9 +76,7 @@ class RetryableTopicAnnotationProcessorTests {
 
 	{
 		this.beanFactory = mock(ConfigurableBeanFactory.class);
-		willAnswer(invoc -> {
-			return invoc.getArgument(0);
-		}).given(this.beanFactory).resolveEmbeddedValue(anyString());
+		willAnswer(invoc -> invoc.getArgument(0)).given(this.beanFactory).resolveEmbeddedValue(anyString());
 	}
 
 	// Retry with DLT

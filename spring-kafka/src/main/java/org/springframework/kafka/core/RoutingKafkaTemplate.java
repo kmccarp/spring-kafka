@@ -58,7 +58,7 @@ public class RoutingKafkaTemplate extends KafkaTemplate<Object, Object> {
 	 * @param factories the factories.
 	 */
 	public RoutingKafkaTemplate(Map<Pattern, ProducerFactory<Object, Object>> factories) {
-		super(new ProducerFactory<Object, Object>() {
+		super(new ProducerFactory<>() {
 
 			@Override
 			public Producer<Object, Object> createProducer() {
@@ -68,7 +68,7 @@ public class RoutingKafkaTemplate extends KafkaTemplate<Object, Object> {
 		});
 		this.factoryMatchers = new LinkedHashMap<>(factories);
 		Optional<Boolean> transactional = factories.values().stream()
-			.map(fact -> fact.transactionCapable())
+			.map(ProducerFactory::transactionCapable)
 			.findFirst();
 		Assert.isTrue(!transactional.isPresent() || !transactional.get(), "Transactional factories are not supported");
 	}

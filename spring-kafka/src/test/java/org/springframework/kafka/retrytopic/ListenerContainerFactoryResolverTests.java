@@ -55,9 +55,9 @@ class ListenerContainerFactoryResolverTests {
 	@Mock
 	private ConcurrentKafkaListenerContainerFactory<?, ?> factoryFromDefaultBeanName;
 
-	private final static String factoryName = "testListenerContainerFactory";
-	private final static String otherFactoryName = "otherTestListenerContainerFactory";
-	private final static String defaultFactoryBeanName = "defaultTestListenerContainerFactory";
+	private static final String factoryName = "testListenerContainerFactory";
+	private static final String otherFactoryName = "otherTestListenerContainerFactory";
+	private static final String defaultFactoryBeanName = "defaultTestListenerContainerFactory";
 
 	@Test
 	void shouldResolveWithKLAFactoryForMainEndpoint() {
