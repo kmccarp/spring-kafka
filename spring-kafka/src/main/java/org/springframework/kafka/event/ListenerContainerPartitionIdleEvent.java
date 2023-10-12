@@ -38,7 +38,7 @@ public class ListenerContainerPartitionIdleEvent extends KafkaEvent {
 
 	private final boolean paused;
 
-	private transient Consumer<?, ?> consumer;
+	private final transient Consumer<?, ?> consumer;
 
 	/**
 	 * Construct an instance with the provided arguments.

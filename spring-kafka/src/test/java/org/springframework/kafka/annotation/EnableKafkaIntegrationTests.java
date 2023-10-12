@@ -444,7 +444,7 @@ public class EnableKafkaIntegrationTests {
 		this.embeddedKafka.consumeFromAnEmbeddedTopic(consumer, "annotated43reply");
 		template.send("annotated43", 0, "foo");
 		ConsumerRecord<Integer, String> reply = KafkaTestUtils.getSingleRecord(consumer, "annotated43reply");
-		assertThat(reply).extracting(rec -> rec.value()).isEqualTo("FOO");
+		assertThat(reply).extracting(org.apache.kafka.clients.consumer.ConsumerRecord::value).isEqualTo("FOO");
 		consumer.close();
 	}
 
@@ -1400,9 +1400,7 @@ public class EnableKafkaIntegrationTests {
 
 		@Bean
 		public Map<String, Object> consumerConfigs() {
-			Map<String, Object> consumerProps =
-					KafkaTestUtils.consumerProps(DEFAULT_TEST_GROUP_ID, "false", this.embeddedKafka);
-			return consumerProps;
+			return KafkaTestUtils.consumerProps(DEFAULT_TEST_GROUP_ID, "false", this.embeddedKafka);
 		}
 
 		@Bean
@@ -1497,7 +1495,7 @@ public class EnableKafkaIntegrationTests {
 		@Bean
 		public KafkaTemplate<Integer, String> partitionZeroReplyTemplate() {
 			// reply always uses the no-partition, no-key method; subclasses can be used
-			return new KafkaTemplate<Integer, String>(producerFactory(), true) {
+			return new KafkaTemplate<>(producerFactory(), true) {
 
 				@Override
 				public CompletableFuture<SendResult<Integer, String>> send(String topic, String data) {
@@ -1510,7 +1508,7 @@ public class EnableKafkaIntegrationTests {
 		@Bean
 		public KafkaTemplate<Integer, Object> partitionZeroReplyJsonTemplate() {
 			// reply always uses the no-partition, no-key method; subclasses can be used
-			return new KafkaTemplate<Integer, Object>(jsonProducerFactory(), true) {
+			return new KafkaTemplate<>(jsonProducerFactory(), true) {
 
 				@Override
 				public CompletableFuture<SendResult<Integer, Object>> send(String topic, Object data) {
@@ -1668,9 +1666,7 @@ public class EnableKafkaIntegrationTests {
 
 		@Bean
 		public KafkaListenerErrorHandler voidSendToErrorHandler() {
-			return (m, e) -> {
-				return "baz";
-			};
+			return (m, e) -> "baz";
 		}
 
 		private Throwable listen16Exception;
@@ -2305,7 +2301,7 @@ public class EnableKafkaIntegrationTests {
 					@Override
 					public Object invoke(MethodInvocation invocation) throws Throwable {
 						logger.info(String.format("Proxy listener for %s.$s",
-								invocation.getMethod().getDeclaringClass(), invocation.getMethod().getName()));
+								invocation.getMethod().getDeclaringClass()));
 						return invocation.proceed();
 					}
 				});
@@ -2613,7 +2609,7 @@ public class EnableKafkaIntegrationTests {
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + ((this.bar == null) ? 0 : this.bar.hashCode());
+			result = prime * result + (this.bar == null ? 0 : this.bar.hashCode());
 			return result;
 		}
 

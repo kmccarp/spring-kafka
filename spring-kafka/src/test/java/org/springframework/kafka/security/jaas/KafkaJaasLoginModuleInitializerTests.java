@@ -103,7 +103,7 @@ public class KafkaJaasLoginModuleInitializerTests {
 	@Configuration
 	public static class PreConfiguredJaasConfig implements BeanPostProcessor {
 
-		private boolean initialized = false;
+		private boolean initialized;
 
 		public static String OtherJaasConfigurationName = "other-jaas-configuration-name";
 

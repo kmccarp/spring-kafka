@@ -87,7 +87,7 @@ public class ABSwitchClusterTests {
 		@Bean
 		public DefaultKafkaConsumerFactory<Object, Object> cf() {
 			Map<String, Object> configs = new HashMap<>();
-			DefaultKafkaConsumerFactory<Object, Object> cf = new DefaultKafkaConsumerFactory<Object, Object>(configs) {
+			DefaultKafkaConsumerFactory<Object, Object> cf = new DefaultKafkaConsumerFactory<>(configs) {
 
 				@Override
 				protected Consumer<Object, Object> createRawConsumer(Map<String, Object> configProps) {

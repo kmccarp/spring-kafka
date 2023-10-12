@@ -153,7 +153,7 @@ public class PauseContainerWhileErrorHandlerIsRetryingTests {
 
 		@KafkaListener(id = "id", groupId = "grp", topics = "foo")
 		public void process(List<String> batch, Acknowledgment acknowledgment) {
-			batch.forEach((msg) -> {
+			batch.forEach(msg -> {
 				if (!received.contains(msg)) {
 					log("Got new message: " + msg);
 				}
@@ -163,7 +163,7 @@ public class PauseContainerWhileErrorHandlerIsRetryingTests {
 			if (failing.get()) {
 				throw new RuntimeException("ooops");
 			}
-			batch.forEach((msg) -> {
+			batch.forEach(msg -> {
 				if (!processed.contains(msg)) {
 					log("Processed new message: " + msg);
 				}
@@ -181,7 +181,7 @@ public class PauseContainerWhileErrorHandlerIsRetryingTests {
 		@SuppressWarnings({"rawtypes"})
 		private Consumer makePausingAfterPollConsumer(Consumer delegate) {
 			Consumer spied = spy(delegate);
-			willAnswer((call) -> {
+			willAnswer(call -> {
 				Duration duration = call.getArgument(0, Duration.class);
 				ConsumerRecords records = delegate.poll(duration);
 				if (!duration.isZero() && triggerPause.get()) {

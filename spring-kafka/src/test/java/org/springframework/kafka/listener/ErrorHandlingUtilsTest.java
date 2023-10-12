@@ -73,7 +73,7 @@ class ErrorHandlingUtilsTest {
 	private <K, V> ConsumerRecords<K, V> recordsOf(ConsumerRecord<K, V>... records) {
 		return new ConsumerRecords<>(
 				Arrays.stream(records).collect(Collectors.groupingBy(
-						(cr) -> new TopicPartition(cr.topic(), cr.partition())
+						cr -> new TopicPartition(cr.topic(), cr.partition())
 				))
 		);
 	}
