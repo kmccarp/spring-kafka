@@ -98,7 +98,7 @@ public class KafkaJaasLoginModuleInitializer implements SmartInitializingSinglet
 
 	public KafkaJaasLoginModuleInitializer() throws IOException {
 		// we ignore the system property if it wasn't originally set at launch
-		this.ignoreJavaLoginConfigParamSystemProperty = (System.getProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM) == null);
+		this.ignoreJavaLoginConfigParamSystemProperty = System.getProperty(JaasUtils.JAVA_LOGIN_CONFIG_PARAM) == null;
 		this.placeholderJaasConfiguration = File.createTempFile("kafka-client-jaas-config-placeholder", "conf");
 		this.placeholderJaasConfiguration.deleteOnExit();
 	}

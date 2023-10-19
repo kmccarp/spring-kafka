@@ -55,7 +55,7 @@ public class SerializationIntegrationTests {
 		DelegatingByTopicDeserializer delegating = new DelegatingByTopicDeserializer(
 				Map.of(Pattern.compile(DBTD_TOPIC), testDeser), new StringDeserializer());
 		DefaultKafkaConsumerFactory<String, Object> cFact =
-				new DefaultKafkaConsumerFactory<String, Object>(consumerProps,
+				new DefaultKafkaConsumerFactory<>(consumerProps,
 					new StringDeserializer(), delegating);
 		ContainerProperties props = new ContainerProperties(DBTD_TOPIC);
 		props.setCheckDeserExWhenKeyNull(true);

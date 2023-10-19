@@ -54,7 +54,7 @@ class ConvertingMessageListenerTests {
 	public void testMessageListenerIsInvokedWithConvertedSimpleRecord() {
 		var consumerRecord = new ConsumerRecord<>("foo", 0, 0, "key", 0);
 
-		var delegateListener = (MessageListener<String, Long>) (data) -> assertThat(data.value()).isNotNull();
+		var delegateListener = (MessageListener<String, Long>) data -> assertThat(data.value()).isNotNull();
 		var convertingMessageListener = new ConvertingMessageListener<>(
 				delegateListener,
 				Long.class
@@ -69,7 +69,7 @@ class ConvertingMessageListenerTests {
 		var toBeConvertedJson = mapper.writeValueAsString(toBeConverted);
 		var consumerRecord = new ConsumerRecord<>("foo", 0, 0, "key", toBeConvertedJson);
 
-		var delegateListener = (MessageListener<String, ToBeConverted>) (data) -> {
+		var delegateListener = (MessageListener<String, ToBeConverted>) data -> {
 			assertThat(data.value()).isNotNull();
 			assertThat(data.value().getA()).isEqualTo("foo");
 		};
@@ -108,7 +108,7 @@ class ConvertingMessageListenerTests {
 		var toBeConvertedJson = mapper.writeValueAsString(toBeConverted);
 		var consumerRecord = new ConsumerRecord<>("foo", 0, 0, "key", toBeConvertedJson);
 
-		var delegateListener = (MessageListener<String, ToBeConverted>) (data) -> {
+		var delegateListener = (MessageListener<String, ToBeConverted>) data -> {
 			assertThat(data.value()).isNotNull();
 			assertThat(data.value().getA()).isEqualTo("foo");
 		};
@@ -128,7 +128,7 @@ class ConvertingMessageListenerTests {
 		var header = new RecordHeader("headerKey", "headerValue".getBytes());
 		consumerRecord.headers().add(header);
 
-		var delegateListener = (MessageListener<String, Long>) (data) -> { };
+		var delegateListener = (MessageListener<String, Long>) data -> { };
 		var messageConverter = new MessageConverter() {
 			@Override
 			public Object fromMessage(Message<?> message, Class<?> targetClass) {
@@ -159,7 +159,7 @@ class ConvertingMessageListenerTests {
 		var header = new RecordHeader("headerKey", "headerValue".getBytes());
 		consumerRecord.headers().add(header);
 
-		var delegateListener = (MessageListener<String, Long>) (data) -> { };
+		var delegateListener = (MessageListener<String, Long>) data -> { };
 		var messageConverter = new MessageConverter() {
 			@Override
 			public Object fromMessage(Message<?> message, Class<?> targetClass) {

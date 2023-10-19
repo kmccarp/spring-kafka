@@ -103,7 +103,7 @@ public final class ProducerFactoryUtils {
 				throw e;
 			}
 
-			resourceHolder = new KafkaResourceHolder<K, V>(producer, closeTimeout);
+			resourceHolder = new KafkaResourceHolder<>(producer, closeTimeout);
 			bindResourceToTransaction(resourceHolder, producerFactory);
 		}
 		return resourceHolder;
